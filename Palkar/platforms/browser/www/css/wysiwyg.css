@@ -1,0 +1,165 @@
+h1{
+	font-size: 2.25em;
+	font-weight: 500;
+}
+h2{
+	font-size: 2.0em;
+	font-weight: 500;
+}
+h3{
+	font-size: 1.75em;
+	font-weight: 500;
+}
+h4{
+	font-size: 1.5em;
+	font-weight: 500;
+}
+h5{
+	font-size: 1.25em;
+	font-weight: 500;
+}
+h6{
+	font-size: 1.0em;
+	font-weight: 500;
+}
+p{
+	font-size: 1em;
+	font-weight: 500;
+	margin: 0em 0em 1em 0em;	
+}
+ul{
+	list-style-type:circle;
+	margin: 1em;
+}
+ol{
+	list-style-type:decimal;
+	margin: 1em;
+}
+strong{
+	font-weight: bold;
+}
+em{
+	font-style: italic;
+}
+.mce-content-body{
+	height: 200px;
+}
+.mce-edit-area{
+	border: 1px solid black;
+}
+.mce-container-body {
+	background-color: #ffffff;
+}
+
+.mce-btn button{
+	padding: 1px 5px !important;
+}
+
+.CommentsSummary, .RepliesSummary, .HighlightSummary, .ViewSummary, .ShareSummary{
+	font-size: 0.75em; 
+	padding: 5px; 
+	margin-top: 1px; 
+	margin-bottom: 1px;	
+	border: 0px;
+	font-strength: 200;	
+	border-radius: 1px;
+	color: #666699;
+}
+
+.ShareSummary{
+	margin-right: 0px;
+}
+.CommentsSummary{
+	background-color: #0066cc;
+	color: #ffffff !important;
+	margin-left: 0px;
+	margin-right: -5px;
+	border-top-left-radius: 10px;
+}
+.RepliesSummary{
+	background-color: #33cc33;
+	color: #ffffff !important;
+	margin-left: 0px;
+	margin-right: -4px;	
+}
+.HighlightSummary{
+	background-color: #FF7600;
+	margin-left: 0px;	
+	margin-right: 5px;
+	color: #ffffff !important;
+	border-bottom-right-radius: 10px;
+}
+.ViewSummary{
+	background-color: #ffffff;
+	margin-right: 10px;
+}
+.ui-dialog-title{
+	color: #666699 !important;
+	font-strength: 200;
+}
+.enroll{
+    background: #009dff; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#009dff, #3f7699); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#009dff, #3f7699); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#009dff, #3f7699); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#009dff, #3f7699); /* Standard syntax */	
+    padding: 1em;
+    text-align: center;
+    font-size: 1em;
+}
+.appHeader{
+	background-color: #33adff;
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	text-align: center;
+}
+.appBody{
+	overflow: auto;	
+}
+#palpostr-url{ 
+	background-color: #33adff; 
+	border: 0px;
+	color: #ffffff;	
+	text-shadow: none;
+	float: left;
+}
+#showLeftPanel{
+	float: left;
+	background-color: #33adff; 
+	border: 0px;
+	text-shadow: none;
+}
+#showRightPanel{
+	float: right; 
+	background-color: #33adff; 
+	border: 0px;
+	color: #ffffff;	
+	text-shadow: none;	
+}
+.ui-panel-position-right{
+    background: #80ccff; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#80ccff, #ffffff); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#80ccff, #ffffff); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#80ccff, #ffffff); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#80ccff, #ffffff); /* Standard syntax (must be last) */	
+}
+@media (max-width: 1000px) {          
+	#createStoryDocument{
+		width: 100% !important;
+	}
+ }
+ @media (max-width: 500px) {      
+	.ViewSummary{
+		display: none !important;
+	}
+ }
+ #EditDocumentPreferences .mce-tinymce{
+ 	margin-left: 5%;
+ 	margin-top: 0.5em;
+ }
+ .yui3-g{
+ 	width: 100%;
+ 	text-align: center;
+ }
