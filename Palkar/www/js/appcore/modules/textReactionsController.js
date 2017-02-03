@@ -548,13 +548,29 @@ var textReactionsController = function(sb, input){
 		sb.dom.find(this).parent().find('.textReactionList').html("");
 	}
 	
+	function _pageSnippetAddedReceived(message){
+   		sb.dom.find(message.snippetId).find('.storyItem').each(
+   				function(){
+   					console.log("Sniipet Added Recieved : Story ID " + sb.dom.find(this).attr("id"));
+   					sb.dom.find(this).find('.rpltxtreac').bind('click',_replyLinkClicked);
+   					sb.dom.find(this).find('.cancelrpltxtreac').bind('click',_replyCancelled);
+   					sb.dom.find(this).find('.ReplyReacSubmit').bind('click',_replySubmit);
+   					sb.dom.find(this).find('.rplytxtara').bind('keydown', _replySubmitKeyPressed);
+   					sb.dom.find(this).find('a.remtxtreac').bind('click', _removeReaction);
+   					sb.dom.find(this).find('a.remtxtreacall').bind('click', _removeAllReactionsFromUser);
+   					sb.dom.find(this).find('.txtreaction').bind('click',_addTextReaction);
+   					sb.dom.find(this).find('.cmntsection').bind('click',_commentsSelectedEvent);
+   					sb.dom.find(this).find('.rplysection').bind('click',_repliesSelectedEvent);
+   					sb.dom.find(this).find('.txtara').bind('click', _textBoxClickEvent);
+   					sb.dom.find(this).find('.txtaracancel').bind('click', _cancelButtonClickEvent);
+   					sb.dom.find(this).find('.txtara').bind('keydown', _textBoxKeyDownEvent);
+   					sb.dom.find(this).find('.showMoreTextReactions').click(_showMoreButtonClickEventFirst);
+   					sb.dom.find(this).find('.timeago').timeago();
+   				}
+   		);
+	}	
 	
-   return{
-	   init:function() {
-       	try{       	
-       		pgReactionTitle="Comments";
-       		reactionType="PBRTRMK";    
-       		pageReactionType="PBRTRMK";
+	function _startController(msg){
        		sb.dom.find('.txtreaction').bind('click',_addTextReaction);
        		sb.dom.find('.cmntsection').bind('click',_commentsSelectedEvent);
        		sb.dom.find('.rplysection').bind('click',_repliesSelectedEvent);
@@ -573,7 +589,16 @@ var textReactionsController = function(sb, input){
        		//_loadTextPageReactionList(TxtReactionListDiv);
        		//sb.dom.find(window).scroll(_txtReactionWindowScroll);
        		Core.subscribe('reloadReactions', _reloadReactionsMessageReceived);
-       		Core.subscribe('newStoryAdded', _newStoryAddedMessageReceived);
+       		Core.subscribe('newStoryAdded', _newStoryAddedMessageReceived);		
+			Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
+	}
+   return{
+	   init:function() {
+       	try{       	
+       		pgReactionTitle="Comments";
+       		reactionType="PBRTRMK";    
+       		pageReactionType="PBRTRMK";
+			Core.subscribe('startStoryItemController', _startController);
        	}catch(err){       		
        		serverLog(err);
        	}

@@ -1,3 +1,6 @@
+a{
+	text-decoration: none;
+}
 h1{
 	font-size: 2.25em;
 	font-weight: 500;
@@ -116,9 +119,8 @@ em{
  .containerHeader{
  	text-align: left;
  	font-size: 2em;
- 	background-color: #3299BB;
  	color: #ffffff;
- 	padding: 0.25em;
+ 	padding: 1em 0 1em 0.25em;
  }
  .docItemAcceptPostsBtn{
  	padding: 1em;
@@ -151,7 +153,7 @@ em{
 	    min-height: 200px;
 	    z-index: 99;
 	    background-color: #ffffff;
-	    border: 2px solid #ffffff;
+	    border: 0px;
 	    color: #333;
 	    box-shadow: 0 0 16px #3299BB;
 	} .ie7 .subContainer {
@@ -372,6 +374,7 @@ em{
 	float: left;
 	color: #3299BB;
 	font-size: 1em;
+	font-weight: 800;
 }
 #showLeftPanel{
 	float: left;
@@ -379,7 +382,7 @@ em{
 	border: 0px;
 	text-shadow: none;
 }
-#showRightPanel{
+#showRightPanel, #refreshPanel{
 	float: right; 
 	background-color: rgba(0,0,0,0); 
 	border: 0px;
@@ -404,8 +407,8 @@ em{
 	font-size: 2em;
 	color: #ffffff;
 }
-.fa{
- color: #333;
+.fa-picture-o, .fa-globe{
+ color: #333 !important;
 }
 @media (max-width: 1000px) {          
 	#createStoryDocument{
@@ -428,8 +431,11 @@ em{
 	vertical-align: middle;
  }
  
- #mainContainer{
+ #mainContainer, .subContainer{
  	text-align: center;
+	height: 700px;
+	max-height: 2000px;
+	overflow: auto;
  }
  .fa-spinner{
  	margin-top: 5em;
@@ -442,26 +448,45 @@ em{
  	background-size: contain;
 	background-position: 5px center;
 	background-repeat: no-repeat;
-	background-color: inherit !important;
 	height: 4em;
 	text-align: right;
  }
  textarea{
  	display: none;
  }
- .hilite, .sharePageButton{
+ .hilite, .sharePageButton, .hiliteResponse, .rpltxtreac{
  	display: none;
  }
  .ui-btn:active{
  	box-shadow: 0px !important;
  }
- #storyItemTitle{
+ #storyItemTitle-Big{
  	text-decoration: none; 
 	margin: 0px; 
 	border: 0px solid; 
-	font-size: 1em;
-	color: #3299BB !important;
+	font-size: 2em;
+	color: #333 !important;
 	font-weight: 800;
+ }
+ #storyItemTitle-small{ 
+ 	text-decoration: none; 
+	margin: 0px; 
+	border: 0px solid; 
+	font-size: 1.5em;
+	color: #333 !important;
+	font-weight: 800;
+ }
+  #storyItemTitle{
+ 	text-decoration: none; 
+	margin: 0px; 
+	border: 0px solid; 
+	font-size: 1.5em;
+	color: #333 !important;
+	font-weight: 800;
+ }
+ .story{
+ 	font-size: 1.5em;
+	font-weight: 400;
  }
  #story{
   	text-decoration: none; 
@@ -474,3 +499,62 @@ em{
  .containerBackButton{
  	color: #ffffff !important;
  }
+ div.News{
+ 	background-color: #00CCFF;
+ }
+ div.People{
+ 	background-color: #CC3399;
+ }
+ div.Food{
+ 	background-color: #66FF99;
+ }
+ div.Horoscope{
+ 	background-color: #FF6600;
+ }
+ a.News{
+ 	border: 5px solid #00CCFF !important;
+ }
+ a.People{
+ 	border: 5px solid #CC3399 !important;
+ }
+ a.Food{
+ 	border: 5px solid #66FF99 !important;
+ }
+ a.Horoscope{
+ 	border: 5px solid #FF6600 !important;
+ }
+ 
+ span.News{
+ 	color: #00CCFF !important;
+ }
+ span.People{
+ 	color: #CC3399 !important;
+ }
+ span.Food{
+ 	color: #66FF99 !important;
+ }
+ span.Horoscope{
+ 	color: #FF6600 !important;
+ }
+
+
+.albumPicDecriptions{
+	background: rgba(255,255,255,0.5) !important; 
+	border: 0px; 
+	margin: 0em; 
+	clear:both; 
+	color: #333;
+	font-size: 2em;
+	position: absolute; 
+	left: 0px; 
+	top: 0px;
+	padding: 0.5em;
+}
+#documentTitleLabel{
+	color: #333;
+}
+.containerCloseButton{
+	float: right;
+	color: #CCCCCC !important;
+	margin-right: 1em;
+}

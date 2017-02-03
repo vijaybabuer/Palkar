@@ -635,27 +635,6 @@ canvas{
  
 }
 
-
-.pane{
-	box-shadow: 1px 1px 5px 1px #cccccc ;
-	border-radius:5px;
-  -moz-border-radius:5px;
-  margin: 1em;
-}
-
-.storyPane{
-	box-shadow: 1px 1px 5px 1px #cccccc ;
-	border-radius:2px;
-  -moz-border-radius:2px;
-  margin: 0.5em;
-}
-
-.tile{
-	box-shadow: 1px 1px 5px 1px #cccccc ;
-	border-radius:2px;
-  -moz-border-radius:2px;
-}
-
 .hilite{
 	background-size: 1.5em 1.5em;
 	background-repeat: no-repeat;

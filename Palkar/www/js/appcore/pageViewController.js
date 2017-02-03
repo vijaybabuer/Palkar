@@ -63,6 +63,10 @@ var pageViewController = function(sb, input){
 	   function addStoryItemToView(storyItem){
 		   var storyItemHtml = tmpl("template-storyTemplate", storyItem);	   
 		   sb.dom.find("#mainContainer").find("#storiesDiv").append(sb.utilities.htmlDecode(storyItemHtml));
+			if(storyItem.storyDocumentPageId){
+	   		   sb.dom.find("#mainContainer").find("#storiesDiv").find("#storyItem-"+storyItem.storyDocumentPageId).find('a').each(_setAnchorClickEvent);
+		   }
+
 	   }
 	   
 	function addPagesToRightPanel(snippetResponse){
@@ -84,17 +88,23 @@ var pageViewController = function(sb, input){
 	        });
 	    }
 		
-		function _containerBackButtonClicked(e){
-		   closeOverlay();
+		function _containerBackButtonClicked(e){		   
+		   closeOverlay();		
 		   sb.dom.find(this).parents('.subContainer').slideUp();
 		   sb.dom.find(this).parents('.subContainer').remove();
-		   sb.dom.find('.container').first().show();
+		   var nextContainer = sb.dom.find('.container').first();		   
+/*		   var nextContainerScrollTop = nextContainer.attr("data-scroll-top");
+		   if(nextContainerScrollTop){
+			   alert('have scroll top ' + nextContainerScrollTop);
+			   nextContainer.scrollTop(nextContainerScrollTop);
+		   }*/
+		   nextContainer.show();
 	   }
 
 	    function openOverlay() {
 	        var overLayDiv = sb.dom.find('.subContainer').first();	        
 	        if (sb.dom.find('#overlay-shade').length == 0)
-	            sb.dom.find('body').prepend('<div id="overlay-shade"></div>');
+	            sb.dom.find('#containerDiv').prepend('<div id="overlay-shade"></div>');
 
 	        sb.dom.find('#overlay-shade').fadeTo(300, 0.6, function() {
 	            var props = {
@@ -119,12 +129,29 @@ var pageViewController = function(sb, input){
 	        });
 	    }
 		
+    	function _containerCloseButtonClicked(e){
+		   closeOverlay();
+		   var subContainerList = sb.dom.find('.subContainer');
+		   for(var i= subContainerList.length - 1; i >=0 ; i--){
+			  sb.dom.find(subContainerList[i]).slideUp();
+			  sb.dom.find(subContainerList[i]).remove();			  
+		   }
+		   var nextContainer = sb.dom.find('.container').first();		   
+		   /*var nextContainerScrollTop = nextContainer.attr("data-scroll-top");
+		   if(nextContainerScrollTop){
+			   nextContainer.scrollTop(nextContainerScrollTop);
+		   }*/
+		   nextContainer.show();			
+		}
+		
 	   function _snippetResponseReceived(snippetResponse){
 		   if(snippetResponse != null){
 			   sb.dom.find('.placeHolderContainer').remove();
 			   sb.dom.find('#containerDiv').prepend(snippetResponse);
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerBackButton').show();
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerBackButton').bind('click', _containerBackButtonClicked);
+			   sb.dom.find('#containerDiv').find('.container').first().find('.containerCloseButton').show();
+			   sb.dom.find('#containerDiv').find('.container').first().find('.containerCloseButton').bind('click', _containerCloseButtonClicked);			   
 			   sb.dom.find('.container').first().find('.storyItemBody').show();
 			   openOverlay();
 		   }else{
@@ -142,13 +169,15 @@ var pageViewController = function(sb, input){
 	   }
 	   
 	function _anchorClickEvent(e){
-		try{
+		try{			
 			var snippetUrl = sb.dom.find(this).attr('data-snippet-url');
 			if(snippetUrl){
 					   e.preventDefault();
 					   sb.dom.find('.container').each(_hideContainer);
-					   sb.dom.find('#containerDiv').prepend(placeHolderContainer);				   
-					   window.scrollTo(0, 0);
+					   sb.dom.find('#containerDiv').prepend(placeHolderContainer);		
+					   //alert(sb.dom.find('#containerDiv').scrollTop());
+					   //alert(sb.dom.find(this).scrollTo(0, 0));
+					   //window.scrollTo(0, 0);
 					   sb.utilities.get(snippetUrl,null,_snippetResponseReceived);			
 			}else{
 				updateFooterMessage('no view snippet url has been set');
@@ -158,6 +187,19 @@ var pageViewController = function(sb, input){
 			updateFooterMessage(err);	
 		}
 	}
+	
+	function _newStoryAddedToView(message){
+		try{		
+		var storyItemNode =sb.dom.find(message.storyItemDivId);
+		scrollListContainer=storyItemNode.find('#scrollListContainer');
+		sb.dom.find(message.storyItemDivId).find('.toggleFullScreen').on('click',_toggleFullScreenEvent);
+	   	sb.dom.find(message.storyItemDivId).find('a').each(_setAnchorClickEvent);
+		setTimeout(_initializePicturePresentation, 1500);
+		}catch(err){
+			console.log(err);
+		}
+	}
+	
 	
 	function _loadMainPage(snippetResponse){
 		   if(snippetResponse != null && snippetResponse.antahRequestStatus == "SUCCESS"){	
@@ -189,11 +231,8 @@ var pageViewController = function(sb, input){
    			   sb.dom.find('#containerDiv').find('#mainContainer').find('div').first().removeClass('container');
 			   sb.dom.find('#containerDiv').find('#mainContainer').find('div').first().find('.containerHeader').remove();
 			if(sb.dom.find('.grid').length > 0){
-				var gridList = sb.dom.find('.grid').masonry({
-					  itemSelector: '.grid-item',
-					  percentPosition: true,
-					  columnWidth: '.grid-sizer'
-					});
+				var gridList = sb.dom.find('.grid');
+				setTimeout(function(){gridList.each(_enableGrid)}, 5000);
 			}
 			sb.dom.find('.toggleFullScreen').on('click',_toggleFullScreenEvent);
 			sb.dom.find('.timeago').timeago();
@@ -203,6 +242,13 @@ var pageViewController = function(sb, input){
 	}
 	
 
+	function _enableGrid(){
+			sb.dom.find(this).masonry({
+				itemSelector: '.grid-item',
+				percentPosition: true,
+				columnWidth: 250
+			});	
+	}
 	function updateFooterMessage(msg){
 		document.getElementById("message1").innerHTML = msg;
 	}
@@ -240,6 +286,7 @@ var pageViewController = function(sb, input){
 	}
 	
 	 function _initializePicturePresentation(){
+		 try{
 		   albumContainerJS = document.getElementById('pictureList');
 	   		window.myAlbumView=Swipe(albumContainerJS, {
 	   			startSlide: 0,
@@ -265,7 +312,10 @@ var pageViewController = function(sb, input){
 	   				prevNavBtn = currentNavBtn;
 
 	   			}
-	   		});				   		
+	   		});
+		 }catch(err){
+			alert(err);	 
+		 }
 	   }
 	
 	   function confirmExit(e){
@@ -296,12 +346,26 @@ var pageViewController = function(sb, input){
 		sb.dom.find("#leftPanel").panel("close");
 		_startControllerV2();
 	}
+
+	function _pageSnippetAddedReceived(message){
+   		//defaultClickReactionsDivList = sb.dom.find('.storyItemFooter');
+   		//_loadPageReactionList(defaultClickReactionsDivList);
+		console.log("Click Reactions Controller Snippet Added Recieved : MEssage ID " + JSON.stringify(message));
+   		sb.dom.find(message.snippetId).find('.storyItem').each(
+   				function(){
+		   		   sb.dom.find(this).find('a').each(_setAnchorClickEvent);
+				}
+   		);
+	}
+	
    return{
 	   init:function() {
        	try{
 			console.log('starting page view controller..');
        		Core.subscribe('storyEditStatusUpdate', _storyEditStatusUpdateMessageReceived);
        		Core.subscribe('documentEditStatusUpdate', _documentEditStatusUpdateMessageReceived);
+			Core.subscribe('newStoryAdded', _newStoryAddedToView);
+			Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
        		window.onbeforeunload = confirmExit;
 			_startControllerV2();
 			sb.dom.find("#reloadApp").click(_reloadStream);

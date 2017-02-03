@@ -9,6 +9,7 @@
 	width: 100%; 
 	background-repeat: no-repeat;  
 	background-position: 2px top;
+	padding: 1em;
 }
 .sIDtls{
 	height: 100%;  
@@ -27,6 +28,8 @@
 .storyItemBody{
 	width: 100%; 
 	display: none;
+	text-align: left;
+	padding: 0px;
 }
 .sirl{
 	height: 100%; 
@@ -52,4 +55,7 @@
 }
 .ui-widget, .ui-widget-content{
 	font-size: 1em;
+}
+.socialShare{
+	display: none;
 }

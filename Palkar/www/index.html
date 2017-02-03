@@ -24,9 +24,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
-
-        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="css/index.css" />
 		<link rel="stylesheet" href="css/yui3/3.13.0/build/cssgrids/cssgrids.css" type="text/css" />
 		<link rel="stylesheet" href="css/yui3/3.17.1/cssreset/cssreset-min.css" type="text/css" />
@@ -37,7 +35,8 @@
 		<link rel="stylesheet" href="css/standard.css" type="text/css" />
 		<link rel="stylesheet" href="css/storyItem.css" type="text/css" />
 		<link rel="stylesheet" href="css/fa.css" type="text/css" />
-		<link rel="stylesheet" href="css/wysiwyg.css" type="text/css" />		
+		<link rel="stylesheet" href="css/wysiwyg.css" type="text/css" />
+		<link rel="stylesheet" href="css/swipe.css" type="text/css" />		
         <title>Welcome to Palkar News</title>
 		<style type="text/css" media="all">
 			@font-face{
@@ -53,6 +52,7 @@
 			<div>
 				<div class="appHeader">
 					<a href="#rightPanel" class="ui-btn ui-btn-inline" id="showRightPanel"><i class="fa fa-bars"></i></a>	
+					<a  class="ui-btn ui-btn-inline ht" id="refreshPanel"><i class="fa fa-refresh"></i></a>
 					<a  href="#leftPanel" id="palpostr-url" class="ui-btn ui-btn-inline">
 						Palkar News
 					</a>		
@@ -123,7 +123,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script type="text/javascript" src="js/plugins/jquery-overlay/loading-overlay.min.js"></script>
 <script type="text/javascript" src="js/external/jquery.nicescroll.js"></script>
-
+<script type="text/javascript" src="js/external/swipe/swipe.js"></script>
 <script type="text/javascript" src="js/appcore/inheritance.js"></script>
 <script type="text/javascript" src="js/appcore/appmain.js"></script>
 <script type="text/javascript" src="js/appcore/pageViewController.js"></script>	
@@ -164,8 +164,8 @@
 <script type="text/template" id="jstemplate-MessageDisplayController-GeneralNote">Note</script>
 <!-- Story Add Controller Labels -->
 <script type="text/template" id="storyAddController-StoryTitle">Subject/URL</script>
-<script type="text/template" id="storyAddController-DefaultContent"><p style="color: grey; font-size: 1em;"><br>${userAccount.userFullName}, ${userAccount.detailsText}, ${userAccount.location}</p></script>
-<script type="text/template" id="storyAddController-AlbumTitle">${userAccount.userFullName}'s Album - ${year} ${month}</script>
+<script type="text/template" id="storyAddController-DefaultContent"><p style="color: grey; font-size: 1em;"><br></p></script>
+<script type="text/template" id="storyAddController-AlbumTitle">Album</script>
 <script type="text/template" id="storyAddController-MessageContent">your story/message..</script>
 <script type="text/template" id="storyAddController-AttachAlbumTitle">Attach Album</script>
 <script type="text/template" id="storyAddController-PostStory">Post Message</script>
@@ -180,15 +180,15 @@
 <script type="text/template" id="ChapterDialog-PreferencesSet-success">Exclusive Preferences has been set.</script>
 <script type="text/template" id="ChapterDialog-PreferencesSet-failure">Exclusive Preferences could not be saved. Please try again later.</script>
 <script type="text/template" id="NewSignboardDialog-CoverPage-PlaceHolder">Write a little about the Magazine. Ex; Today's Sporting giants etc</script>
-<script type="text/template" id="NewSignboardDialog-SignboardName-PlaceHolder">Choose a name for your Magazine. ${userAccount.userFullName}'s Magazine</script>
-<script type="text/template" id="NewSignboardDialog-SignboardName">${userAccount.userFullName}'s Magazine</script>
+<script type="text/template" id="NewSignboardDialog-SignboardName-PlaceHolder">Choose a name for your Magazine.</script>
+<script type="text/template" id="NewSignboardDialog-SignboardName">Magazine</script>
 <script type="text/template" id="DocumentDialog-ConfirmNavigation">Please save the changes before navigating away.</script>
 <script type="text/template" id="DocumentDialog-Title">Page - Preferences</script>
 <script type="text/template" id="DocumentDialog-DocumentCreate-failure">Operation failed. Please try again later.</script>
 <script type="text/template" id="DocumentDialog-PreferencesSet-success">Page Preferences has been set.</script>
 <script type="text/template" id="DocumentDialog-PreferencesSet-failure">Page Preferences could not be saved. Please try again later.</script>
 <script type="text/template" id="DocumentDialog-CoverPage-PlaceHolder">Write a little about the Page you are creating. Ex; Today's Sporting giants etc</script>
-<script type="text/template" id="DocumentDialog-DocumentName-PlaceHolder">${userAccount.userFullName}'s Page</script>
+<script type="text/template" id="DocumentDialog-DocumentName-PlaceHolder">Page</script>
 <script type="text/template" id="DocumentController-DocumentDelete-Success">Page was deleted successfully. <a href="http://192.168.0.101:8080/palpostr/">Home</a></script>
 <script type="text/template" id="DocumentController-DocumentDelete-Confirm">Deleting the page will delete all the stories and photos. Can you please confirm?</script>
 <script type="text/template" id="StoryItemController-StoryItemDelete-Confirm">Please confirm: deleting this story will remove any text, photos, highlights, comments and replies associated with this story. </script>
@@ -201,7 +201,7 @@
 <script type="text/template" id="TabloidDialog-PreferencesSet-failure">Exclusive Preferences could not be saved. Please try again later.</script>
 <script type="text/template" id="NewTabloidDialog-CoverPage-PlaceHolder">Write a little about the Exclusive. Ex; My ${year} year book, picture book for my little daughter</script>
 <script type="text/template" id="NewTabloidDialog-Name-PlaceHolder">Choose a name for your Exclusive. Ex; ${userAccount.userFullName}'s Exclusive ${year}</script>
-<script type="text/template" id="NewTabloidDialog-Name">${userAccount.userFullName}'s Exclusive ${year} ${month}</script>
+<script type="text/template" id="NewTabloidDialog-Name">Exclusive</script>
 <script type="text/template" id="NewTabloidDialog-UserSearchInput-Placeholder">Choose your contacts who post stories and media to this Exclusive.</script>
 <script type="text/template" id="EditDocumentDialog-CreateButton-Label">Done</script>
 <script type="text/template" id="DocumentItemController-IconTooBig-DialogHtml">Please pick a smaller Icon. Maximum allowed width and height is 200 pixels. <br><br>It is not mandatory to choose an Icon. If your page does not have an Icon, its Cover Page Picture will be shown as the Icon.</script>
@@ -253,147 +253,112 @@ Ex: john@example.com;sam@example.com</script>
 {% if (!o.storyAuthorContact.userIsBlockedByLoggedInUser) { %}
 {% if (o.storyPictures || o.story || o.storyTitle) { %}
 <div class="yui3-g-r storyItem bnc {%=o.documentItem.documentType%}STORY" style="clear:both; margin: 5px; padding: 0px; overflow: hidden;" id="storyItem-{%=o.storyDocumentPageId%}">
-	{% if (o.storyType == 'PHOTOSHARED' || o.storyType == 'RICHTEXTSHARED' || o.storyType == 'COVERPAGESHARED') { %} 
-			<span class="stdf">
-	  		<a style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=o.referencedByUserName%}" class="stdf cd b">{%=o.referencedByUserFullName%}</a> Shared a 
-	    	{% if (o.storyType == 'PHOTOSHARED') { %}
-	     		photo
-	     	{% } %}
-	    	{% if (o.storyType == 'RICHTEXTSHARED') { %}
-	     		story
-	     	{% } %}      
-	    	{% if (o.storyType == 'COVERPAGESHARED') { %}
-	     		page
-	     	{% } %}      
-	      	on <a style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://192.168.0.101:8080/palpostr/{%=o.referencedDocumentType%}/page/{%=o.referencedDocumentID%}?viewAllStories=false" class="stdf cd b">{%=o.referencedDocumentName%}</a>
-	        <span class="stdf cg" style="font-style: italic; margin-left: 0.5em;"><i class="fa fa-clock-o"></i>&nbsp;</span><span class="stdf cg timeago" style="font-style: italic;" title="{%=o.referencedAtTimeStamp%}" ></span>
-	        <br>
-	  		{% if (o.referencedByUserStoryTitle) { %}<span style="margin-left: 1em;">{%=o.referencedByUserStoryTitle%}</span>{% } %}
-	    	</span>
-	{% } %}
-	{% if (o.storyAuthorHasProfilePicture) { %}
-	<div  class="cd stdf al" style="border: 0px; margin: 0px; padding: 0px;">
-			<div  style="width: 35px; float: left;">
-	  			<img style="border-radius: 35px;" src="http://192.168.0.101:8080/palpostr/userpictn/{%=o.storyAuthorUserName%}?mediaType=jpeg" width="35px" height="35px"/>
-	  		</div>
-			<a style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cd">{%=o.storyAuthor%}</a> 
-   			{% if (o.storyDocumentType != 'Home' && o.storyDocumentType != 'Followers') { %}
-				{% if (o.storyType != 'COVERPAGE') { %}
-				<i class="cd stdf fa fa-play" aria-hidden="true"></i> 
-				{% } %}
-				{% if (o.storyType == 'COVERPAGE') { %}
-				<i class="cd stdf fa fa-book" aria-hidden="true"></i> 
-				{% } %}
-		    	<a href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cd" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</a>
-      		{% } %}
-	  		<br>
-	    	{% if (o.pageReferenceInformation && o.pageReferenceInformation.referenceDetailList) { %}
-	       		<span class="stdf cg" style="font-style: italic; margin-left: 0.5em;"><i class="fa fa-clock-o"></i>&nbsp;shared</span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.pageReferenceInformation.referenceDetailList[0].referencedAtTimeStamp%}" ></span>
-	        {% } %}
-	    	{% if (!o.pageReferenceInformation) { %}
-	    		<span class="stdf cg" style="font-style: italic; margin-left: 0.5em;"><i class="fa fa-clock-o"></i>&nbsp;posted</span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>
-	        {% } %}
-	</div>
-	{% } %}
-	{% if (!o.storyAuthorHasProfilePicture) { %}
-	<span  class="ui-btn noeffect ui-btn-icon-left ui-icon-user cd stdf al bw" style="border: 0px; margin: 0px; padding: 0px;">
-			<a style="border: 0px; margin: 0px 0px 0px 3em; padding: 0px;" href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cd">{%=o.storyAuthor%}</a> 
-   			{% if (o.storyDocumentType != 'Home' && o.storyDocumentType != 'Followers') { %}
-				{% if (o.storyType != 'COVERPAGE') { %}
-				<i class="cd stdf fa fa-play" aria-hidden="true"></i>
-				{% } %}
-				{% if (o.storyType == 'COVERPAGE') { %}
-				<i class="cd stdf fa fa-book" aria-hidden="true"></i> 
-				{% } %}
-		    	<a href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cd" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</a>
-      		{% } %}
-	  		<br>
-	    	{% if (o.pageReferenceInformation && o.pageReferenceInformation.referenceDetailList) { %}
-	       		<span class="stdf cg" style="font-style: italic; margin-left:  3em;"><i class="fa fa-clock-o"></i>&nbsp;shared</span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.pageReferenceInformation.referenceDetailList[0].referencedAtTimeStamp%}" ></span>
-	        {% } %}
-	    	{% if (!o.pageReferenceInformation) { %}
-	    		<span class="stdf cg" style="font-style: italic; margin-left: 3em;"><i class="fa fa-clock-o"></i>&nbsp;posted</span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>
-	        {% } %}
-	</span>
-	{% } %}
-		<div class="" style="font-size: 1em; width: 100%; padding-left: 5px; float: left; text-align: justify;">
-			{% if (o.storyPictures && o.storyPictures.length > 0) { %}
-			<div class="yui3-g" style="text-align: left;  margin: 0px; padding: 0px; " id="album-{%=o.storyPictureAlbumId%}-{%=o.storyPictureAlbumTypeCd%}">
-				<div class="yui3-u-1 p albumpictures storyItemMedia" title="" style=" border: 0px; margin: 0em; padding: 5px; clear:both; ">
-				{% for (var i=0, file; file=o.storyPictures[i]; i++) { %}
-    				<div class="" style="">
-					<a href="http://192.168.0.101:8080/palpostr/alb/{%=o.storyPictures[i].documentPageId%}">
-						{% if (file.mediaIsLandscape) { %}
-						<div class="ba yui3-u-1" style="background: url(http://192.168.0.101:8080/palpostr/tnphoto1.pvt/{%=file.documentPageId%}?mediaType=jpeg); height: 250px; width:  100%; background-size: contain; background-position: center center; background-repeat: no-repeat;">
-				 	 
-						</div>
-						{% } %}
-						{% if (file.mediaIsPortrait) { %}
-						<div class="ba yui3-u-1" style="background: url(http://192.168.0.101:8080/palpostr/tnphoto1.pvt/{%=file.documentPageId%}?mediaType=jpeg); height: 250px; width:  100%; background-size: contain; background-position: center center; background-repeat: no-repeat;">
-				 	 
-						</div>
-						{% } %}
-					</a>
-    				</div>
-				{% } %}
-				</div>
-				<div class="yui3-u-1 p" title="Add more pictures to this album" style=" border: 0px; margin: 0em; padding: 0px; clear:both; ">
-				{% if (o.editAlbumTrueOrFalse) { %}
-					<br>
-					<a class="yui3-button ab b lt tile addpics"  title="Add more pictures to this album." style="margin: 0px; font-size: 1em;" id="button-{%=o.storyPictureAlbumId%}-{%=o.storyPictureAlbumTypeCd%}">
-						<i class="fa fa-plus"></i>&nbsp;Add Pictures
-					</a>				
-				{% } %}
-				{% if (o.storyItemPictureCount && o.storyItemPictureCount > 0) { %}
-					<a class="yui3-button ab b lt"  href="http://192.168.0.101:8080/palpostr/alb/{%=o.storyPictures[0].documentPageId%}" style="margin: 0px; font-size: 1em;" id="button-{%=o.storyPictureAlbumId%}-{%=o.storyPictureAlbumTypeCd%}">
-						<i class="fa fa-eye"></i>&nbsp;View All Pictures ({%=o.storyItemPictureCount%}) 
-					</a>	
-				{% } %}
-				</div>
-			</div>
-			{% } %}
-		</div>
+
+{% if (o.storyItemPictureCount && o.storyItemPictureCount > 1) { %}
 	<div class="yui3-u storyItemHeader" style="width: 100%;">
 		<div  style="height: 100%;  padding-left: 5px; text-align: left;">		
 			{% if (o.storyType != 'COVERPAGE') { %}
-			<a id="storyItemTitle" class="roberto" data-snippet-url="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">
-			{% if (o.documentItem.pageIcon) { %}
-       					<div style="margin: 0px; padding: 0px;">
-            				<img style="vertical-align:middle;" src="{%=o.documentItem.pageIcon%}" height="25px" />
-			                <span>{%=o.storyTitle%}</span>
-            			</div>
-			{% } %}
-			{% if (!o.documentItem.pageIcon) { %}
-				{% if (o.documentItem.documentType == 'Home') { %}
-					<i class="fa fa-users cd" title="Home"></i>
-				{% } %}
-				{% if (o.documentItem.documentType == 'Magazine') { %}
-					<i class="fa fa-globe cd" title="Magazine" ></i>
-				{% } %}
-				{% if (o.documentItem.documentType == 'Exclusive') { %}
-					<i class="fa fa-book cd" title="Exclusive"></i>
-				{% } %}	
-				{% if (o.documentItem.documentType == 'PVTSTYPIC' || o.documentItem.documentType == 'PVTCOVPIC' || o.documentItem.documentType == 'PROFPICS') { %}
-					<i class="fa  fa-picture-o cd" title="Pictures"></i>
-				{% } %}	
+			<a id="storyItemTitle-Big" class="roberto" data-snippet-url="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">
+				<i class="fa fa-picture-o" aria-hidden="true"></i>	
 				{%=o.storyTitle%}
-			{% } %}
 			</a>
-			{% } %}
-			{% if (o.storyType != 'COVERPAGE' && o.story) { %}
+			<br>
+			{% } %}			
+			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>&raquo;			
+	    	<span class="{% if (o.documentItem.pageCategories && o.documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=o.documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}" href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cg" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</span>
+    		<span class="stdf cg" style="font-style: italic; margin-left: 0.1em;"><i class="fa fa-clock-o"></i></span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>
+		</div>		
+	</div>
+
+	<div class="yui3-u" style="font-size: 1em; width: 100%; padding-left: 5px; float: left; text-align: left;">			
+					{% if (o.storyPictures && o.storyPictures.length > 0) { %}				
+						<div class="yui3-g" style="text-align: center;  margin: 0px; padding: 0px;" id="album-{%=o.storyPictureAlbumId%}-{%=o.storyPictureAlbumTypeCd%}">
+							<div class="yui3-u albumpictures storyItemMedia" title="" style="position: relative; border: 0px; clear:both; text-align: center; width: 100%; max-width: 500px;">
+									{% for (var i=0, file; file=o.storyPictures[i]; i++) { %}
+									<div class="" style="">
+									<a data-snippet-url="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text" href="http://192.168.0.101:8080/palpostr/alb/{%=o.storyPictures[i].documentPageId%}">
+										{% if (file.mediaIsLandscape) { %}
+										<div class="ba yui3-u-1" style="background: url(http://192.168.0.101:8080/palpostr/tnphoto1.pvt/{%=file.documentPageId%}?mediaType=jpeg); height: 250px; width:  100%; background-size: contain; background-position: center center; background-repeat: no-repeat;">
+									 
+										</div>
+										{% } %}
+										{% if (file.mediaIsPortrait) { %}
+										<div class="ba yui3-u-1" style="background: url(http://192.168.0.101:8080/palpostr/tnphoto1.pvt/{%=file.documentPageId%}?mediaType=jpeg); height: 250px; width:  100%; background-size: contain; background-position: center center; background-repeat: no-repeat;">
+									 
+										</div>
+										{% } %}
+									</a>
+									</div>
+								{% } %}						
+								{% if (o.storyItemPictureCount && o.storyItemPictureCount > 4) { %}
+								<div title="Add more pictures to this album">
+									<a class="ui-btn albumPicDecriptions" data-snippet-url="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text" href="http://192.168.0.101:8080/palpostr/alb/{%=o.storyPictures[0].documentPageId%}" id="button-{%=o.storyPictureAlbumId%}-{%=o.storyPictureAlbumTypeCd%}">
+										<i class="fa fa-camera"></i>&nbsp;&nbsp;({%=o.storyItemPictureCount%}) 
+									</a>	
+								</div>								
+								{% } %}							
+							</div>
+						</div>
+					{% } %}
+					{% if (o.storyType != 'COVERPAGE' && o.story) { %}
+						<a href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/Story/{%=o.storyDocumentPageId%}-true" id="story" class="roberto">
+							{%=o.story%}
+						</a>	
+						{% } %}	
+						{% if (o.storyType == 'COVERPAGE' && o.story) { %}
+						<a href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false"  id="story" class="roberto">
+							{%=o.story%}
+						</a>	
+					{% } %}															
+	</div>
+			
+{% } %}
+
+
+{% if (!o.storyItemPictureCount || (o.storyItemPictureCount && (o.storyItemPictureCount == 0 ||  o.storyItemPictureCount == 1))) { %}
+	<div class="yui3-u storyItemHeader" style="width: 100%; text-align: left; padding: 5px;">
+		{% if (o.storyType == 'COVERPAGE') { %}
+			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>&raquo;			
+			<span class="{% if (o.documentItem.pageCategories && o.documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=o.documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}" href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cg" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</span>
+			<span class="stdf cg" style="font-style: italic; margin-left: 0.1em;"><i class="fa fa-clock-o"></i></span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>	
+		{% } %}
+		<div  style="text-align: left; width: 100%;">		
+				<a id="storyItemTitle-small" class="roberto" data-snippet-url="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">
+				{% if (o.storyPictures && o.storyPictures.length > 0) { %}
+							<div style="float: left; height: 75px; overflow: hidden; margin-right: 5px;">
+							<img src='http://192.168.0.101:8080/palpostr/tnphoto1.pvt/{%=o.storyPictures[0].documentPageId%}?mediaType=jpeg' height=75px />
+							</div>
+				{% } %}	
+				{% if (!o.storyPictures || (o.storyPictures && o.storyPictures.length == 0)) { %}
+					{% if (o.documentItem.documentCoverMediaItem) { %}
+						<div style="float: left; height: 75px; overflow: hidden; margin-right: 5px;">
+							<img src='http://192.168.0.101:8080/palpostr/tnphoto1.pvt/{%=o.documentItem.documentCoverMediaItem.documentPageId%}?mediaType=jpeg' height=75px />
+						</div>
+					{% } %}
+				{% } %}					
+				{% if (o.storyType != 'COVERPAGE') { %}
+					{%=o.storyTitle%}
+				{% } %}
+				</a>				
+		</div>	
+		{% if (o.storyType != 'COVERPAGE' && o.story) { %}				
 			<a href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/Story/{%=o.storyDocumentPageId%}-true" id="story" class="roberto">
 				{%=o.story%}
-			</a>	
-			{% } %}	
-			{% if (o.storyType == 'COVERPAGE' && o.story) { %}
+			</a><br>
+			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>&raquo;			
+			<span class="{% if (o.documentItem.pageCategories && o.documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=o.documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}" href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cg" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</span>
+			<span class="stdf cg" style="font-style: italic; margin-left: 0.1em;"><i class="fa fa-clock-o"></i></span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>			
+		{% } %}	
+		{% if (o.storyType == 'COVERPAGE' && o.story) { %}
 			<a href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false"  id="story" class="roberto">
 				{%=o.story%}
 			</a>	
-			{% } %}
-		</div>		
+		{% } %}					
 	</div> 
-	<div class="yui3-u storyItemBody " style="width: 100%; display:none; ">
-		<div class="lnc tnc stdf allReactionList" style="height: 100%; width: 100%; padding-left: 5px;float: left; text-align: justify;">		
+{% } %}
+
+	<div class="yui3-u storyItemBody ">	
+		<div class="lnc tnc stdf allReactionList" style="height: 100%; width: 100%; padding-left: 5px;float: left;">		
 			<div class="yui3-g bw">
 	<div class="yui3-u-1 TxtReactionList {%=o.hasComments%} {%=o.hasReplies%}" id="TxtReactionList-{%=o.storyDocumentPageId%}" style="">
 	   	<button class="sf b u ePtr lt p ui-btn bw nd">Show all</button>
@@ -403,6 +368,9 @@ Ex: john@example.com;sam@example.com</script>
 	<!-- Public Reactions Start-->
 	{% if (o.publicTextResponse) { %}
 	<div id="TxtReactionList-{%=o.publicTextResponse.documentPageId%}-{%=o.publicTextResponse.pageReactionType%}" class="cd">
+	{% if (!o.publicTextResponse.reactionResponseList || (o.publicTextResponse.reactionResponseList && o.publicTextResponse.reactionResponseList.length == 0)) { %}
+		<a href="http://www.palpostr.com/Palkar"><span class="roberto cg">To Comment on this Story, log on to www.palpostr.com/Palkar</span></a>
+	{% } %}
 	{% if (o.publicTextResponse.reactionResponseList && o.publicTextResponse.reactionResponseList.length > 0) { %}
 	<ul style="list-style: none; margin: 0px; padding: 0px;">
 	{% for (var i=0, reactionResponse; reactionResponse=o.publicTextResponse.reactionResponseList[i]; i++) { %}
@@ -414,7 +382,7 @@ Ex: john@example.com;sam@example.com</script>
         </div>	
 		{% } %}					
 		<div class="yui3-g-r {%=reactionResponse.reactionType%}" >
-		<div  class="yui3-u contactToolTip" style="text-align: right;">
+		<div  class="yui3-u contactToolTip" style="text-align: left; width: 95%; padding-left: 2.5em;">
 		<span style="display:none;" id="#memberTooltipDetails">
 			<span class="memberTooltipUsername">{%=reactionResponse.userSummary.username%}</span>
 			<span class="memberTooltipPhotoYesNo">{%=reactionResponse.userSummary.userHasProfPic%}</span>
@@ -423,11 +391,17 @@ Ex: john@example.com;sam@example.com</script>
 			<span class="memberAdd">false</span>
 		</span>
 
-		<div class="userPic photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>
+		{% if (reactionResponse.userSummary.userHasProfPic) { %}
+		<div class="photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://192.168.0.101:8080/palpostr/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
-		<div class="yui3-u" style="width: 90%;" >
+		{% } %}
+		{% if (!reactionResponse.userSummary.userHasProfPic) { %}
+		<div class="photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		</div>
+		{% } %}
+		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
 		  <div class="" style="margin-left: 5px; ">
-			<a class="sf"  href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=reactionResponse.userSummary.username%}">{%=reactionResponse.userSummary.userFullName%}</a>: <span class="stdf b">{%=reactionResponse.reactionRichText%}</span><br>	
+			<a  href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=reactionResponse.userSummary.username%}">{%=reactionResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=reactionResponse.reactionRichText%}</span><br>	
 			<span class="lt sf timeago" title="{%=reactionResponse.reactionTimeStamp%}">{%=reactionResponse.reactionTimeStamp%}</span>
 			{% if (reactionResponse.allowAgree || reactionResponse.allowRemoveAgree) { %}
       		  <span id="reactionHighlightArea-{%=reactionResponse.reactionId%}">			
@@ -448,6 +422,7 @@ Ex: john@example.com;sam@example.com</script>
 			{% } %}
           </div>		  
 		</div>		
+		</div>		
 		</div>				
 	</li>
 	{% } %}
@@ -467,7 +442,7 @@ Ex: john@example.com;sam@example.com</script>
         </div>	
 		{% } %}					
 		<div class="yui3-g-r {%=replyResponse.reactionType%}" >
-		<div  class="yui3-u contactToolTip" style="text-align: right;">
+		<div  class="yui3-u contactToolTip" style="text-align: left; width: 95%; padding-left: 2.5em;">
 		<span style="display:none;" id="#memberTooltipDetails">
 			<span class="memberTooltipUsername">{%=replyResponse.userSummary.username%}</span>
 			<span class="memberTooltipPhotoYesNo">{%=replyResponse.userSummary.userHasProfPic%}</span>
@@ -475,11 +450,17 @@ Ex: john@example.com;sam@example.com</script>
 			<span class="memberTooltipOrientation">e</span>
 			<span class="memberAdd">false</span>
 		</span>
-		<div class="userPic photo-{%=replyResponse.userSummary.userProfPicId%}"  style="float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>
+		{% if (replyResponse.userSummary.userHasProfPic) { %}
+		<div class="photo-{%=replyResponse.userSummary.userProfPicId%}"  style="background-image: url('http://192.168.0.101:8080/palpostr/userpictn/{%=replyResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
-		<div class="yui3-u" style="width: 90%;" >
+		{% } %}
+		{% if (!replyResponse.userSummary.userHasProfPic) { %}
+		<div class="photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		</div>
+		{% } %}
+		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
 		  <div class="" style="margin-left: 5px; ">
-			<a class="sf"  href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=replyResponse.userSummary.username%}">{%=replyResponse.userSummary.userFullName%}</a>: <span class="stdf b">{%=replyResponse.reactionRichText%}</span><br>	
+			<a  href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=replyResponse.userSummary.username%}">{%=replyResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=replyResponse.reactionRichText%}</span><br>	
 			<span class="lt sf timeago" title="{%=replyResponse.reactionTimeStamp%}">{%=replyResponse.reactionTimeStamp%}</span>
 			{% if (replyResponse.allowAgree || replyResponse.allowRemoveAgree) { %}
       		  <span id="reactionHighlightArea-{%=replyResponse.reactionId%}">			
@@ -499,6 +480,7 @@ Ex: john@example.com;sam@example.com</script>
 			<input type="button" id="ReplyReacSubmit-{%=replyResponse.documentPageId%}-{%=replyResponse.toReactionId%}-{%=replyResponse.reactionId%}" class="ab p ReplyReacSubmit" value="Reply" />&nbsp;&nbsp;<input type="button" style="margin-left: 1em;" id="ReplyReacCancel-{%=replyResponse.documentPageId%}-{%=replyResponse.toReactionId%}-{%=replyResponse.reactionId%}" class="br lt p cancelrpltxtreac" value="Cancel" /></span>
 			{% } %}
           </div>		  
+		</div>		
 		</div>		
 		</div>				
 	</li>
@@ -543,7 +525,7 @@ Ex: john@example.com;sam@example.com</script>
         </div>	
 		{% } %}					
 		<div class="yui3-g-r {%=reactionResponse.reactionType%}" >
-		<div  class="yui3-u contactToolTip" style="text-align: right;">
+		<div  class="yui3-u contactToolTip" style="text-align: left; width: 95%; padding-left: 2.5em;">
 		<span style="display:none;" id="#memberTooltipDetails">
 			<span class="memberTooltipUsername">{%=reactionResponse.userSummary.username%}</span>
 			<span class="memberTooltipPhotoYesNo">{%=reactionResponse.userSummary.userHasProfPic%}</span>
@@ -551,11 +533,17 @@ Ex: john@example.com;sam@example.com</script>
 			<span class="memberTooltipOrientation">e</span>
 			<span class="memberAdd">false</span>
 		</span>
-		<div class="userPic photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>
+		{% if (reactionResponse.userSummary.userHasProfPic) { %}
+		<div class="photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://192.168.0.101:8080/palpostr/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
-		<div class="yui3-u" style="width: 90%;" >
+		{% } %}
+		{% if (!reactionResponse.userSummary.userHasProfPic) { %}
+		<div class="photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		</div>
+		{% } %}
+		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
 		  <div class="" style="margin-left: 5px; ">
-			<a class="sf"  href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=reactionResponse.userSummary.username%}">{%=reactionResponse.userSummary.userFullName%}</a>: <span class="stdf b">{%=reactionResponse.reactionRichText%}</span><br>	
+			<a  href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=reactionResponse.userSummary.username%}">{%=reactionResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=reactionResponse.reactionRichText%}</span><br>	
 			<span class="lt sf timeago" title="{%=reactionResponse.reactionTimeStamp%}">{%=reactionResponse.reactionTimeStamp%}</span>
 			{% if (reactionResponse.allowAgree || reactionResponse.allowRemoveAgree) { %}
       		  <span id="reactionHighlightArea-{%=reactionResponse.reactionId%}">			
@@ -576,6 +564,7 @@ Ex: john@example.com;sam@example.com</script>
 			{% } %}
           </div>		  
 		</div>		
+		</div>		
 		</div>				
 	</li>
 	{% } %}
@@ -595,7 +584,7 @@ Ex: john@example.com;sam@example.com</script>
         </div>	
 		{% } %}					
 		<div class="yui3-g-r {%=replyResponse.reactionType%}" >
-		<div  class="yui3-u contactToolTip" style="text-align: right;">
+		<div  class="yui3-u contactToolTip" style="text-align: left; width: 95%; padding-left: 2.5em;">
 		<span style="display:none;" id="#memberTooltipDetails">
 			<span class="memberTooltipUsername">{%=replyResponse.userSummary.username%}</span>
 			<span class="memberTooltipPhotoYesNo">{%=replyResponse.userSummary.userHasProfPic%}</span>
@@ -603,11 +592,17 @@ Ex: john@example.com;sam@example.com</script>
 			<span class="memberTooltipOrientation">e</span>
 			<span class="memberAdd">false</span>
 		</span>
-		<div class="userPic photo-{%=replyResponse.userSummary.userProfPicId%}"  style="float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>
+		{% if (replyResponse.userSummary.userHasProfPic) { %}
+		<div class="photo-{%=replyResponse.userSummary.userProfPicId%}"  style="background-image: url('http://192.168.0.101:8080/palpostr/userpictn/{%=replyResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
-		<div class="yui3-u" style="width: 90%;" >
+		{% } %}
+		{% if (!replyResponse.userSummary.userHasProfPic) { %}
+		<div class="photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		</div>
+		{% } %}		
+		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
 		  <div class="" style="margin-left: 5px; ">
-			<a class="sf"  href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=replyResponse.userSummary.username%}">{%=replyResponse.userSummary.userFullName%}</a>: <span class="stdf b">{%=replyResponse.reactionRichText%}</span><br>	
+			<a href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=replyResponse.userSummary.username%}">{%=replyResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=replyResponse.reactionRichText%}</span><br>	
 			<span class="lt sf timeago" title="{%=replyResponse.reactionTimeStamp%}">{%=replyResponse.reactionTimeStamp%}</span>
 			{% if (replyResponse.allowAgree || replyResponse.allowRemoveAgree) { %}
       		  <span id="reactionHighlightArea-{%=replyResponse.reactionId%}">			
@@ -628,6 +623,7 @@ Ex: john@example.com;sam@example.com</script>
 			{% } %}
           </div>		  
 		</div>		
+		</div>			
 		</div>				
 	</li>
 	{% } %}	
@@ -659,6 +655,11 @@ Ex: john@example.com;sam@example.com</script>
 		<div class="defaultClickReactionList"  id="reactions-{%=o.clickResponsePageReactionId%}" style="display: none;">
 			<div  class="clickReactionList p" style="max-height: 1000px; overflow-y: scroll; overflow-x: hidden;">
 <!-- Click Reaction Response-->
+{% if (!o.clickReactionResponse.reactionResponseList) { %}
+<div id="ClickReactionList-{%=o.clickReactionResponse.documentPageId%}-{%=o.clickReactionResponse.pageReactionType%}" style="display: inline; " class="cd">	
+		<a href="http://www.palpostr.com/Palkar"><span class="roberto cg">To Highlight this Story, log on to www.palpostr.com/Palkar</span></a>
+</div>
+{% } %}
 {% if (o.clickReactionResponse.reactionResponseList) { %}
 <div id="ClickReactionList-{%=o.clickReactionResponse.documentPageId%}-{%=o.clickReactionResponse.pageReactionType%}" style="display: inline; " class="cd">	
 	<ul style="list-style: none; margin: 0px; padding: 0px; display: inline;" class="cd">
@@ -673,7 +674,12 @@ Ex: john@example.com;sam@example.com</script>
 			<span class="memberTooltipOrientation">e</span>
 			<span class="memberAdd">false</span>
 		</span>
-		<div class="userPic photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>
+		{% if (reactionResponse.userSummary.userHasProfPic) { %}
+		<div class="userPic photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://192.168.0.101:8080/palpostr/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>
+		{% } %}
+		{% if (!reactionResponse.userSummary.userHasProfPic) { %}
+		<div class="userPic photo"  style="background-image: url('img/User-plain.gif'); float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>		
+		{% } %}
 	   </a>
 	  </div>
 	</li>
@@ -792,12 +798,15 @@ Ex: john@example.com;sam@example.com</script>
 {% for (var i=0, documentItem; documentItem=o.documentListResponse.documentItemList[i]; i++) { %}
 
 {% if (documentItem.documentCoverMediaItem) { %}
-<a style="text-decoration: none; text-alg; background-image: url('http://192.168.0.101:8080/palpostr/tnphoto1.pvt/{%=documentItem.documentCoverMediaItem.documentPageId%}?mediaType=jpeg');" data-snippet-url="http://192.168.0.101:8080/palpostr/{%=documentItem.documentType%}/snippet/page/{%=documentItem.documentId%}?viewAllStories=true&mediaType=text" class="ui-btn snippetAnchorWithPic asper">
+<a style="text-decoration: none; text-alg; background-image: url('http://192.168.0.101:8080/palpostr/tnphoto1.pvt/{%=documentItem.documentCoverMediaItem.documentPageId%}?mediaType=jpeg');" data-snippet-url="http://192.168.0.101:8080/palpostr/{%=documentItem.documentType%}/snippet/page/{%=documentItem.documentId%}?viewAllStories=true&mediaType=text" class="ui-btn snippetAnchorWithPic asper {% if (documentItem.pageCategories && documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}">
 {% } %}		
 {% if (!documentItem.documentCoverMediaItem) { %}
-<a style="text-decoration: none; text-alg;" data-snippet-url="http://192.168.0.101:8080/palpostr/{%=documentItem.documentType%}/snippet/page/{%=documentItem.documentId%}?viewAllStories=true&mediaType=text" class="ui-btn asper">
+<a style="text-decoration: none; text-alg;" data-snippet-url="http://192.168.0.101:8080/palpostr/{%=documentItem.documentType%}/snippet/page/{%=documentItem.documentId%}?viewAllStories=true&mediaType=text" class="ui-btn asper {% if (documentItem.pageCategories && documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=documentItem.pageCategories[j]; j++) { %}{%=category%}{% } %} {% } %}">
 {% } %}		
-	<span>{%=documentItem.documentTitle%}</span>
+	<span>{%=documentItem.documentTitle%}</span><br>
+	<span>
+		{% if (documentItem.pageCategories && documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=documentItem.pageCategories[j]; j++) { %}{%=category%}&nbsp;{% } %} {% } %}		
+	</span>
 </a>
 {% } %}
 </script>

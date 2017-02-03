@@ -158,10 +158,13 @@ var storyItemController = function(sb, input){
    }
    
    function _HighlightSummaryClick(e){
+	   try{
 	   var storyItemBody = sb.dom.find(this).parentsUntil(this, '.storyItem').find('.storyItemBody');
    	   storyItemBody.slideDown();
    	   storyItemBody.find('.clickReacMessage').triggerHandler('click');
-   	   
+	   }catch(err){
+			  appendFooterMessage("could not get stream. " + data.antahRequestStatus); 
+	   }
 		
    }
    

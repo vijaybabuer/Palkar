@@ -447,9 +447,29 @@ var clickReactionsController = function(sb, input){
 	function _setReactionAgreeCountButtonEvents(){
 		sb.dom.find(this).on('click', _ReactionAgreeCountButtonClickEvent);
 	}
-   return{
-	   init:function() {
-       	try{       		
+	
+	function _pageSnippetAddedReceived(message){
+   		//defaultClickReactionsDivList = sb.dom.find('.storyItemFooter');
+   		//_loadPageReactionList(defaultClickReactionsDivList);
+		console.log("Click Reactions Controller Snippet Added Recieved : MEssage ID " + JSON.stringify(message));
+   		sb.dom.find(message.snippetId).find('.storyItem').each(
+   				function(){
+   					console.log("Sniipet Added Recieved : Story ID " + sb.dom.find(this).attr("id"));
+   			   		sb.dom.find(this).find('.hilite').bind('click',_addReaction);
+   			   		sb.dom.find(this).find('.clickReacMessage').bind('click',_toggleReactionList);
+   			   		sb.dom.find(this).find('.showMoreClickReactions').bind('click',_showMoreButtonClickEventFirst);
+   			   		sb.dom.find(this).find('.timeago').timeago();
+   			   		sb.dom.find(this).find('.sharePageButton').each(_setSharePageTooltipV2);
+   			   		sb.dom.find(this).find('.hiliteResponse').each(_setHiliteResponseButtonEvents);
+   			   		sb.dom.find(this).find('.unhiliteResponse').each(_setUnHiliteResponseButtonEvents);
+   			   		sb.dom.find(this).find('.ViewSummary').each(_setViewSummaryButtonEvents);
+   			   		sb.dom.find(this).find('.ReactionAgreeCount').each(_setReactionAgreeCountButtonEvents);
+   				}
+   		);
+	}
+	
+	function _startController(msg){
+		
        		sb.dom.find('.hilite').bind('click',_addReaction);  
        		sb.dom.find('.sharePageButton').each(_setSharePageTooltipV2);
        		sb.dom.find('.clickReacMessage').bind('click',_toggleReactionList);
@@ -463,7 +483,14 @@ var clickReactionsController = function(sb, input){
        		//_loadPageReactionList(defaultClickReactionsDivList);
        		//sb.dom.find(window).scroll(sb.dom.debounce(5000, _clickReactionWindowScroll));
        		Core.subscribe('reloadReactions', _reloadReactionsMessageReceived);
-       		Core.subscribe('newStoryAdded', _newStoryAddedMessageReceived);
+       		Core.subscribe('newStoryAdded', _newStoryAddedMessageReceived);		
+			Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
+	}
+   return{
+	   init:function() {
+       	try{      
+			Core.subscribe('startStoryItemController', _startController);
+
        	}catch(err){       		
        		serverLog(err);
        	}
