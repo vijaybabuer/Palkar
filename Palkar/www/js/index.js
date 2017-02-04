@@ -29,20 +29,23 @@ var app = {
         document.addEventListener('deviceready', this.onDeviceReady, false);
 		
     },
+	
+	log: function(msg){
+		
+		document.getElementById('#message1').innerHTML = document.getElementById('#message1').innerHTML + msg;
+	},
     // deviceready Event Handler
     //
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
-		
-
-	
 	try{
 	Core.register('clickReactionsController',clickReactionsController,{relPath: "http://192.168.0.101:8080/palpostr/}", reactionCountPerPage: "5"});
 	Core.register('textReactionsController',textReactionsController,{relPath: "http://192.168.0.101:8080/palpostr/", reactionCountPerPage: "5"});
 	Core.register('storyItemController',storyItemController, {relPath: "http://192.168.0.101:8080/palpostr/", storyPage: false, authenticatedUser: "none", storyJSTemplateName: "template-storyTemplate", getMoreStories: true, storiesDivId: "#storiesDiv", appname: "palkar", numberOfStoriesToGet: 5});
-	Core.register('pageViewController', pageViewController, {relPath: "http://192.168.0.101:8080/palpostr/", loadingText: "Welcome, <br> We are downloading your stream.", appname: "palkar", appmaintitle: "Community Updates", appextendedtitle: "Share your local community stories and pictures with more than 1 Million Palkars worldwide", streamSize: 5});	
+	Core.register('pageViewController', pageViewController, {relPath: "http://192.168.0.101:8080/palpostr/", loadingText: "Welcome, <br> We are downloading your stream.", appname: "Palkar", appmaintitle: "Community Updates", appextendedtitle: "Share your local community stories and pictures with more than 1 Million Palkars worldwide", streamSize: 5});	
+	Core.register('sseController',sseController, {relPath: "http://192.168.0.101:8080/palpostr/", username: "guest", userAuthenticated: "false", pageHandle: "Palkar"});
 	
 	}catch(err){
 		alert(err);
@@ -52,6 +55,7 @@ var app = {
 	Core.start('textReactionsController');
 	Core.start('storyItemController');
 	Core.start('pageViewController');
+	Core.start('sseController');
 	
     },
     // Update DOM on a Received Event

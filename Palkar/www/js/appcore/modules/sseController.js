@@ -33,11 +33,12 @@ var sseController = function(sb, input){
             stompClient.disconnect();
         }
         setConnected(false);
-        console.log("Disconnected");
+        alert("App Disconnected from RealTime Updates");
     }
     
     function _storyUpdateMessageReceived(message) {
-    	Core.publish('getNewStories', null);
+		Core.publish('streamUpdateReceived', null);
+    	//Core.publish('getNewStories', null);
     }
     
     function _pulseUpdateMessageReceived(message){
@@ -56,10 +57,52 @@ var sseController = function(sb, input){
     function _authResponse(response){
     	console.log(JSON.stringify(response));
     }
+    
+    function publicConnect(){
+
+		try{
+    	var host, sseUrl;
+    	host = relPathIn;
+    	sseUrl = host+'publicssevents';
+        var socket = new SockJS(sseUrl);
+        stompClient = Stomp.over(socket); 
+        var headers  = {};
+		var token = $("meta[name='_csrf']").attr("content");
+		var headerName = $("meta[name='_csrf_header']").attr("content");
+        headers[headerName] = token;
+        stompClient.connect(headers, function(frame) {
+            setConnected(true);
+            appendFooterMessage('Handle Connect Connected: ' + frame);
+            stompClient.subscribe('/pageHandle/'+input.pageHandle, function(message){
+                _storyUpdateMessageReceived(message);
+            });
+        });
+        appendFooterMessage('publis connect..2');
+		}catch(err){
+			alert('App may have problems stories in real time.' + err);	
+		}
+        	
+    }
+	
+	function appendFooterMessage(msg){
+		//sb.dom.find("#message1").append("<br>"+msg);
+	}	
+	
+	function _initSseController(message){
+		
+       		if(input.userAuthenticated && input.userAuthenticated == 'true'){
+       			sb.utilities.postV2(relPathIn+'sseParameters?mediaType=json', null, _parameterResponseReceived);	
+       		}       		 
+       		if(input.pageHandle && input.pageHandle != null){
+           		publicConnect();
+           		appendFooterMessage('publis connect..4');
+       		}
+			
+		}
    return{
 	   init:function() {
        	try{
-       		sb.utilities.postV2(relPathIn+'sseParameters?mediaType=json', null, _parameterResponseReceived);  
+			Core.subscribe('startStoryItemController', _initSseController);
        	}catch(err){
        		sb.utilities.log("Error while initializing sse controller: " + err);
        	}

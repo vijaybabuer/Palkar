@@ -1,5 +1,5 @@
 var pageViewController = function(sb, input){
-	var thisIsMobileDevice = true, albumContainerJS=null, storyEditHappening = false, documentEditHappening = false, placeHolderContainer=sb.dom.find("#jstemplate-pageViewController-placeHolderContainer").html(), relPathIn = input.relPath, appname=input.appname, streamSize = input.streamSize;
+	var thisIsMobileDevice = true, albumContainerJS=null, storyEditHappening = false, documentEditHappening = false, placeHolderContainer=sb.dom.find("#jstemplate-pageViewController-placeHolderContainer").html(), relPathIn = input.relPath, appname=input.appname, streamSize = input.streamSize, newStream = null;
 	
 	function _enableBigScreenFeatures(){
 		sb.dom.find(".bigScreenItem").show();
@@ -281,10 +281,15 @@ var pageViewController = function(sb, input){
 		sb.dom.find('.appBody').css("height", screenHeight + " px");
 		document.getElementById("message1").innerHTML = "Loading "+appname+"..";
 		var appPageUrl = relPathIn + "appPage/"+appname+"/"+input.appmaintitle+"/"+input.appextendedtitle+"?mediaType=text";
+		sb.dom.find('#refreshPanel').on('click', _refreshButtonClick);
 		sb.utilities.appGet(appPageUrl,_loadAppPage,_errorStartController);
         console.log('snippet : 2' + appPageUrl);
 	}
 	
+	function _refreshButtonClick(e){		
+		_loadMainPage(newStream);
+		sb.dom.find('#refreshPanel').prop('disabled', true);
+	}
 	 function _initializePicturePresentation(){
 		 try{
 		   albumContainerJS = document.getElementById('pictureList');
@@ -337,14 +342,6 @@ var pageViewController = function(sb, input){
 	   
 	function appendFooterMessage(msg){
 		sb.dom.find("#message1").append("<br>"+msg);
-	}	
-	function _reloadStream(){
-		sb.dom.find(".appFooter").find("#message1").html("");
-		sb.dom.find("#mainContainer").find("#storiesDiv").html("<i class='fa fa-spinner fa-pulse nd fa-3x fa-fw'></i>");
-		sb.dom.find("#rightPanel").find("#documentPageList").html("Please wait while the section is loading..");	
-		sb.dom.find("#storiesDivTrailer").find("#showMore").addClass("nd");
-		sb.dom.find("#leftPanel").panel("close");
-		_startControllerV2();
 	}
 
 	function _pageSnippetAddedReceived(message){
@@ -358,6 +355,24 @@ var pageViewController = function(sb, input){
    		);
 	}
 	
+	function _errorProcessNewStream(msg){
+		appendFooterMessage(msg);
+	}
+	
+	function _processNewStream(newStreamResponse){
+		   if(newStreamResponse != null && newStreamResponse.antahRequestStatus == "SUCCESS"){
+			   newStream = newStreamResponse;
+			   sb.dom.find('#refreshPanel').prop('disabled', false);
+		   }else{
+			   _errorProcessNewStream('There was a problem getting message ' + antahResponseMessage);
+			}
+	}
+	function _streamUpdateReceived(message){
+			   newStream = null;
+			   var snippetUrl = relPathIn+"appView?mediaType=json";
+			   var data = {appname: appname, streamSize: streamSize};
+			   sb.utilities.postV2(snippetUrl, data, _processNewStream, _errorProcessNewStream);
+	}
    return{
 	   init:function() {
        	try{
@@ -366,9 +381,9 @@ var pageViewController = function(sb, input){
        		Core.subscribe('documentEditStatusUpdate', _documentEditStatusUpdateMessageReceived);
 			Core.subscribe('newStoryAdded', _newStoryAddedToView);
 			Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
+			Core.subscribe('streamUpdateReceived', _streamUpdateReceived);
        		window.onbeforeunload = confirmExit;
 			_startControllerV2();
-			sb.dom.find("#reloadApp").click(_reloadStream);
        	}catch(err){
 			updateFooterMessage('Problem starting App..'+err);
        	}
