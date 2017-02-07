@@ -189,7 +189,7 @@
 <script type="text/template" id="DocumentDialog-PreferencesSet-failure">Page Preferences could not be saved. Please try again later.</script>
 <script type="text/template" id="DocumentDialog-CoverPage-PlaceHolder">Write a little about the Page you are creating. Ex; Today's Sporting giants etc</script>
 <script type="text/template" id="DocumentDialog-DocumentName-PlaceHolder">Page</script>
-<script type="text/template" id="DocumentController-DocumentDelete-Success">Page was deleted successfully. <a href="http://192.168.0.101:8080/palpostr/">Home</a></script>
+<script type="text/template" id="DocumentController-DocumentDelete-Success">Page was deleted successfully. <a href="http://www.palpostr.com/">Home</a></script>
 <script type="text/template" id="DocumentController-DocumentDelete-Confirm">Deleting the page will delete all the stories and photos. Can you please confirm?</script>
 <script type="text/template" id="StoryItemController-StoryItemDelete-Confirm">Please confirm: deleting this story will remove any text, photos, highlights, comments and replies associated with this story. </script>
 <script type="text/template" id="StoryItemController-StoryItemDelete-Success">Story deleted successfully.</script>
@@ -258,14 +258,14 @@ Ex: john@example.com;sam@example.com</script>
 	<div class="yui3-u storyItemHeader" style="width: 100%;">
 		<div  style="height: 100%;  padding-left: 5px; text-align: left;">		
 			{% if (o.storyType != 'COVERPAGE') { %}
-			<a id="storyItemTitle-Big" class="roberto" data-snippet-url="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">
+			<a id="storyItemTitle-Big" class="roberto" data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">
 				<i class="fa fa-picture-o" aria-hidden="true"></i>	
 				{%=o.storyTitle%}
 			</a>
 			<br>
 			{% } %}			
-			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>&raquo;			
-	    	<span class="{% if (o.documentItem.pageCategories && o.documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=o.documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}" href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cg" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</span>
+			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://www.palpostr.com/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>&raquo;			
+	    	<span class="{% if (o.documentItem.pageCategories && o.documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=o.documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}" href="http://www.palpostr.com/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cg" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</span>
     		<span class="stdf cg" style="font-style: italic; margin-left: 0.1em;"><i class="fa fa-clock-o"></i></span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>
 		</div>		
 	</div>
@@ -276,14 +276,14 @@ Ex: john@example.com;sam@example.com</script>
 							<div class="yui3-u albumpictures storyItemMedia" title="" style="position: relative; border: 0px; clear:both; text-align: center; width: 100%; max-width: 500px;">
 									{% for (var i=0, file; file=o.storyPictures[i]; i++) { %}
 									<div class="" style="">
-									<a data-snippet-url="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text" href="http://192.168.0.101:8080/palpostr/alb/{%=o.storyPictures[i].documentPageId%}">
+									<a data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text" href="http://www.palpostr.com/alb/{%=o.storyPictures[i].documentPageId%}">
 										{% if (file.mediaIsLandscape) { %}
-										<div class="ba yui3-u-1" style="background: url(http://192.168.0.101:8080/palpostr/tnphoto1.pvt/{%=file.documentPageId%}?mediaType=jpeg); height: 250px; width:  100%; background-size: contain; background-position: center center; background-repeat: no-repeat;">
+										<div class="ba yui3-u-1" style="background: url(http://www.palpostr.com/tnphoto1.pvt/{%=file.documentPageId%}?mediaType=jpeg); height: 250px; width:  100%; background-size: contain; background-position: center center; background-repeat: no-repeat;">
 									 
 										</div>
 										{% } %}
 										{% if (file.mediaIsPortrait) { %}
-										<div class="ba yui3-u-1" style="background: url(http://192.168.0.101:8080/palpostr/tnphoto1.pvt/{%=file.documentPageId%}?mediaType=jpeg); height: 250px; width:  100%; background-size: contain; background-position: center center; background-repeat: no-repeat;">
+										<div class="ba yui3-u-1" style="background: url(http://www.palpostr.com/tnphoto1.pvt/{%=file.documentPageId%}?mediaType=jpeg); height: 250px; width:  100%; background-size: contain; background-position: center center; background-repeat: no-repeat;">
 									 
 										</div>
 										{% } %}
@@ -292,7 +292,7 @@ Ex: john@example.com;sam@example.com</script>
 								{% } %}						
 								{% if (o.storyItemPictureCount && o.storyItemPictureCount > 4) { %}
 								<div title="Add more pictures to this album">
-									<a class="ui-btn albumPicDecriptions" data-snippet-url="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text" href="http://192.168.0.101:8080/palpostr/alb/{%=o.storyPictures[0].documentPageId%}" id="button-{%=o.storyPictureAlbumId%}-{%=o.storyPictureAlbumTypeCd%}">
+									<a class="ui-btn albumPicDecriptions" data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text" href="http://www.palpostr.com/alb/{%=o.storyPictures[0].documentPageId%}" id="button-{%=o.storyPictureAlbumId%}-{%=o.storyPictureAlbumTypeCd%}">
 										<i class="fa fa-camera"></i>&nbsp;&nbsp;({%=o.storyItemPictureCount%}) 
 									</a>	
 								</div>								
@@ -301,12 +301,12 @@ Ex: john@example.com;sam@example.com</script>
 						</div>
 					{% } %}
 					{% if (o.storyType != 'COVERPAGE' && o.story) { %}
-						<a href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/Story/{%=o.storyDocumentPageId%}-true" id="story" class="roberto">
+						<a href="http://www.palpostr.com/{%=o.storyDocumentType%}/Story/{%=o.storyDocumentPageId%}-true" id="story" class="roberto">
 							{%=o.story%}
 						</a>	
 						{% } %}	
 						{% if (o.storyType == 'COVERPAGE' && o.story) { %}
-						<a href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false"  id="story" class="roberto">
+						<a href="http://www.palpostr.com/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false"  id="story" class="roberto">
 							{%=o.story%}
 						</a>	
 					{% } %}															
@@ -318,21 +318,21 @@ Ex: john@example.com;sam@example.com</script>
 {% if (!o.storyItemPictureCount || (o.storyItemPictureCount && (o.storyItemPictureCount == 0 ||  o.storyItemPictureCount == 1))) { %}
 	<div class="yui3-u storyItemHeader" style="width: 100%; text-align: left; padding: 5px;">
 		{% if (o.storyType == 'COVERPAGE') { %}
-			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>&raquo;			
-			<span class="{% if (o.documentItem.pageCategories && o.documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=o.documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}" href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cg" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</span>
+			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://www.palpostr.com/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>&raquo;			
+			<span class="{% if (o.documentItem.pageCategories && o.documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=o.documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}" href="http://www.palpostr.com/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cg" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</span>
 			<span class="stdf cg" style="font-style: italic; margin-left: 0.1em;"><i class="fa fa-clock-o"></i></span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>	
 		{% } %}
 		<div  style="text-align: left; width: 100%;">		
-				<a id="storyItemTitle-small" class="roberto" data-snippet-url="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">
+				<a id="storyItemTitle-small" class="roberto" data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">
 				{% if (o.storyPictures && o.storyPictures.length > 0) { %}
 							<div style="float: left; height: 75px; overflow: hidden; margin-right: 5px;">
-							<img src='http://192.168.0.101:8080/palpostr/tnphoto1.pvt/{%=o.storyPictures[0].documentPageId%}?mediaType=jpeg' height=75px />
+							<img src='http://www.palpostr.com/tnphoto1.pvt/{%=o.storyPictures[0].documentPageId%}?mediaType=jpeg' height=75px />
 							</div>
 				{% } %}	
 				{% if (!o.storyPictures || (o.storyPictures && o.storyPictures.length == 0)) { %}
 					{% if (o.documentItem.documentCoverMediaItem) { %}
 						<div style="float: left; height: 75px; overflow: hidden; margin-right: 5px;">
-							<img src='http://192.168.0.101:8080/palpostr/tnphoto1.pvt/{%=o.documentItem.documentCoverMediaItem.documentPageId%}?mediaType=jpeg' height=75px />
+							<img src='http://www.palpostr.com/tnphoto1.pvt/{%=o.documentItem.documentCoverMediaItem.documentPageId%}?mediaType=jpeg' height=75px />
 						</div>
 					{% } %}
 				{% } %}					
@@ -342,15 +342,15 @@ Ex: john@example.com;sam@example.com</script>
 				</a>				
 		</div>	
 		{% if (o.storyType != 'COVERPAGE' && o.story) { %}				
-			<a href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/Story/{%=o.storyDocumentPageId%}-true" id="story" class="roberto">
+			<a href="http://www.palpostr.com/{%=o.storyDocumentType%}/Story/{%=o.storyDocumentPageId%}-true" id="story" class="roberto">
 				{%=o.story%}
 			</a><br>
-			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>&raquo;			
-			<span class="{% if (o.documentItem.pageCategories && o.documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=o.documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}" href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cg" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</span>
+			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://www.palpostr.com/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>&raquo;			
+			<span class="{% if (o.documentItem.pageCategories && o.documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=o.documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}" href="http://www.palpostr.com/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cg" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</span>
 			<span class="stdf cg" style="font-style: italic; margin-left: 0.1em;"><i class="fa fa-clock-o"></i></span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>			
 		{% } %}	
 		{% if (o.storyType == 'COVERPAGE' && o.story) { %}
-			<a href="http://192.168.0.101:8080/palpostr/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false"  id="story" class="roberto">
+			<a href="http://www.palpostr.com/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false"  id="story" class="roberto">
 				{%=o.story%}
 			</a>	
 		{% } %}					
@@ -392,7 +392,7 @@ Ex: john@example.com;sam@example.com</script>
 		</span>
 
 		{% if (reactionResponse.userSummary.userHasProfPic) { %}
-		<div class="photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://192.168.0.101:8080/palpostr/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		<div class="photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
 		{% } %}
 		{% if (!reactionResponse.userSummary.userHasProfPic) { %}
@@ -401,7 +401,7 @@ Ex: john@example.com;sam@example.com</script>
 		{% } %}
 		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
 		  <div class="" style="margin-left: 5px; ">
-			<a  href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=reactionResponse.userSummary.username%}">{%=reactionResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=reactionResponse.reactionRichText%}</span><br>	
+			<a  href="http://www.palpostr.com/mct.pvt/{%=reactionResponse.userSummary.username%}">{%=reactionResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=reactionResponse.reactionRichText%}</span><br>	
 			<span class="lt sf timeago" title="{%=reactionResponse.reactionTimeStamp%}">{%=reactionResponse.reactionTimeStamp%}</span>
 			{% if (reactionResponse.allowAgree || reactionResponse.allowRemoveAgree) { %}
       		  <span id="reactionHighlightArea-{%=reactionResponse.reactionId%}">			
@@ -451,7 +451,7 @@ Ex: john@example.com;sam@example.com</script>
 			<span class="memberAdd">false</span>
 		</span>
 		{% if (replyResponse.userSummary.userHasProfPic) { %}
-		<div class="photo-{%=replyResponse.userSummary.userProfPicId%}"  style="background-image: url('http://192.168.0.101:8080/palpostr/userpictn/{%=replyResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		<div class="photo-{%=replyResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=replyResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
 		{% } %}
 		{% if (!replyResponse.userSummary.userHasProfPic) { %}
@@ -460,7 +460,7 @@ Ex: john@example.com;sam@example.com</script>
 		{% } %}
 		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
 		  <div class="" style="margin-left: 5px; ">
-			<a  href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=replyResponse.userSummary.username%}">{%=replyResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=replyResponse.reactionRichText%}</span><br>	
+			<a  href="http://www.palpostr.com/mct.pvt/{%=replyResponse.userSummary.username%}">{%=replyResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=replyResponse.reactionRichText%}</span><br>	
 			<span class="lt sf timeago" title="{%=replyResponse.reactionTimeStamp%}">{%=replyResponse.reactionTimeStamp%}</span>
 			{% if (replyResponse.allowAgree || replyResponse.allowRemoveAgree) { %}
       		  <span id="reactionHighlightArea-{%=replyResponse.reactionId%}">			
@@ -534,7 +534,7 @@ Ex: john@example.com;sam@example.com</script>
 			<span class="memberAdd">false</span>
 		</span>
 		{% if (reactionResponse.userSummary.userHasProfPic) { %}
-		<div class="photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://192.168.0.101:8080/palpostr/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		<div class="photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
 		{% } %}
 		{% if (!reactionResponse.userSummary.userHasProfPic) { %}
@@ -543,7 +543,7 @@ Ex: john@example.com;sam@example.com</script>
 		{% } %}
 		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
 		  <div class="" style="margin-left: 5px; ">
-			<a  href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=reactionResponse.userSummary.username%}">{%=reactionResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=reactionResponse.reactionRichText%}</span><br>	
+			<a  href="http://www.palpostr.com/mct.pvt/{%=reactionResponse.userSummary.username%}">{%=reactionResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=reactionResponse.reactionRichText%}</span><br>	
 			<span class="lt sf timeago" title="{%=reactionResponse.reactionTimeStamp%}">{%=reactionResponse.reactionTimeStamp%}</span>
 			{% if (reactionResponse.allowAgree || reactionResponse.allowRemoveAgree) { %}
       		  <span id="reactionHighlightArea-{%=reactionResponse.reactionId%}">			
@@ -593,7 +593,7 @@ Ex: john@example.com;sam@example.com</script>
 			<span class="memberAdd">false</span>
 		</span>
 		{% if (replyResponse.userSummary.userHasProfPic) { %}
-		<div class="photo-{%=replyResponse.userSummary.userProfPicId%}"  style="background-image: url('http://192.168.0.101:8080/palpostr/userpictn/{%=replyResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		<div class="photo-{%=replyResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=replyResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
 		{% } %}
 		{% if (!replyResponse.userSummary.userHasProfPic) { %}
@@ -602,7 +602,7 @@ Ex: john@example.com;sam@example.com</script>
 		{% } %}		
 		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
 		  <div class="" style="margin-left: 5px; ">
-			<a href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=replyResponse.userSummary.username%}">{%=replyResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=replyResponse.reactionRichText%}</span><br>	
+			<a href="http://www.palpostr.com/mct.pvt/{%=replyResponse.userSummary.username%}">{%=replyResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=replyResponse.reactionRichText%}</span><br>	
 			<span class="lt sf timeago" title="{%=replyResponse.reactionTimeStamp%}">{%=replyResponse.reactionTimeStamp%}</span>
 			{% if (replyResponse.allowAgree || replyResponse.allowRemoveAgree) { %}
       		  <span id="reactionHighlightArea-{%=replyResponse.reactionId%}">			
@@ -666,7 +666,7 @@ Ex: john@example.com;sam@example.com</script>
 	{% for (var i=0, reactionResponse; reactionResponse=o.clickReactionResponse.reactionResponseList[i]; i++) { %}
 	<li  style="display: inline; list-style: none; margin: 0px; padding: 1px;"  >
 	  <div class="contactToolTip" style="display: inline-block; margin: 0px; padding: 0px;">
-	   <a  href="http://192.168.0.101:8080/palpostr/mct.pvt/{%=reactionResponse.userSummary.username%}" style="margin: 0px; padding: 0px;" title="{%=reactionResponse.userSummary.userFullName%}" >
+	   <a  href="http://www.palpostr.com/mct.pvt/{%=reactionResponse.userSummary.username%}" style="margin: 0px; padding: 0px;" title="{%=reactionResponse.userSummary.userFullName%}" >
 		<span style="display:none; float: left;" id="#memberTooltipDetails">
 			<span class="memberTooltipUsername">{%=reactionResponse.userSummary.username%}</span>
 			<span class="memberTooltipPhotoYesNo">{%=reactionResponse.userSummary.userHasProfPic%}</span>
@@ -675,7 +675,7 @@ Ex: john@example.com;sam@example.com</script>
 			<span class="memberAdd">false</span>
 		</span>
 		{% if (reactionResponse.userSummary.userHasProfPic) { %}
-		<div class="userPic photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://192.168.0.101:8080/palpostr/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>
+		<div class="userPic photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>
 		{% } %}
 		{% if (!reactionResponse.userSummary.userHasProfPic) { %}
 		<div class="userPic photo"  style="background-image: url('img/User-plain.gif'); float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>		
@@ -712,11 +712,11 @@ Ex: john@example.com;sam@example.com</script>
 		<div  class="ar" style="height: 100%; float: left; width: 100%;" id="storyItemFooterDiv-{%=o.storyDocumentPageId%}">
 			{% if (o.clickResponseTitle && o.allowClickReactions) { %}
 			  	{% if (o.clickReactionEnabled == 'enabled') { %}
-					<button type="button" title="Click to highlight this story among your friends." id="button-{%=o.clickResponsePageReactionId%}-{%=o.clickReactionEnabled%}" class="yui3-button sf cb b hilite" style="float: left; background-image: url(http://192.168.0.101:8080/palpostr/resources/images/icons/stared.gif); background-color: #ffffff;">{%=o.clickResponseTitle%}
+					<button type="button" title="Click to highlight this story among your friends." id="button-{%=o.clickResponsePageReactionId%}-{%=o.clickReactionEnabled%}" class="yui3-button sf cb b hilite" style="float: left; background-image: url(http://www.palpostr.com/resources/images/icons/stared.gif); background-color: #ffffff;">{%=o.clickResponseTitle%}
 					</button>
 				{% } %}
 				{% if (o.clickReactionEnabled == 'disabled') { %}
-					<button type="button" title="Click to remove your reaction for this story." id="button-{%=o.clickResponsePageReactionId%}-{%=o.clickReactionEnabled%}" class="yui3-button sf cb b hilite" style="float: left; background-image: url(http://192.168.0.101:8080/palpostr/resources/images/icons/stared.gif); background-color: #3299BB;">Remove
+					<button type="button" title="Click to remove your reaction for this story." id="button-{%=o.clickResponsePageReactionId%}-{%=o.clickReactionEnabled%}" class="yui3-button sf cb b hilite" style="float: left; background-image: url(http://www.palpostr.com/resources/images/icons/stared.gif); background-color: #3299BB;">Remove
 					</button>										
 				{% } %}										
 			{% } %}		
@@ -798,10 +798,10 @@ Ex: john@example.com;sam@example.com</script>
 {% for (var i=0, documentItem; documentItem=o.documentListResponse.documentItemList[i]; i++) { %}
 
 {% if (documentItem.documentCoverMediaItem) { %}
-<a style="text-decoration: none; text-alg; background-image: url('http://192.168.0.101:8080/palpostr/tnphoto1.pvt/{%=documentItem.documentCoverMediaItem.documentPageId%}?mediaType=jpeg');" data-snippet-url="http://192.168.0.101:8080/palpostr/{%=documentItem.documentType%}/snippet/page/{%=documentItem.documentId%}?viewAllStories=true&mediaType=text" class="ui-btn snippetAnchorWithPic asper {% if (documentItem.pageCategories && documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}">
+<a style="text-decoration: none; text-alg; background-image: url('http://www.palpostr.com/tnphoto1.pvt/{%=documentItem.documentCoverMediaItem.documentPageId%}?mediaType=jpeg');" data-snippet-url="http://www.palpostr.com/{%=documentItem.documentType%}/snippet/page/{%=documentItem.documentId%}?viewAllStories=true&mediaType=text" class="ui-btn snippetAnchorWithPic asper {% if (documentItem.pageCategories && documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}">
 {% } %}		
 {% if (!documentItem.documentCoverMediaItem) { %}
-<a style="text-decoration: none; text-alg;" data-snippet-url="http://192.168.0.101:8080/palpostr/{%=documentItem.documentType%}/snippet/page/{%=documentItem.documentId%}?viewAllStories=true&mediaType=text" class="ui-btn asper {% if (documentItem.pageCategories && documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=documentItem.pageCategories[j]; j++) { %}{%=category%}{% } %} {% } %}">
+<a style="text-decoration: none; text-alg;" data-snippet-url="http://www.palpostr.com/{%=documentItem.documentType%}/snippet/page/{%=documentItem.documentId%}?viewAllStories=true&mediaType=text" class="ui-btn asper {% if (documentItem.pageCategories && documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=documentItem.pageCategories[j]; j++) { %}{%=category%}{% } %} {% } %}">
 {% } %}		
 	<span>{%=documentItem.documentTitle%}</span><br>
 	<span>

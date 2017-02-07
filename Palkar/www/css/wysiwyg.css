@@ -119,6 +119,7 @@ em{
  .containerHeader{
  	text-align: left;
  	font-size: 2em;
+	background-color: #3299BB;
  	color: #ffffff;
  	padding: 1em 0 1em 0.25em;
  }
@@ -501,15 +502,19 @@ em{
  }
  div.News{
  	background-color: #00CCFF;
+  	background: radial-gradient(500px 500px at bottom right, #86c9df, #00CCFF, #00CCFF); /* Standard syntax */	
  }
  div.People{
  	background-color: #CC3399;
+	background: radial-gradient(500px 500px at bottom right, #86c9df, #CC3399, #CC3399); /* Standard syntax */	
  }
  div.Food{
  	background-color: #66FF99;
+	background: radial-gradient(500px 500px at bottom right, #86c9df, #66FF99, #66FF99); /* Standard syntax */	
  }
  div.Horoscope{
  	background-color: #FF6600;
+	background: radial-gradient(500px 500px at bottom right, #86c9df, #FF6600, #FF6600); /* Standard syntax */	
  }
  a.News{
  	border: 5px solid #00CCFF !important;

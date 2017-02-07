@@ -286,9 +286,10 @@ var pageViewController = function(sb, input){
         console.log('snippet : 2' + appPageUrl);
 	}
 	
-	function _refreshButtonClick(e){		
-		_loadMainPage(newStream);
-		sb.dom.find('#refreshPanel').prop('disabled', true);
+	function _refreshButtonClick(e){
+			var snippetUrl = relPathIn+"appView?mediaType=json";
+			var data = {appname: appname, streamSize: streamSize};
+			sb.utilities.postV2(snippetUrl, data, _processNewStream, _errorProcessNewStream);
 	}
 	 function _initializePicturePresentation(){
 		 try{
@@ -361,17 +362,25 @@ var pageViewController = function(sb, input){
 	
 	function _processNewStream(newStreamResponse){
 		   if(newStreamResponse != null && newStreamResponse.antahRequestStatus == "SUCCESS"){
-			   newStream = newStreamResponse;
-			   sb.dom.find('#refreshPanel').prop('disabled', false);
+				_loadMainPage(newStreamResponse);
+				sb.dom.find('#refreshPanel').prop('disabled', true);
 		   }else{
 			   _errorProcessNewStream('There was a problem getting message ' + antahResponseMessage);
 			}
 	}
-	function _streamUpdateReceived(message){
-			   newStream = null;
-			   var snippetUrl = relPathIn+"appView?mediaType=json";
-			   var data = {appname: appname, streamSize: streamSize};
-			   sb.utilities.postV2(snippetUrl, data, _processNewStream, _errorProcessNewStream);
+	function _streamUpdateReceived(message){	
+		 if(sb.dom.find('#refreshPanel').is(":disabled")){
+			 navigator.notification.beep(2);
+			 sb.dom.find('#refreshPanel').prop('disabled', false);
+		  }
+	}
+	
+	function disconnectAlertDismissed(){
+		;
+	}
+	
+	function _stompClientDisconnectMessageReceived(message){
+		navigator.notification.alert('We are currently upgrading the ' + message.pageHandle + ' server. Your App may be slow or unresponsive. Please Restart the App in a few minutes to restore full set of features. See you soon!', disconnectAlertDismissed, message.pageHandle, 'Ok, Thanks');
 	}
    return{
 	   init:function() {
@@ -382,6 +391,7 @@ var pageViewController = function(sb, input){
 			Core.subscribe('newStoryAdded', _newStoryAddedToView);
 			Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
 			Core.subscribe('streamUpdateReceived', _streamUpdateReceived);
+			Core.subscribe('stompClientDisconnect', _stompClientDisconnectMessageReceived);
        		window.onbeforeunload = confirmExit;
 			_startControllerV2();
        	}catch(err){

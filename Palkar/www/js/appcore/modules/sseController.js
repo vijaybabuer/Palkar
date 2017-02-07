@@ -1,8 +1,9 @@
 var sseController = function(sb, input){
-	var relPathIn=input.relPath, stompClient = null; 
+	var relPathIn=input.relPath, stompClient = null, stompClientConnected = false; 
    
 	function setConnected(connected){
 		console.log('connected : ' + connected);
+		stompClientConnected = connected;
 	}
 	
     function connect(sseConnectionParameters) {
@@ -33,7 +34,6 @@ var sseController = function(sb, input){
             stompClient.disconnect();
         }
         setConnected(false);
-        alert("App Disconnected from RealTime Updates");
     }
     
     function _storyUpdateMessageReceived(message) {
@@ -55,11 +55,18 @@ var sseController = function(sb, input){
     }
     
     function _authResponse(response){
-    	console.log(JSON.stringify(response));
+    	//console.log(JSON.stringify(response));
     }
     
+	function stompClientDisconnect(message){
+		if(stompClientConnected){
+			disconnect();
+			Core.publish('stompClientDisconnect', {pageHandle: input.pageHandle});
+		}else{
+			console.log(message);	
+		}
+	}
     function publicConnect(){
-
 		try{
     	var host, sseUrl;
     	host = relPathIn;
@@ -69,17 +76,17 @@ var sseController = function(sb, input){
         var headers  = {};
 		var token = $("meta[name='_csrf']").attr("content");
 		var headerName = $("meta[name='_csrf_header']").attr("content");
-        headers[headerName] = token;
+        headers[headerName] = token;			
         stompClient.connect(headers, function(frame) {
-            setConnected(true);
-            appendFooterMessage('Handle Connect Connected: ' + frame);
-            stompClient.subscribe('/pageHandle/'+input.pageHandle, function(message){
+            setConnected(true);		
+            stompClient.subscribe('/pageHandle/'+input.pageHandle, function(message){																
                 _storyUpdateMessageReceived(message);
             });
-        });
+			sb.dom.find('#refreshPanel').prop('disabled', true);
+        }, stompClientDisconnect);
         appendFooterMessage('publis connect..2');
 		}catch(err){
-			alert('App may have problems stories in real time.' + err);	
+			alert('App may have problems in getting stories in real time.');	
 		}
         	
     }
@@ -88,8 +95,8 @@ var sseController = function(sb, input){
 		//sb.dom.find("#message1").append("<br>"+msg);
 	}	
 	
+
 	function _initSseController(message){
-		
        		if(input.userAuthenticated && input.userAuthenticated == 'true'){
        			sb.utilities.postV2(relPathIn+'sseParameters?mediaType=json', null, _parameterResponseReceived);	
        		}       		 
@@ -97,7 +104,6 @@ var sseController = function(sb, input){
            		publicConnect();
            		appendFooterMessage('publis connect..4');
        		}
-			
 		}
    return{
 	   init:function() {
