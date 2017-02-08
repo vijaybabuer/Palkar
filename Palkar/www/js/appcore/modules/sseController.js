@@ -63,7 +63,7 @@ var sseController = function(sb, input){
 			disconnect();
 			Core.publish('stompClientDisconnect', {pageHandle: input.pageHandle});
 		}else{
-			console.log(message);	
+			alert(message);	
 		}
 	}
     function publicConnect(){
