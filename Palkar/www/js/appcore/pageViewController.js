@@ -370,7 +370,6 @@ var pageViewController = function(sb, input){
 	}
 	function _streamUpdateReceived(message){	
 		 if(sb.dom.find('#refreshPanel').is(":disabled")){
-			 navigator.notification.beep(2);
 			 sb.dom.find('#refreshPanel').prop('disabled', false);
 		  }
 	}
