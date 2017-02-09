@@ -76,17 +76,17 @@ var sseController = function(sb, input){
         var headers  = {};
 		var token = $("meta[name='_csrf']").attr("content");
 		var headerName = $("meta[name='_csrf_header']").attr("content");
-        headers[headerName] = token;			
+        headers[headerName] = token;		
         stompClient.connect(headers, function(frame) {
             setConnected(true);		
-            stompClient.subscribe('/pageHandle/'+input.pageHandle, function(message){																
+            stompClient.subscribe('/pageHandle/'+input.pageHandle, function(message){																	
                 _storyUpdateMessageReceived(message);
             });
 			sb.dom.find('#refreshPanel').prop('disabled', true);
         }, stompClientDisconnect);
         appendFooterMessage('publis connect..2');
 		}catch(err){
-			alert('App may have problems in getting stories in real time.');	
+			console.log('App may have problems in getting stories in real time.');	
 		}
         	
     }

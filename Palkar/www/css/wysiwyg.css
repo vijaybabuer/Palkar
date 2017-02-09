@@ -512,21 +512,42 @@ em{
  	background-color: #66FF99;
 	background: radial-gradient(500px 500px at bottom right, #86c9df, #66FF99, #66FF99); /* Standard syntax */	
  }
- div.Horoscope{
+ div.Spirituality{
  	background-color: #FF6600;
 	background: radial-gradient(500px 500px at bottom right, #86c9df, #FF6600, #FF6600); /* Standard syntax */	
  }
+ div.LifeStyle{
+ 	background-color: #00CC99;
+	background: radial-gradient(500px 500px at bottom right, #86c9df, #00CC99, #00CC99); /* Standard syntax */	
+ }
+ div.Stories{
+ 	background-color: #FF3333;
+	background: radial-gradient(500px 500px at bottom right, #86c9df, #FF3333, #FF3333); /* Standard syntax */	
+ }
+ 
  a.News{
+ 	color: #00CCFF !important;
  	border: 5px solid #00CCFF !important;
  }
  a.People{
+ 	color: #CC3399 !important;
  	border: 5px solid #CC3399 !important;
  }
  a.Food{
+ 	color: #66FF99 !important;
  	border: 5px solid #66FF99 !important;
  }
- a.Horoscope{
+ a.Spirituality{
+	 color: #FF6600 !important;
  	border: 5px solid #FF6600 !important;
+ }
+ a.LifeStyle{
+ 	color: #00CC99 !important;
+	border: 5px solid #00CC99 !important;
+ }
+ a.Stories{
+	 color: #FF3333 !important;
+ 	border: 5px solid #FF3333 !important;
  }
  
  span.News{
@@ -538,8 +559,14 @@ em{
  span.Food{
  	color: #66FF99 !important;
  }
- span.Horoscope{
+ span.Spirituality{
  	color: #FF6600 !important;
+ }
+ span.LifeStyle{
+ 	color: #00CC99 !important;
+ }
+ span.Stories{
+ 	color: #FF3333 !important;
  }
 
 

@@ -320,7 +320,7 @@ var pageViewController = function(sb, input){
 	   			}
 	   		});
 		 }catch(err){
-			console.log(err);	 
+			alert(err);	 
 		 }
 	   }
 	
@@ -370,6 +370,7 @@ var pageViewController = function(sb, input){
 	}
 	function _streamUpdateReceived(message){	
 		 if(sb.dom.find('#refreshPanel').is(":disabled")){
+			 navigator.notification.alert('Publishing Stream  Update Received', null, 'Connect', 'Ok');
 			 sb.dom.find('#refreshPanel').prop('disabled', false);
 		  }
 	}

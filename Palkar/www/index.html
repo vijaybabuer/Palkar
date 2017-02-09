@@ -256,16 +256,24 @@ Ex: john@example.com;sam@example.com</script>
 
 {% if (o.storyItemPictureCount && o.storyItemPictureCount > 1) { %}
 	<div class="yui3-u storyItemHeader" style="width: 100%;">
-		<div  style="height: 100%;  padding-left: 5px; text-align: left;">		
-			{% if (o.storyType != 'COVERPAGE') { %}
-			<a id="storyItemTitle-Big" class="roberto" data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">
-				<i class="fa fa-picture-o" aria-hidden="true"></i>	
-				{%=o.storyTitle%}
+		<div  style="height: 100%;  padding-left: 5px; text-align: left;">					
+			<a id="storyItemTitle-Big" class="roberto" data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">				
+				{% if (o.storyType != 'COVERPAGE') { %}
+					<i class="fa fa-picture-o" aria-hidden="true"></i>	
+					{%=o.storyTitle%}
+				{% } %}							
+				{% if (o.storyType == 'COVERPAGE') { %}
+					<i class="fa fa-globe" aria-hidden="true"></i>	
+					{%=o.storyDocumentTitle%}
+				{% } %}											
 			</a>
 			<br>
-			{% } %}			
-			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://www.palpostr.com/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>&raquo;			
+
+			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://www.palpostr.com/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>
+			{% if (o.storyType != 'COVERPAGE') { %}
+			&raquo;			
 	    	<span class="{% if (o.documentItem.pageCategories && o.documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=o.documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}" href="http://www.palpostr.com/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cg" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</span>
+			{% } %}
     		<span class="stdf cg" style="font-style: italic; margin-left: 0.1em;"><i class="fa fa-clock-o"></i></span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>
 		</div>		
 	</div>
@@ -318,21 +326,24 @@ Ex: john@example.com;sam@example.com</script>
 {% if (!o.storyItemPictureCount || (o.storyItemPictureCount && (o.storyItemPictureCount == 0 ||  o.storyItemPictureCount == 1))) { %}
 	<div class="yui3-u storyItemHeader" style="width: 100%; text-align: left; padding: 5px;">
 		{% if (o.storyType == 'COVERPAGE') { %}
-			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://www.palpostr.com/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>&raquo;			
-			<span class="{% if (o.documentItem.pageCategories && o.documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=o.documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}" href="http://www.palpostr.com/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cg" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</span>
+			<a id="storyItemTitle-small" class="roberto" data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">
+					<i class="fa fa-globe" aria-hidden="true"></i>	
+					{%=o.storyDocumentTitle%}
+			</a><br>
+			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://www.palpostr.com/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>
 			<span class="stdf cg" style="font-style: italic; margin-left: 0.1em;"><i class="fa fa-clock-o"></i></span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>	
 		{% } %}
 		<div  style="text-align: left; width: 100%;">		
 				<a id="storyItemTitle-small" class="roberto" data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">
 				{% if (o.storyPictures && o.storyPictures.length > 0) { %}
-							<div style="float: left; height: 75px; overflow: hidden; margin-right: 5px;">
-							<img src='http://www.palpostr.com/tnphoto1.pvt/{%=o.storyPictures[0].documentPageId%}?mediaType=jpeg' height=75px />
+							<div style="float: left; height: 100px; overflow: hidden; margin-right: 5px;">
+							<img src='http://www.palpostr.com/tnphoto1.pvt/{%=o.storyPictures[0].documentPageId%}?mediaType=jpeg' height=100px />
 							</div>
 				{% } %}	
 				{% if (!o.storyPictures || (o.storyPictures && o.storyPictures.length == 0)) { %}
 					{% if (o.documentItem.documentCoverMediaItem) { %}
-						<div style="float: left; height: 75px; overflow: hidden; margin-right: 5px;">
-							<img src='http://www.palpostr.com/tnphoto1.pvt/{%=o.documentItem.documentCoverMediaItem.documentPageId%}?mediaType=jpeg' height=75px />
+						<div style="float: left; height: 100px; overflow: hidden; margin-right: 5px;">
+							<img src='http://www.palpostr.com/tnphoto1.pvt/{%=o.documentItem.documentCoverMediaItem.documentPageId%}?mediaType=jpeg' height=100px />
 						</div>
 					{% } %}
 				{% } %}					
