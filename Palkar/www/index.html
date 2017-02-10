@@ -50,10 +50,12 @@
     <body>
         <div data-role="page" class="app">        
 			<div>
-				<div class="appHeader">
-					<a href="#rightPanel" class="ui-btn ui-btn-inline" id="showRightPanel"><i class="fa fa-bars"></i></a>	
-					<button  class="ui-btn ui-btn-inline" id="refreshPanel" disabled><i class="fa fa-refresh"></i></button>
-					<a  href="#leftPanel" id="palpostr-url" class="ui-btn ui-btn-inline">
+				<div class="appHeader noshadow">
+					<a href="#rightPanel" class="ui-btn ui-btn-inline noshadow" id="showRightPanel"><i class="fa fa-bars"></i></a>	
+					<button  class="ui-btn ui-btn-inline noshadow" id="refreshPanel" disabled>
+							<i class="fa fa-refresh"></i>
+					</button>
+					<a  href="#leftPanel" id="palpostr-url" class="ui-btn ui-btn-inline noshadow">
 						Palkar News
 					</a>		
 				</div>	        
@@ -257,7 +259,7 @@ Ex: john@example.com;sam@example.com</script>
 {% if (o.storyItemPictureCount && o.storyItemPictureCount > 1) { %}
 	<div class="yui3-u storyItemHeader" style="width: 100%;">
 		<div  style="height: 100%;  padding-left: 5px; text-align: left;">					
-			<a id="storyItemTitle-Big" class="roberto" data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">				
+			<a id="storyItemTitle-small" class="roberto" data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">				
 				{% if (o.storyType != 'COVERPAGE') { %}
 					<i class="fa fa-picture-o" aria-hidden="true"></i>	
 					{%=o.storyTitle%}
@@ -336,14 +338,14 @@ Ex: john@example.com;sam@example.com</script>
 		<div  style="text-align: left; width: 100%;">		
 				<a id="storyItemTitle-small" class="roberto" data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">
 				{% if (o.storyPictures && o.storyPictures.length > 0) { %}
-							<div style="float: left; height: 100px; overflow: hidden; margin-right: 5px;">
-							<img src='http://www.palpostr.com/tnphoto1.pvt/{%=o.storyPictures[0].documentPageId%}?mediaType=jpeg' height=100px />
+							<div style="float: left; overflow: hidden; margin-right: 5px;">
+							<img src='http://www.palpostr.com/tnphoto1.pvt/{%=o.storyPictures[0].documentPageId%}?mediaType=jpeg' width=100px; />
 							</div>
 				{% } %}	
 				{% if (!o.storyPictures || (o.storyPictures && o.storyPictures.length == 0)) { %}
 					{% if (o.documentItem.documentCoverMediaItem) { %}
-						<div style="float: left; height: 100px; overflow: hidden; margin-right: 5px;">
-							<img src='http://www.palpostr.com/tnphoto1.pvt/{%=o.documentItem.documentCoverMediaItem.documentPageId%}?mediaType=jpeg' height=100px />
+						<div style="float: left;  overflow: hidden; margin-right: 5px;">
+							<img src='http://www.palpostr.com/tnphoto1.pvt/{%=o.documentItem.documentCoverMediaItem.documentPageId%}?mediaType=jpeg' width=100px />
 						</div>
 					{% } %}
 				{% } %}					

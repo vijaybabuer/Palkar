@@ -268,7 +268,7 @@ var pageViewController = function(sb, input){
 			   updateFooterMessage("Getting data stream");
 			   var snippetUrl = relPathIn+"appView?mediaType=json";
 			   var data = {appname: appname, streamSize: streamSize};
-			   setTimeout(function(){sb.utilities.postV2(snippetUrl, data, _loadMainPage, _errorStartController);}, 5000);
+			   setTimeout(function(){sb.utilities.postV2(snippetUrl, data, _loadMainPage, _errorStartController);}, 1000);
 		   }else{
 			   sb.dom.find('#message1').html("There was a problem loading the Page. Please try again after some time.");
 			}

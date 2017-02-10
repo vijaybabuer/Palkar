@@ -374,8 +374,9 @@ em{
 	text-shadow: none;
 	float: left;
 	color: #3299BB;
-	font-size: 1em;
+	font-size: 1.5em;
 	font-weight: 800;
+	margin: 0px;
 }
 #showLeftPanel{
 	float: left;
@@ -446,7 +447,7 @@ em{
  	margin-top: 25%;
  }
  .snippetAnchorWithPic{
- 	background-size: contain;
+ 	background-size: 100px auto;
 	background-position: 5px center;
 	background-repeat: no-repeat;
 	height: 4em;
@@ -457,9 +458,6 @@ em{
  }
  .hilite, .sharePageButton, .hiliteResponse, .rpltxtreac{
  	display: none;
- }
- .ui-btn:active{
- 	box-shadow: 0px !important;
  }
  #storyItemTitle-Big{
  	text-decoration: none; 
@@ -589,4 +587,14 @@ em{
 	float: right;
 	color: #CCCCCC !important;
 	margin-right: 1em;
+}
+.ui-focus,
+.ui-btn:focus,
+.noshadow {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+.newStoryCount{
+	margin-top: 0.3em;
 }
