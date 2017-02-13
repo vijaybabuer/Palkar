@@ -152,7 +152,7 @@ var pageViewController = function(sb, input){
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerBackButton').bind('click', _containerBackButtonClicked);
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerCloseButton').show();
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerCloseButton').bind('click', _containerCloseButtonClicked);			   
-			   sb.dom.find('.container').first().find('.storyItemBody').show();
+			   sb.dom.find('.container').first().find('.storyItemBody').show();			   
 			   openOverlay();
 		   }else{
 			   sb.dom.find('.placeHolderContainer').remove();
@@ -179,8 +179,6 @@ var pageViewController = function(sb, input){
 					   //alert(sb.dom.find(this).scrollTo(0, 0));
 					   //window.scrollTo(0, 0);
 					   sb.utilities.get(snippetUrl,null,_snippetResponseReceived);			
-			}else{
-				updateFooterMessage('no view snippet url has been set');
 			}
 			sb.dom.find("#rightPanel").panel("close");
 		}catch(err){
@@ -213,7 +211,7 @@ var pageViewController = function(sb, input){
 							updateFooterMessage('problem loading story ' + snippetResponse.streamResponse.storyItemList[i].storyDocumentPageId + " " + e);
 						}							
 					} 
-					Core.publish("startStoryItemController", {appname: appname, lastUpdatedStreamDate: snippetResponse.streamResponse.storyItemList[snippetResponse.streamResponse.storyItemList.length-1].storyTimeStampStringFormat});					
+					Core.publish("startStoryItemController", {appname: appname, lastUpdatedStreamDate: snippetResponse.streamResponse.storyItemList[snippetResponse.streamResponse.storyItemList.length-1].storyTimeStampStringFormat, sseDetails: snippetResponse.sseHostDetails});					
 				}else{
 					updateFooterMessage("No Stories Received");
 				}
@@ -254,8 +252,8 @@ var pageViewController = function(sb, input){
 	}
 	
 	function _loadAppPage(appPage){
-		   if(appPage != null){			   
-			   sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").html(appPage);
+		   if(appPage != null){				
+ 			    sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").html(appPage);
 				var token = sb.dom.find("meta[name='_csrf']").attr("content");
 				var header = sb.dom.find("meta[name='_csrf_header']").attr("content");
 			
@@ -381,6 +379,32 @@ var pageViewController = function(sb, input){
 	function _stompClientDisconnectMessageReceived(message){
 		navigator.notification.alert('We are currently upgrading the ' + message.pageHandle + ' server. Your App may be slow or unresponsive. Please Restart the App in a few minutes to restore full set of features. See you soon!', disconnectAlertDismissed, message.pageHandle, 'Ok, Thanks');
 	}
+	
+	function _deviceBackButtonClicked(e){
+		if(sb.dom.find('.subContainer').length > 0){
+		   e.preventDefault();
+		   closeOverlay();		
+		   var firstSubContainer = sb.dom.find('.subContainer').first();
+		   firstSubContainer.slideUp();
+		   firstSubContainer.remove();
+		   var nextContainer = sb.dom.find('.container').first();		   
+		   nextContainer.show();
+	   }
+		if(sb.dom.find('.placeHolderContainer').length > 0){
+		   e.preventDefault();
+		   closeOverlay();		
+		   var firstSubContainer = sb.dom.find('.placeHolderContainer').first();
+		   firstSubContainer.slideUp();
+		   firstSubContainer.remove();
+		   var nextContainer = sb.dom.find('.container').first();		   
+		   nextContainer.show();
+		}
+	}
+
+	function onResume(e) {
+		e.preventDefault();
+	}
+
    return{
 	   init:function() {
        	try{
@@ -390,6 +414,8 @@ var pageViewController = function(sb, input){
 			Core.subscribe('newStoryAdded', _newStoryAddedToView);
 			Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
 			Core.subscribe('streamUpdateReceived', _streamUpdateReceived);
+			document.addEventListener("backbutton", _deviceBackButtonClicked, false);
+			document.addEventListener("resume", onResume, false);
 			Core.subscribe('stompClientDisconnect', _stompClientDisconnectMessageReceived);
        		window.onbeforeunload = confirmExit;
 			_startControllerV2();

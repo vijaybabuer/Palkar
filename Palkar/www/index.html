@@ -79,14 +79,15 @@
 			<div class="al b" data-position="right" data-position-fixed="true" data-role="panel" data-display="overlay" id="rightPanel">
 				<div id="documentPageList">Please wait while the section is loading..</div>
 			</div><!-- /panel -->		
-			<div class="cw al welcome asper" data-position="left" data-position-fixed="true" data-role="panel" data-display="overlay" id="leftPanel">
-			   <p>There are an estimated 10 lac Sourashtrians world wide. Lets rediscover our culture and connect with our community world wide in this digital age.</p>
-			   <p>We have a team of volunteers who will share news from our community on this App. We will add more features as we grow. Your feedback and ideas are most welcome.</p>			   
-			   	<p>
+			<div class="al cd" data-position="left" data-position-fixed="true" data-role="panel" data-display="overlay" id="leftPanel">
+			   <p class="roberto">This App brings you Palkar Community Updates</p>
+			   <p class="roberto">Share your local community stories and pictures with more than 1 Million Palkars worldwide</p>
+			   <p class="roberto">There are an estimated 10 lac Sourashtrians world wide. Lets rediscover our culture and connect with our community world wide in this digital age.</p>
+			   <p class="roberto">We have a team of volunteers who will share news from our community on this App. We will add more features as we grow. Your feedback and ideas are most welcome.</p>			   
+			   	<p class="roberto">
 			   	Sincerely<br>
 			   	Vasanth(Founder) veervasanth@gmail.com <br>
-			   	</p>	   
-				<a class="ui-btn" id="reloadApp" href="#">Reload Palkar</a>				
+			   	</p>	
 			</div><!-- /panel -->					
         </div>
 		
@@ -271,7 +272,7 @@ Ex: john@example.com;sam@example.com</script>
 			</a>
 			<br>
 
-			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://www.palpostr.com/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>
+			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>
 			{% if (o.storyType != 'COVERPAGE') { %}
 			&raquo;			
 	    	<span class="{% if (o.documentItem.pageCategories && o.documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=o.documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}" href="http://www.palpostr.com/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cg" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</span>
@@ -332,7 +333,7 @@ Ex: john@example.com;sam@example.com</script>
 					<i class="fa fa-globe" aria-hidden="true"></i>	
 					{%=o.storyDocumentTitle%}
 			</a><br>
-			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://www.palpostr.com/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>
+			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;"  class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>
 			<span class="stdf cg" style="font-style: italic; margin-left: 0.1em;"><i class="fa fa-clock-o"></i></span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>	
 		{% } %}
 		<div  style="text-align: left; width: 100%;">		
@@ -358,7 +359,7 @@ Ex: john@example.com;sam@example.com</script>
 			<a href="http://www.palpostr.com/{%=o.storyDocumentType%}/Story/{%=o.storyDocumentPageId%}-true" id="story" class="roberto">
 				{%=o.story%}
 			</a><br>
-			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" href="http://www.palpostr.com/mct.pvt/{%=o.storyAuthorUserName%}" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>&raquo;			
+			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;"  class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>&raquo;			
 			<span class="{% if (o.documentItem.pageCategories && o.documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=o.documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}" href="http://www.palpostr.com/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cg" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</span>
 			<span class="stdf cg" style="font-style: italic; margin-left: 0.1em;"><i class="fa fa-clock-o"></i></span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>			
 		{% } %}	
@@ -414,7 +415,7 @@ Ex: john@example.com;sam@example.com</script>
 		{% } %}
 		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
 		  <div class="" style="margin-left: 5px; ">
-			<a  href="http://www.palpostr.com/mct.pvt/{%=reactionResponse.userSummary.username%}">{%=reactionResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=reactionResponse.reactionRichText%}</span><br>	
+			<a>{%=reactionResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=reactionResponse.reactionRichText%}</span><br>	
 			<span class="lt sf timeago" title="{%=reactionResponse.reactionTimeStamp%}">{%=reactionResponse.reactionTimeStamp%}</span>
 			{% if (reactionResponse.allowAgree || reactionResponse.allowRemoveAgree) { %}
       		  <span id="reactionHighlightArea-{%=reactionResponse.reactionId%}">			
@@ -473,7 +474,7 @@ Ex: john@example.com;sam@example.com</script>
 		{% } %}
 		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
 		  <div class="" style="margin-left: 5px; ">
-			<a  href="http://www.palpostr.com/mct.pvt/{%=replyResponse.userSummary.username%}">{%=replyResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=replyResponse.reactionRichText%}</span><br>	
+			<a>{%=replyResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=replyResponse.reactionRichText%}</span><br>	
 			<span class="lt sf timeago" title="{%=replyResponse.reactionTimeStamp%}">{%=replyResponse.reactionTimeStamp%}</span>
 			{% if (replyResponse.allowAgree || replyResponse.allowRemoveAgree) { %}
       		  <span id="reactionHighlightArea-{%=replyResponse.reactionId%}">			
@@ -556,7 +557,7 @@ Ex: john@example.com;sam@example.com</script>
 		{% } %}
 		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
 		  <div class="" style="margin-left: 5px; ">
-			<a  href="http://www.palpostr.com/mct.pvt/{%=reactionResponse.userSummary.username%}">{%=reactionResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=reactionResponse.reactionRichText%}</span><br>	
+			<a>{%=reactionResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=reactionResponse.reactionRichText%}</span><br>	
 			<span class="lt sf timeago" title="{%=reactionResponse.reactionTimeStamp%}">{%=reactionResponse.reactionTimeStamp%}</span>
 			{% if (reactionResponse.allowAgree || reactionResponse.allowRemoveAgree) { %}
       		  <span id="reactionHighlightArea-{%=reactionResponse.reactionId%}">			
@@ -615,7 +616,7 @@ Ex: john@example.com;sam@example.com</script>
 		{% } %}		
 		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
 		  <div class="" style="margin-left: 5px; ">
-			<a href="http://www.palpostr.com/mct.pvt/{%=replyResponse.userSummary.username%}">{%=replyResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=replyResponse.reactionRichText%}</span><br>	
+			<a>{%=replyResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=replyResponse.reactionRichText%}</span><br>	
 			<span class="lt sf timeago" title="{%=replyResponse.reactionTimeStamp%}">{%=replyResponse.reactionTimeStamp%}</span>
 			{% if (replyResponse.allowAgree || replyResponse.allowRemoveAgree) { %}
       		  <span id="reactionHighlightArea-{%=replyResponse.reactionId%}">			
@@ -679,7 +680,7 @@ Ex: john@example.com;sam@example.com</script>
 	{% for (var i=0, reactionResponse; reactionResponse=o.clickReactionResponse.reactionResponseList[i]; i++) { %}
 	<li  style="display: inline; list-style: none; margin: 0px; padding: 1px;"  >
 	  <div class="contactToolTip" style="display: inline-block; margin: 0px; padding: 0px;">
-	   <a  href="http://www.palpostr.com/mct.pvt/{%=reactionResponse.userSummary.username%}" style="margin: 0px; padding: 0px;" title="{%=reactionResponse.userSummary.userFullName%}" >
+	   <a style="margin: 0px; padding: 0px;" title="{%=reactionResponse.userSummary.userFullName%}" >
 		<span style="display:none; float: left;" id="#memberTooltipDetails">
 			<span class="memberTooltipUsername">{%=reactionResponse.userSummary.username%}</span>
 			<span class="memberTooltipPhotoYesNo">{%=reactionResponse.userSummary.userHasProfPic%}</span>

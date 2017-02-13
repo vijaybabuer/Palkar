@@ -105,11 +105,7 @@ em{
     font-size: 1em;
 }
 .welcome{
-	background: #3299BB; /* For browsers that do not support gradients */
-  	background: -webkit-radial-gradient(1000px 1000px at center 300px, #86c9df, #3299BB, #3299BB); /* Safari */
-  	background: -o-radial-gradient(1000px 1000px at center 300px, #86c9df, #3299BB, #3299BB); /* Opera 11.6 to 12.0 */
-  	background: -moz-radial-gradient(1000px 1000px at center 300px, #86c9df, #3299BB, #3299BB); /* Firefox 3.6 to 15 */
-  	background: radial-gradient(1000px 1000px at center 300px, #86c9df, #3299BB, #3299BB); /* Standard syntax */
+	background: inherit;
 }
 
  #EditDocumentPreferences .mce-tinymce{
@@ -403,11 +399,10 @@ em{
 }
 #leftPanel{
 	text-shadow: none;	
-	background-color: rgba(255,255,255,0.9);  
+	background-color: rgba(255,255,255,1);  
 	margin: 0px;
 	width: 95%;
-	font-size: 2em;
-	color: #ffffff;
+	font-size: 1em;
 }
 .fa-picture-o, .fa-globe{
  color: #333 !important;
@@ -598,3 +593,7 @@ em{
 .newStoryCount{
 	margin-top: 0.3em;
 }
+ .postYourStory{
+ 	opacity: 0.75;
+ 	color: #333333;
+ }

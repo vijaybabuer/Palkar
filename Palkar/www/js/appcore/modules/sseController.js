@@ -66,10 +66,10 @@ var sseController = function(sb, input){
 			console.log(message);	
 		}
 	}
-    function publicConnect(){
+    function publicConnect(sseHostIp){
 		try{
     	var host, sseUrl;
-    	host = relPathIn;
+    	host = sseHostIp;
     	sseUrl = host+'publicssevents';
         var socket = new SockJS(sseUrl);
         stompClient = Stomp.over(socket); 
@@ -101,7 +101,7 @@ var sseController = function(sb, input){
        			sb.utilities.postV2(relPathIn+'sseParameters?mediaType=json', null, _parameterResponseReceived);	
        		}       		 
        		if(input.pageHandle && input.pageHandle != null){
-           		publicConnect();
+           		publicConnect(message.sseDetails.parameterInfoList[0].parameterValue);
            		appendFooterMessage('publis connect..4');
        		}
 		}
