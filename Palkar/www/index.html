@@ -289,12 +289,12 @@ Ex: john@example.com;sam@example.com</script>
 									<div class="" style="">
 									<a data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text" href="http://www.palpostr.com/alb/{%=o.storyPictures[i].documentPageId%}">
 										{% if (file.mediaIsLandscape) { %}
-										<div class="ba yui3-u-1" style="background: url(http://www.palpostr.com/tnphoto1.pvt/{%=file.documentPageId%}?mediaType=jpeg); height: 250px; width:  100%; background-size: contain; background-position: center center; background-repeat: no-repeat;">
+										<div class="ba yui3-u-1" style="background: url(http://www.palpostr.com/publicphoto/{%=o.storyDocumentId%}/{%=o.storyDocumentPageId%}/{%=o.storyPictureAlbumId%}/{%=file.documentPageId%}?mediaType=jpeg); height: 250px; width:  100%; background-size: contain; background-position: center center; background-repeat: no-repeat;">
 									 
 										</div>
 										{% } %}
 										{% if (file.mediaIsPortrait) { %}
-										<div class="ba yui3-u-1" style="background: url(http://www.palpostr.com/tnphoto1.pvt/{%=file.documentPageId%}?mediaType=jpeg); height: 250px; width:  100%; background-size: contain; background-position: center center; background-repeat: no-repeat;">
+										<div class="ba yui3-u-1" style="background: url(http://www.palpostr.com/publicphoto/{%=o.storyDocumentId%}/{%=o.storyDocumentPageId%}/{%=o.storyPictureAlbumId%}/{%=file.documentPageId%}?mediaType=jpeg); height: 250px; width:  100%; background-size: contain; background-position: center center; background-repeat: no-repeat;">
 									 
 										</div>
 										{% } %}
@@ -339,7 +339,7 @@ Ex: john@example.com;sam@example.com</script>
 		<div  style="text-align: left; width: 100%;">		
 				<a id="storyItemTitle-small" class="roberto" data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">
 				{% if (o.storyPictures && o.storyPictures.length > 0) { %}
-							<div style="float: left; overflow: hidden; margin-right: 5px;">
+							<div style="float: left; overflow: hidden; margin-right: 5px;">							
 							<img src='http://www.palpostr.com/tnphoto1.pvt/{%=o.storyPictures[0].documentPageId%}?mediaType=jpeg' width=100px; />
 							</div>
 				{% } %}	
