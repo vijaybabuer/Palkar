@@ -1,4 +1,4 @@
-<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.palpostr.palkar" version="1.0.0">
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" id="com.palpostr.palkar" version="1.0.1">
   <name>Palkar</name>
   <description>Staty Connected with more than 1 Million Palkars world Wide.</description>
   <author href="http://palpostr.com" email="welcome@palpostr.com">PalPostr Team</author>
