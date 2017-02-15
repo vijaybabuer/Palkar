@@ -312,12 +312,12 @@ Ex: john@example.com;sam@example.com</script>
 						</div>
 					{% } %}
 					{% if (o.storyType != 'COVERPAGE' && o.story) { %}
-						<a href="http://www.palpostr.com/{%=o.storyDocumentType%}/Story/{%=o.storyDocumentPageId%}-true" id="story" class="roberto">
+						<a data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text" id="story" class="roberto">
 							{%=o.story%}
 						</a>	
 						{% } %}	
 						{% if (o.storyType == 'COVERPAGE' && o.story) { %}
-						<a href="http://www.palpostr.com/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false"  id="story" class="roberto">
+						<a data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text"  id="story" class="roberto">
 							{%=o.story%}
 						</a>	
 					{% } %}															
@@ -356,7 +356,7 @@ Ex: john@example.com;sam@example.com</script>
 				</a>				
 		</div>	
 		{% if (o.storyType != 'COVERPAGE' && o.story) { %}				
-			<a href="http://www.palpostr.com/{%=o.storyDocumentType%}/Story/{%=o.storyDocumentPageId%}-true" id="story" class="roberto">
+			<a data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text" id="story" class="roberto">
 				{%=o.story%}
 			</a><br>
 			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;"  class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>&raquo;			
@@ -364,7 +364,7 @@ Ex: john@example.com;sam@example.com</script>
 			<span class="stdf cg" style="font-style: italic; margin-left: 0.1em;"><i class="fa fa-clock-o"></i></span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>			
 		{% } %}	
 		{% if (o.storyType == 'COVERPAGE' && o.story) { %}
-			<a href="http://www.palpostr.com/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false"  id="story" class="roberto">
+			<a data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text"  id="story" class="roberto">
 				{%=o.story%}
 			</a>	
 		{% } %}					
