@@ -1,8 +1,9 @@
 var sseController = function(sb, input){
-	var relPathIn=input.relPath, stompClient = null; 
+	var relPathIn=input.relPath, stompClient = null, stompClientConnected = false; 
    
 	function setConnected(connected){
 		console.log('connected : ' + connected);
+		stompClientConnected = connected;
 	}
 	
     function connect(sseConnectionParameters) {
@@ -33,11 +34,11 @@ var sseController = function(sb, input){
             stompClient.disconnect();
         }
         setConnected(false);
-        console.log("Disconnected");
     }
     
     function _storyUpdateMessageReceived(message) {
-    	Core.publish('getNewStories', null);
+		Core.publish('streamUpdateReceived', null);
+    	//Core.publish('getNewStories', null);
     }
     
     function _pulseUpdateMessageReceived(message){
@@ -54,12 +55,60 @@ var sseController = function(sb, input){
     }
     
     function _authResponse(response){
-    	console.log(JSON.stringify(response));
+    	//console.log(JSON.stringify(response));
     }
+    
+	function stompClientDisconnect(message){
+		if(stompClientConnected){
+			disconnect();
+			Core.publish('stompClientDisconnect', {pageHandle: input.pageHandle});
+		}else{
+			console.log(message);	
+		}
+	}
+    function publicConnect(){
+		try{
+    	var host, sseUrl;
+    	host = relPathIn;
+    	sseUrl = host+'publicssevents';
+        var socket = new SockJS(sseUrl);
+        stompClient = Stomp.over(socket); 
+        var headers  = {};
+		var token = $("meta[name='_csrf']").attr("content");
+		var headerName = $("meta[name='_csrf_header']").attr("content");
+        headers[headerName] = token;			
+        stompClient.connect(headers, function(frame) {
+            setConnected(true);		
+            stompClient.subscribe('/pageHandle/'+input.pageHandle, function(message){																
+                _storyUpdateMessageReceived(message);
+            });
+			sb.dom.find('#refreshPanel').prop('disabled', true);
+        }, stompClientDisconnect);
+        appendFooterMessage('publis connect..2');
+		}catch(err){
+			alert('App may have problems in getting stories in real time.');	
+		}
+        	
+    }
+	
+	function appendFooterMessage(msg){
+		//sb.dom.find("#message1").append("<br>"+msg);
+	}	
+	
+
+	function _initSseController(message){
+       		if(input.userAuthenticated && input.userAuthenticated == 'true'){
+       			sb.utilities.postV2(relPathIn+'sseParameters?mediaType=json', null, _parameterResponseReceived);	
+       		}       		 
+       		if(input.pageHandle && input.pageHandle != null){
+           		publicConnect();
+           		appendFooterMessage('publis connect..4');
+       		}
+		}
    return{
 	   init:function() {
        	try{
-       		sb.utilities.postV2(relPathIn+'sseParameters?mediaType=json', null, _parameterResponseReceived);  
+			Core.subscribe('startStoryItemController', _initSseController);
        	}catch(err){
        		sb.utilities.log("Error while initializing sse controller: " + err);
        	}

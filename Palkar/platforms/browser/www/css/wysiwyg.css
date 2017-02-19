@@ -1,3 +1,6 @@
+a{
+	text-decoration: none;
+}
 h1{
 	font-size: 2.25em;
 	font-weight: 500;
@@ -57,13 +60,14 @@ em{
 
 .CommentsSummary, .RepliesSummary, .HighlightSummary, .ViewSummary, .ShareSummary{
 	font-size: 0.75em; 
-	padding: 5px; 
+	padding: 1em; 
 	margin-top: 1px; 
 	margin-bottom: 1px;	
 	border: 0px;
 	font-strength: 200;	
 	border-radius: 1px;
-	color: #666699;
+	color: #333 !important;
+	text-shadow: none;
 }
 
 .ShareSummary{
@@ -71,14 +75,12 @@ em{
 }
 .CommentsSummary{
 	background-color: #0066cc;
-	color: #ffffff !important;
 	margin-left: 0px;
 	margin-right: -5px;
 	border-top-left-radius: 10px;
 }
 .RepliesSummary{
 	background-color: #33cc33;
-	color: #ffffff !important;
 	margin-left: 0px;
 	margin-right: -4px;	
 }
@@ -86,7 +88,6 @@ em{
 	background-color: #FF7600;
 	margin-left: 0px;	
 	margin-right: 5px;
-	color: #ffffff !important;
 	border-bottom-right-radius: 10px;
 }
 .ViewSummary{
@@ -94,56 +95,321 @@ em{
 	margin-right: 10px;
 }
 .ui-dialog-title{
-	color: #666699 !important;
+	color: #3299BB !important;
 	font-strength: 200;
 }
 .enroll{
-    background: #009dff; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#009dff, #3f7699); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#009dff, #3f7699); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#009dff, #3f7699); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#009dff, #3f7699); /* Standard syntax */	
+    background: #3299BB; /* For browsers that do not support gradients */	
     padding: 1em;
     text-align: center;
     font-size: 1em;
 }
+.welcome{
+	background: #3299BB; /* For browsers that do not support gradients */
+  	background: -webkit-radial-gradient(1000px 1000px at center 300px, #86c9df, #3299BB, #3299BB); /* Safari */
+  	background: -o-radial-gradient(1000px 1000px at center 300px, #86c9df, #3299BB, #3299BB); /* Opera 11.6 to 12.0 */
+  	background: -moz-radial-gradient(1000px 1000px at center 300px, #86c9df, #3299BB, #3299BB); /* Firefox 3.6 to 15 */
+  	background: radial-gradient(1000px 1000px at center 300px, #86c9df, #3299BB, #3299BB); /* Standard syntax */
+}
+
+ #EditDocumentPreferences .mce-tinymce{
+ 	margin-left: 5%;
+ 	margin-top: 0.5em;
+ }
+ .containerHeader{
+ 	text-align: left;
+ 	font-size: 2em;
+	background-color: #3299BB;
+ 	color: #ffffff;
+ 	padding: 1em 0 1em 0.25em;
+ }
+ .docItemAcceptPostsBtn{
+ 	padding: 1em;
+ 	color: green;
+ 	background-color: #ffffff;
+ 	border: 0px;
+ 	font-size: 1em;
+ 	
+ }
+ 
+ .subContainer,
+#overlay-shade {
+    display: none;
+}
+
+#overlay-shade {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 98;
+    background-color: #ffffff;
+}
+
+	.subContainer {
+	    position: absolute;
+	    top: -20px;
+	    left: 0;
+	    min-height: 200px;
+	    z-index: 99;
+	    background-color: #ffffff;
+	    border: 0px;
+	    color: #333;
+	    box-shadow: 0 0 16px #3299BB;
+	} .ie7 .subContainer {
+	    height: 200px;
+	} .subContainer .wrapper {
+	    padding: 15px 30px 30px;
+	}
+	
+	.subContainer {
+	    width: 100%;
+	}
+
+
+
+ .siteTitle{
+ 	font-size: 8em;
+ }
+ 
+.big-grid{
+	width: 100%;
+}
+.grid {
+  background: #DDD;
+  width: 100%;
+}
+
+
+.subContainer .toolbar {
+    padding: 8px;
+    line-height: 1;
+    text-align: right;
+    overflow: hidden;
+}
+.subContainer .toolbar a.close {
+    display: inline-block;
+         zoom: 1;
+    padding: 0 0px;
+    font-size: 12px;
+    text-decoration: none;
+    font-weight: bold;
+    line-height: 18px;
+    border-radius: 5px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        -o-border-radius: 5px;
+    color: #999999;
+    background-color: #515151;
+} .subContainer .toolbar a.close span {
+    color: #818181;
+} .subContainer .toolbar a.close:hover,
+  .subContainer .toolbar a.close:hover span {
+    background-color: #b90900;
+    color: #333;
+}
+
+.bgGradient{
+  background: #ffffff; /* For browsers that do not support gradients */
+  background: -webkit-radial-gradient(#FFFFFF 5%, #262626 95%); /* Safari 5.1-6.0 */
+  background: -o-radial-gradient(#FFFFFF 5%, #262626 95%); /* For Opera 11.6-12.0 */
+  background: -moz-radial-gradient(#FFFFFF 5%, #262626 95%); /* For Firefox 3.6-15 */
+  background: radial-gradient(#FFFFFF 5%, #262626 95%); /* Standard syntax */	
+}
+
+/* ---- grid ---- */
+
+
+
+/* clear fix */
+.grid:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+/* ---- .grid-item ---- */
+
+.grid-sizer,
+.grid-item {
+  width: 50%;
+}
+
+.grid-item {
+  float: left;
+}
+
+.grid-item img {
+  display: block;
+  max-width: 100%;
+}
+ 
+
+.fullScreenPicturePanel{
+	position: absolute;
+	width: 100% !important;
+	height: 100% !important;
+	min-height: 100% !important;
+	max-height: 100% !important;
+	left: 0px !important;
+	top: 0px !important;
+	z-index: 1000 !important;
+	background: rgba(0,0,0,0.75) !important;	
+}
+
+.fullScreenPicture{
+	margin-top: 25px !important;
+	height: 50em !important;
+	background-size: auto 50em !important;	
+}
+ 
+ .fullScreenPictureList{
+ 	height: 90% !important;
+ 	max-height: 90% !important;	
+ }
+.fullScreenSwipeBar{
+	top: 0px !important;
+}
+.fullScreenSubContainer{
+	height: 90% !important;
+}
+
+
+/*------------------ Media Queries *---------------------------------*/
+@media (max-width: 700px) {
+            .headline h3 {
+                font-size:180%;
+            }
+            #lp{
+                display: none;
+                width:0 !important;
+                padding:0;
+                border:none;
+            }
+            #pagebody{
+            	padding-left: 0px !important;
+            	padding-right: 0px !important;
+            }    
+            .bigScreenItem{
+            	display: none !important;
+            }
+            .smallScreenItem{
+            	display: inline !important;
+            }   
+	#createStoryDocument{
+		width: 100% !important;
+	} 
+ }
+
+@media (max-width: 767px) {
+  .fileupload-buttonbar .toggle,
+  .files .toggle,
+  .files .btn span {
+    display: none;
+  }
+  .files .name {
+    width: 80px;
+    word-wrap: break-word;
+  }
+  .files audio,
+  .files video {
+    max-width: 80px;
+  }
+  .ViewSummary{
+    display: none !important;
+  }
+}
+
+@media (min-width: 750px){
+	.siteTitle{
+		font-size: 20em;
+	}
+	#authuser{
+		margin-left: 25%;
+	}
+	#createStoryDocument{
+		width: 100% !important;
+	}	
+	.docRoleItem{
+		margin-left: 0px !important;
+		margin-right: 0px !important;
+	}
+	.hostRoleIcon{
+		width: 50px !important;
+		height: 50px !important;
+		border-radius: 50px !important;
+	}	
+	.hostRoleUserIcon{
+		font-size: 3.5em !important;
+	}	
+	.editSharing{
+		left: 20px !important;
+		top: 20px !important;
+	}	
+}
+
 .appHeader{
-	background-color: #33adff;
+	background-color: #ffffff;
+	text-shadow: none;
+	color: #333;
 	position: fixed;
 	left: 0px;
 	top: 0px;
 	width: 100%;
-	text-align: center;
+	display: block;
+	z-index: 1000;
+	height: 45px;
 }
 .appBody{
 	overflow: auto;	
+	display: block;
+	margin-top: 45px;
+	text-align: left;
+	text-shadow: none;
 }
 #palpostr-url{ 
-	background-color: #33adff; 
+	background: rgba(0,0,0,0); 
 	border: 0px;
-	color: #ffffff;	
 	text-shadow: none;
 	float: left;
+	color: #3299BB;
+	font-size: 1em;
+	font-weight: 800;
 }
 #showLeftPanel{
 	float: left;
-	background-color: #33adff; 
+	background-color: rgba(0,0,0,0);  
 	border: 0px;
 	text-shadow: none;
 }
-#showRightPanel{
+#showRightPanel, #refreshPanel{
 	float: right; 
-	background-color: #33adff; 
+	background-color: rgba(0,0,0,0); 
 	border: 0px;
-	color: #ffffff;	
 	text-shadow: none;	
+	color: #3299BB !important;
+	margin: 0px;	
+	max-height: 1000px;
+	overflow: auto;
 }
-.ui-panel-position-right{
-    background: #80ccff; /* For browsers that do not support gradients */
-    background: -webkit-linear-gradient(#80ccff, #ffffff); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#80ccff, #ffffff); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#80ccff, #ffffff); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#80ccff, #ffffff); /* Standard syntax (must be last) */	
+#rightPanel{
+	color: #000000;
+	text-shadow: none;	
+	background-color: rgba(255,255,255,0.9);  
+	margin: 0px;
+	width: 80%;
+}
+#leftPanel{
+	text-shadow: none;	
+	background-color: rgba(255,255,255,0.9);  
+	margin: 0px;
+	width: 95%;
+	font-size: 2em;
+	color: #ffffff;
+}
+.fa-picture-o, .fa-globe{
+ color: #333 !important;
 }
 @media (max-width: 1000px) {          
 	#createStoryDocument{
@@ -159,7 +425,141 @@ em{
  	margin-left: 5%;
  	margin-top: 0.5em;
  }
- .yui3-g{
- 	width: 100%;
- 	text-align: center;
+
+ #palpostr-logo{
+ 	height: 20px;
+	margin: 0px;
+	vertical-align: middle;
  }
+ 
+ #mainContainer, .subContainer{
+ 	text-align: center;
+	height: 700px;
+	max-height: 2000px;
+	overflow: auto;
+ }
+ .fa-spinner{
+ 	margin-top: 5em;
+
+ }
+ #placeHolderContainer{
+ 	margin-top: 25%;
+ }
+ .snippetAnchorWithPic{
+ 	background-size: contain;
+	background-position: 5px center;
+	background-repeat: no-repeat;
+	height: 4em;
+	text-align: right;
+ }
+ textarea{
+ 	display: none;
+ }
+ .hilite, .sharePageButton, .hiliteResponse, .rpltxtreac{
+ 	display: none;
+ }
+ .ui-btn:active{
+ 	box-shadow: 0px !important;
+ }
+ #storyItemTitle-Big{
+ 	text-decoration: none; 
+	margin: 0px; 
+	border: 0px solid; 
+	font-size: 2em;
+	color: #333 !important;
+	font-weight: 800;
+ }
+ #storyItemTitle-small{ 
+ 	text-decoration: none; 
+	margin: 0px; 
+	border: 0px solid; 
+	font-size: 1.5em;
+	color: #333 !important;
+	font-weight: 800;
+ }
+  #storyItemTitle{
+ 	text-decoration: none; 
+	margin: 0px; 
+	border: 0px solid; 
+	font-size: 1.5em;
+	color: #333 !important;
+	font-weight: 800;
+ }
+ .story{
+ 	font-size: 1.5em;
+	font-weight: 400;
+ }
+ #story{
+  	text-decoration: none; 
+	color: #333;
+	font-weight: 400;
+ }
+ .roberto{
+	 font-family: 'Roboto Condensed', sans-serif;
+ }
+ .containerBackButton{
+ 	color: #ffffff !important;
+ }
+ div.News{
+ 	background-color: #00CCFF;
+  	background: radial-gradient(500px 500px at bottom right, #86c9df, #00CCFF, #00CCFF); /* Standard syntax */	
+ }
+ div.People{
+ 	background-color: #CC3399;
+	background: radial-gradient(500px 500px at bottom right, #86c9df, #CC3399, #CC3399); /* Standard syntax */	
+ }
+ div.Food{
+ 	background-color: #66FF99;
+	background: radial-gradient(500px 500px at bottom right, #86c9df, #66FF99, #66FF99); /* Standard syntax */	
+ }
+ div.Horoscope{
+ 	background-color: #FF6600;
+	background: radial-gradient(500px 500px at bottom right, #86c9df, #FF6600, #FF6600); /* Standard syntax */	
+ }
+ a.News{
+ 	border: 5px solid #00CCFF !important;
+ }
+ a.People{
+ 	border: 5px solid #CC3399 !important;
+ }
+ a.Food{
+ 	border: 5px solid #66FF99 !important;
+ }
+ a.Horoscope{
+ 	border: 5px solid #FF6600 !important;
+ }
+ 
+ span.News{
+ 	color: #00CCFF !important;
+ }
+ span.People{
+ 	color: #CC3399 !important;
+ }
+ span.Food{
+ 	color: #66FF99 !important;
+ }
+ span.Horoscope{
+ 	color: #FF6600 !important;
+ }
+
+
+.albumPicDecriptions{
+	background: rgba(255,255,255,0.5) !important; 
+	border: 0px; 
+	margin: 0em; 
+	clear:both; 
+	color: #333;
+	font-size: 2em;
+	position: absolute; 
+	left: 0px; 
+	top: 0px;
+	padding: 0.5em;
+}
+#documentTitleLabel{
+	color: #333;
+}
+.containerCloseButton{
+	float: right;
+	color: #CCCCCC !important;
+	margin-right: 1em;
+}

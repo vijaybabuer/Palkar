@@ -4,9 +4,12 @@ background-repeat:repeat;
 font-size: 12px;
 padding: 0px;
 margin: 0px;
-text-transform: none;
+font-family: "Times New Roman", Times, serif;
 }
-strong{
+.asper{
+font-family: AsperGit, Helvetica, Verdana, Sans-Serif;
+}
+.strong{
 	font-weight: bold;
 }
 .left{
@@ -34,8 +37,8 @@ background-image: url(../../css/User-no-pic.gif);
 .ab{
 /*background-image: url(images/buttons/ButtonDefault.jpg);*/
 /*background-size: 100%; */
-background-color: #ffcc33;
-color: #666699;
+background-color: #3299BB;
+color: #ffffff;
 }
 
 /* Align */
@@ -255,6 +258,7 @@ font-size: 6em;
 /* Font color */
 .cw{
 	color: #ffffff; 
+	text-shadow: 0px 1px 1px #3299BB;
 }
 .cr{
 	color: red;
@@ -264,28 +268,25 @@ font-size: 6em;
 }
 .cb{
 	color: #000000; 
-	text-shadow: none !important;
 }
 .ca{
-	color: #ffcc33; 
+	color: #3299BB; 
+	text-shadow: 0px 1px 1px #ffffff;
 }
 .cg{
 /* Color Grey */
 	color: #999999; 
-	text-shadow: none !important;
 }
  
 .cd{
 /* Default color */
-color: #666699 !important;
+color: #3299BB !important;
 font-strength: 200;
-text-shadow: none !important;
 }
 
 .cbd{
 	/* Bright Default */
 	color: #0099FF;
-	text-shadow: none !important;
 }
 /* Pattern */
 .pat{
@@ -319,7 +320,7 @@ background-repeat: repeat-x;
 }
 .na{
 /* Thin Antah Color */
-	border: 0.1em solid #ffcc33;
+	border: 0.1em solid #3299BB;
 }
 .naimg{
 	background: #ffffff url(images/bg/ba-border.gif);
@@ -339,7 +340,7 @@ background-repeat: repeat-x;
 }
 .lna{
     /* Thin Antah Color Left */
-	border-left: 0.1em solid #ffcc33;
+	border-left: 0.1em solid #3299BB;
 }
 .lnc{
     /* Thin Cyan Left */
@@ -348,7 +349,7 @@ background-repeat: repeat-x;
 
 .rna{
     /* Thin Antah Color Right */
-	border-right: 0.1em solid #ffcc33;
+	border-right: 0.1em solid #3299BB;
 }
 .rnc{
     /* Thin Cyan Right */
@@ -361,7 +362,7 @@ background-repeat: repeat-x;
 }
 .bka{
     /* Thin Antah Color Right */
-	border-bottom: 0.2em solid #ffcc33;
+	border-bottom: 0.2em solid #3299BB;
 }
 .bnc{
     /* Thin Cyan Bottom */
@@ -374,12 +375,12 @@ background-repeat: repeat-x;
 
 .bda{
     /* Thin Cyan Bottom */
-	border-bottom: 0.05em dashed #ffcc33;
+	border-bottom: 0.05em dashed #3299BB;
 }
 
 .rda{
     /* Thin Cyan Bottom */
-	border-right: 0.05em dashed #ffcc33;
+	border-right: 0.05em dashed #3299BB;
 }
 
 .kk{
@@ -398,7 +399,7 @@ border: .5em solid #ffffff;
 }
 .ka{
 /* Thick Cyan Border */
-border: .2em solid #ffcc33;
+border: .2em solid #3299BB;
 }
 .kr{
 /* Thick Cyan Border */
@@ -432,7 +433,7 @@ display: none;
 
  
 .rdya{
-	background: #FFFF99;
+	background: #3299BB;
 	background-position: left bottom;
 	background-repeat: repeat-x;
 	background-size: 1.5em;
@@ -440,7 +441,7 @@ display: none;
 }
 
 .welcome{
-	background: #FFFF99;
+	background: #3299BB;
 	background-position: left bottom;
 	background-repeat: repeat-x;
 	background-size: 2.5em;
@@ -634,27 +635,6 @@ canvas{
  
 }
 
-
-.pane{
-	box-shadow: 1px 1px 5px 1px #cccccc ;
-	border-radius:5px;
-  -moz-border-radius:5px;
-  margin: 1em;
-}
-
-.storyPane{
-	box-shadow: 1px 1px 5px 1px #cccccc ;
-	border-radius:2px;
-  -moz-border-radius:2px;
-  margin: 0.5em;
-}
-
-.tile{
-	box-shadow: 1px 1px 5px 1px #cccccc ;
-	border-radius:2px;
-  -moz-border-radius:2px;
-}
-
 .hilite{
 	background-size: 1.5em 1.5em;
 	background-repeat: no-repeat;
@@ -694,27 +674,7 @@ div.CONTACT{
 .txtara{
 	border: 0px; 
 }
-@media (max-width: 1000px) {
-            .headline h3 {
-                font-size:180%;
-            }
-            #lp{
-                display: none;
-                width:0 !important;
-                padding:0;
-                border:none;
-            }
-            #pagebody{
-            	padding-left: 0px !important;
-            	padding-right: 0px !important;
-            }    
-            .bigScreenItem{
-            	display: none !important;
-            }
-            .smallScreenItem{
-            	display: inline !important;
-            }      
- }
+
  .storyItemHeader{
 	max-height: 100px;
 	text-overflow: ellipsis;
@@ -726,7 +686,7 @@ div.CONTACT{
 	transition: max-height 2s;
 }
 .shareClick{
-	box-shadow: 0px 0px 15px #ffcc33;
+	box-shadow: 0px 0px 15px #3299BB;
 }
 .sharePageButton, .unSharePageButton{
 	float: left;

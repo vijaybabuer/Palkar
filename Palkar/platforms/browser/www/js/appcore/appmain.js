@@ -81,7 +81,7 @@ Core = function(_$) {
 			userAgent: function(){
 				return navigator.userAgent; 
 			},
-			postV2: function(url, data, successMethod){
+			postV2: function(url, data, successMethod, errorMethod){
 				var token = $("meta[name='_csrf']").attr("content");
 				var header = $("meta[name='_csrf_header']").attr("content");
 				_$.ajax({
@@ -90,6 +90,7 @@ Core = function(_$) {
 					data: data,
 					contentType: 'application/x-www-form-urlencoded;charset=UTF-8',
 					success: successMethod,
+					error: errorMethod,
 					dataType: 'json',
 					encoding: 'UTF-8',
 			        beforeSend: function(xhr) {
@@ -98,6 +99,14 @@ Core = function(_$) {
 				});				
 			},			
 			ajax: _$.ajax,
+			appGet: function(url, successMethod, failureMethod){
+				_$.ajax({
+					url: url,
+					type: 'GET',
+					success: successMethod,
+					failure: failureMethod
+				});				
+			},
 			put: function(url, data, successMethod){
 				var token = $("meta[name='_csrf']").attr("content");
 				var header = $("meta[name='_csrf_header']").attr("content");				

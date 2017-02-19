@@ -158,13 +158,10 @@ var storyItemController = function(sb, input){
    }
    
    function _HighlightSummaryClick(e){
-	   try{
 	   var storyItemBody = sb.dom.find(this).parentsUntil(this, '.storyItem').find('.storyItemBody');
    	   storyItemBody.slideDown();
    	   storyItemBody.find('.clickReacMessage').triggerHandler('click');
-	   }catch(err){
-			  appendFooterMessage("could not get stream. " + data.antahRequestStatus); 
-	   }
+   	   
 		
    }
    
@@ -324,18 +321,17 @@ var storyItemController = function(sb, input){
 	}
 	
 	function _showStories(data){
-		
 		try{			
-		if(data.antahRequestStatus == "SUCCESS"){
-			for(var i=0; i < data.streamResponse.storyItemList.length; i++){
+		if(data.txnStatus == "SUCCESS"){			
+			for(var i=0; i < data.storyItemList.length; i++){
 				try{
-				addStoryItemToView(data.streamResponse.storyItemList[i]);
+				addStoryItemToView(data.storyItemList[i]);
 				}catch(e){
-					console.log('problem loading story ' + data.streamResponse.storyItemList[i].storyDocumentPageId + " " + e);
+					console.log('problem loading story ' + data.storyItemList[i].storyDocumentPageId + " " + e);
 				}
 			}
-			lastUpdatedStreamDate = data.streamResponse.storyItemList[data.streamResponse.storyItemList.length - 1].storyTimeStampStringFormat;
-			if(data.streamResponse.streamHasMoreStories){				
+			lastUpdatedStreamDate = data.storyItemList[data.storyItemList.length - 1].storyTimeStampStringFormat;
+			if(data.streamHasMoreStories){				
 				sb.dom.find("#storiesDivTrailer").find("#showMore").find(".fa").removeClass(" fa-spinner");
 				sb.dom.find("#storiesDivTrailer").find("#showMore").find(".fa").removeClass("fa-pulse");				
 				sb.dom.find("#storiesDivTrailer").find("#showMore").attr("disabled", false);
@@ -347,13 +343,12 @@ var storyItemController = function(sb, input){
 				sb.dom.find("#storiesDivTrailer").find("#showMore").attr("disabled", true);
 				sb.dom.find("#storiesDivTrailer").find("#showMore").find(".fa").addClass("fa-chevron-down");
 			}
-			sb.dom.find("#storiesDivTrailer").find("#showMore").removeClass("nd");
 			sb.dom.find(window).scroll(_storiesDivScroll);
 		}else{
-			appendFooterMessage("could not get stream. " + data.antahRequestStatus);
+			console.log("could not get stream. " + data.txtStatusReason);
 		}
 		}catch(e){
-			appendFooterMesssage("There was a problem getting stream data..  " + e);
+			console.log("There was a problem getting stream data..  " + e);
 		}
 		sb.dom.find("#lp").find("#format").show();
 		sb.dom.find("#storiesDivHeader").find("#format").show();
@@ -395,7 +390,7 @@ var storyItemController = function(sb, input){
 	
 	
 	   function addStoryItemToView(storyItem){
-		   var storyItemHtml = tmpl("template-storyTemplate", storyItem);	   
+		   var storyItemHtml = tmpl(storyJSTemplateName, storyItem);	   
 		   sb.dom.find(storiesDivId).append(sb.utilities.htmlDecode(storyItemHtml));
 		   Core.publish("newStoryAdded", {storyItemDivId: "#storyItem-"+storyItem.storyDocumentPageId});
 			Core.publish('contactToolTipAdded', {divId: "#storyItem-"+storyItem.storyDocumentPageId});
@@ -500,6 +495,7 @@ var storyItemController = function(sb, input){
 	}
 	function _startController(message){
 		try{
+				appendFooterMessage("starting controller story item  " + JSON.stringify(message));
 				lastUpdatedStreamDate = message.lastUpdatedStreamDate;
 	    		_correctImageUrlForStory();
 
@@ -567,6 +563,7 @@ var storyItemController = function(sb, input){
    return{
 	   init:function() {
        	try{
+			alert('start story item..');
 			Core.subscribe('startStoryItemController', _startController);
        	}catch(err){
        		console.log(err);
