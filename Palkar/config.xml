@@ -22,7 +22,7 @@
     <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="StatusBarBackgroundColor" value="#ffffff" />
     <preference name="StatusBarStyle" value="lightcontent" />
-    <gap:plugin name="com.phonegap.plugin.statusbar" source="npm" spec="1.0.0"/>
+    <gap:plugin name="com.phonegap.plugin.statusbar" source="npm" spec="1.0.1"/>
     <icon src="icon.png" />
     <icon gap:platform="android" gap:qualifier="ldpi" src="www/res/icon/android/icon-36-ldpi.png" />
     <icon gap:platform="android" gap:qualifier="mdpi" src="www/res/icon/android/icon-48-mdpi.png" />
