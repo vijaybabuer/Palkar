@@ -336,6 +336,7 @@ var storyItemController = function(sb, input){
 			}
 			lastUpdatedStreamDate = data.streamResponse.storyItemList[data.streamResponse.storyItemList.length - 1].storyTimeStampStringFormat;
 			if(data.streamResponse.streamHasMoreStories){				
+				sb.dom.find("#storiesDivTrailer").find("#showMore").html(sb.dom.find("#jstemplate-show-more-stories").html());
 				sb.dom.find("#storiesDivTrailer").find("#showMore").find(".fa").removeClass(" fa-spinner");
 				sb.dom.find("#storiesDivTrailer").find("#showMore").find(".fa").removeClass("fa-pulse");				
 				sb.dom.find("#storiesDivTrailer").find("#showMore").attr("disabled", false);
@@ -348,7 +349,6 @@ var storyItemController = function(sb, input){
 				sb.dom.find("#storiesDivTrailer").find("#showMore").find(".fa").addClass("fa-chevron-down");
 			}
 			sb.dom.find("#storiesDivTrailer").find("#showMore").removeClass("nd");
-			sb.dom.find(window).scroll(_storiesDivScroll);
 		}else{
 			appendFooterMessage("could not get stream. " + data.antahRequestStatus);
 		}
@@ -530,6 +530,7 @@ var storyItemController = function(sb, input){
 	    		sb.dom.find('.unSharePageButton').bind('click', _unSharePageButtonClickEvent);   		
 	    		sb.dom.find('#storiesDivHeader').show();
 	    		
+				sb.dom.find("#storiesDivTrailer").find("#showMore").off("click");
 	    		sb.dom.find("#storiesDivTrailer").find("#showMore").click(_showMoreStoriesClicked);
 	    		
 	    		
