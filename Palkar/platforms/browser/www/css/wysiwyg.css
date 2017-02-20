@@ -105,11 +105,7 @@ em{
     font-size: 1em;
 }
 .welcome{
-	background: #3299BB; /* For browsers that do not support gradients */
-  	background: -webkit-radial-gradient(1000px 1000px at center 300px, #86c9df, #3299BB, #3299BB); /* Safari */
-  	background: -o-radial-gradient(1000px 1000px at center 300px, #86c9df, #3299BB, #3299BB); /* Opera 11.6 to 12.0 */
-  	background: -moz-radial-gradient(1000px 1000px at center 300px, #86c9df, #3299BB, #3299BB); /* Firefox 3.6 to 15 */
-  	background: radial-gradient(1000px 1000px at center 300px, #86c9df, #3299BB, #3299BB); /* Standard syntax */
+	background: inherit;
 }
 
  #EditDocumentPreferences .mce-tinymce{
@@ -374,8 +370,9 @@ em{
 	text-shadow: none;
 	float: left;
 	color: #3299BB;
-	font-size: 1em;
+	font-size: 1.5em;
 	font-weight: 800;
+	margin: 0px;
 }
 #showLeftPanel{
 	float: left;
@@ -402,11 +399,10 @@ em{
 }
 #leftPanel{
 	text-shadow: none;	
-	background-color: rgba(255,255,255,0.9);  
+	background-color: rgba(255,255,255,1);  
 	margin: 0px;
 	width: 95%;
-	font-size: 2em;
-	color: #ffffff;
+	font-size: 1em;
 }
 .fa-picture-o, .fa-globe{
  color: #333 !important;
@@ -435,8 +431,8 @@ em{
  #mainContainer, .subContainer{
  	text-align: center;
 	height: 700px;
-	max-height: 2000px;
-	overflow: auto;
+	max-height: 5000px;
+	overflow: scroll;
  }
  .fa-spinner{
  	margin-top: 5em;
@@ -446,7 +442,7 @@ em{
  	margin-top: 25%;
  }
  .snippetAnchorWithPic{
- 	background-size: contain;
+ 	background-size: 100px auto;
 	background-position: 5px center;
 	background-repeat: no-repeat;
 	height: 4em;
@@ -457,9 +453,6 @@ em{
  }
  .hilite, .sharePageButton, .hiliteResponse, .rpltxtreac{
  	display: none;
- }
- .ui-btn:active{
- 	box-shadow: 0px !important;
  }
  #storyItemTitle-Big{
  	text-decoration: none; 
@@ -512,21 +505,42 @@ em{
  	background-color: #66FF99;
 	background: radial-gradient(500px 500px at bottom right, #86c9df, #66FF99, #66FF99); /* Standard syntax */	
  }
- div.Horoscope{
+ div.Spirituality{
  	background-color: #FF6600;
 	background: radial-gradient(500px 500px at bottom right, #86c9df, #FF6600, #FF6600); /* Standard syntax */	
  }
+ div.LifeStyle{
+ 	background-color: #00CC99;
+	background: radial-gradient(500px 500px at bottom right, #86c9df, #00CC99, #00CC99); /* Standard syntax */	
+ }
+ div.Stories{
+ 	background-color: #FF3333;
+	background: radial-gradient(500px 500px at bottom right, #86c9df, #FF3333, #FF3333); /* Standard syntax */	
+ }
+ 
  a.News{
+ 	color: #00CCFF !important;
  	border: 5px solid #00CCFF !important;
  }
  a.People{
+ 	color: #CC3399 !important;
  	border: 5px solid #CC3399 !important;
  }
  a.Food{
+ 	color: #66FF99 !important;
  	border: 5px solid #66FF99 !important;
  }
- a.Horoscope{
+ a.Spirituality{
+	 color: #FF6600 !important;
  	border: 5px solid #FF6600 !important;
+ }
+ a.LifeStyle{
+ 	color: #00CC99 !important;
+	border: 5px solid #00CC99 !important;
+ }
+ a.Stories{
+	 color: #FF3333 !important;
+ 	border: 5px solid #FF3333 !important;
  }
  
  span.News{
@@ -538,8 +552,14 @@ em{
  span.Food{
  	color: #66FF99 !important;
  }
- span.Horoscope{
+ span.Spirituality{
  	color: #FF6600 !important;
+ }
+ span.LifeStyle{
+ 	color: #00CC99 !important;
+ }
+ span.Stories{
+ 	color: #FF3333 !important;
  }
 
 
@@ -563,3 +583,20 @@ em{
 	color: #CCCCCC !important;
 	margin-right: 1em;
 }
+.ui-focus,
+.ui-btn:focus,
+.noshadow {
+    -moz-box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+.newStoryCount{
+	margin-top: 0.3em;
+}
+ .postYourStory{
+ 	opacity: 0.75;
+ 	color: #333333;
+ }
+ #placeHolderIcon{
+ 	margin-top: 128px;
+ }

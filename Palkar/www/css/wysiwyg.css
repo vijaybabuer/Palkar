@@ -296,6 +296,9 @@ em{
 	#createStoryDocument{
 		width: 100% !important;
 	} 
+	body{
+		font-size: 12px;
+	}
  }
 
 @media (max-width: 767px) {
@@ -315,6 +318,9 @@ em{
   .ViewSummary{
     display: none !important;
   }
+	body{
+		font-size: 12px;
+	}  
 }
 
 @media (min-width: 750px){
@@ -342,6 +348,9 @@ em{
 	.editSharing{
 		left: 20px !important;
 		top: 20px !important;
+	}	
+	body{
+		font-size: 14px;
 	}	
 }
 
@@ -431,8 +440,7 @@ em{
  #mainContainer, .subContainer{
  	text-align: center;
 	height: 700px;
-	max-height: 2000px;
-	overflow: auto;
+	overflow: scroll;
  }
  .fa-spinner{
  	margin-top: 5em;
@@ -599,4 +607,11 @@ em{
  }
  #placeHolderIcon{
  	margin-top: 128px;
+ }
+ .reactionPhoto{
+ 	margin-top: 5px;
+	 border-radius: 2.5em;
+ }
+ div.PBRTRMK, div.PRRTRMK{
+ 	padding: 0.25em; 
  }

@@ -66,27 +66,27 @@ var sseController = function(sb, input){
 			console.log(message);	
 		}
 	}
-    function publicConnect(){
+    function publicConnect(sseHostIp){
 		try{
     	var host, sseUrl;
-    	host = relPathIn;
+    	host = sseHostIp;
     	sseUrl = host+'publicssevents';
         var socket = new SockJS(sseUrl);
         stompClient = Stomp.over(socket); 
         var headers  = {};
 		var token = $("meta[name='_csrf']").attr("content");
 		var headerName = $("meta[name='_csrf_header']").attr("content");
-        headers[headerName] = token;			
+        headers[headerName] = token;		
         stompClient.connect(headers, function(frame) {
             setConnected(true);		
-            stompClient.subscribe('/pageHandle/'+input.pageHandle, function(message){																
+            stompClient.subscribe('/pageHandle/'+input.pageHandle, function(message){																	
                 _storyUpdateMessageReceived(message);
             });
 			sb.dom.find('#refreshPanel').prop('disabled', true);
         }, stompClientDisconnect);
         appendFooterMessage('publis connect..2');
 		}catch(err){
-			alert('App may have problems in getting stories in real time.');	
+			console.log('App may have problems in getting stories in real time.');	
 		}
         	
     }
@@ -101,7 +101,7 @@ var sseController = function(sb, input){
        			sb.utilities.postV2(relPathIn+'sseParameters?mediaType=json', null, _parameterResponseReceived);	
        		}       		 
        		if(input.pageHandle && input.pageHandle != null){
-           		publicConnect();
+           		publicConnect(message.sseDetails.parameterInfoList[0].parameterValue);
            		appendFooterMessage('publis connect..4');
        		}
 		}
