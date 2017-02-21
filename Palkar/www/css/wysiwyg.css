@@ -454,7 +454,7 @@ em{
  
  #mainContainer, .subContainer{
  	text-align: center;
-	height: 700px;
+	height: auto;
 	overflow: scroll;
  }
  .fa-spinner{
