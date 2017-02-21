@@ -455,6 +455,7 @@ em{
  #mainContainer, .subContainer{
  	text-align: center;
 	height: auto;
+	max-height: 5000px;
 	overflow: scroll;
  }
  .fa-spinner{
