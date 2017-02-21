@@ -100,6 +100,22 @@ var pageViewController = function(sb, input){
 		   }*/
 		   nextContainer.show();
 	   }
+	   
+		function _containerBackButtonClickedV2(e){		   
+		   closeOverlay();		
+		   sb.dom.find('.containers').find('.subContainer').first().slideUp();
+		   sb.dom.find('.containers').find('.subContainer').first().remove();
+		   if(sb.dom.find('.containers').find('.subContainer').length == 0){
+				sb.dom.find(this).hide();  
+		   }
+		   var nextContainer = sb.dom.find('.container').first();		   
+/*		   var nextContainerScrollTop = nextContainer.attr("data-scroll-top");
+		   if(nextContainerScrollTop){
+			   alert('have scroll top ' + nextContainerScrollTop);
+			   nextContainer.scrollTop(nextContainerScrollTop);
+		   }*/
+		   nextContainer.show();
+	   }	   
 
 	    function openOverlay() {
 	        var overLayDiv = sb.dom.find('.subContainer').first();	        
@@ -131,6 +147,7 @@ var pageViewController = function(sb, input){
 		
     	function _containerCloseButtonClicked(e){
 		   closeOverlay();
+		   sb.dom.find('.appHeader').find('#containerBackButton').hide();
 		   var subContainerList = sb.dom.find('.subContainer');
 		   for(var i= subContainerList.length - 1; i >=0 ; i--){
 			  sb.dom.find(subContainerList[i]).slideUp();
@@ -153,6 +170,7 @@ var pageViewController = function(sb, input){
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerCloseButton').show();
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerCloseButton').bind('click', _containerCloseButtonClicked);			   
 			   sb.dom.find('.container').first().find('.storyItemBody').show();			   
+			   sb.dom.find('.appHeader').find('#containerBackButton').show();
 			   openOverlay();
 		   }else{
 			   sb.dom.find('.placeHolderContainer').remove();
@@ -274,6 +292,15 @@ var pageViewController = function(sb, input){
 	function _errorStartController(request, errorMessage, errorObj){
 		document.getElementById("message1").innerHTML = JSON.stringify(request) + " " + errorMessage;
 	}
+	
+	function _leftPanelButtonClickEvent(e){
+		if(sb.dom.find('.subContainer').length > 0){
+			sb.dom.find('#leftPanel').panel({disabled: true});
+			_containerCloseButtonClicked(e);
+		}else{
+			sb.dom.find('#leftPanel').panel({disabled: false});
+		}
+	}
 	function _startControllerV2(){
 		var screenHeight = sb.dom.find(window).height();
 		sb.dom.find('.appBody').css("height", screenHeight + " px");
@@ -282,6 +309,8 @@ var pageViewController = function(sb, input){
 		sb.dom.find('#refreshPanel').on('click', _refreshButtonClick);
 		sb.utilities.appGet(appPageUrl,_loadAppPage,_errorStartController);
         console.log('snippet : 2' + appPageUrl);
+		sb.dom.find('.appHeader').find('#containerBackButton').on('click', _containerBackButtonClickedV2);
+		sb.dom.find('.appHeader').find('#palpostr-url').on('click', _leftPanelButtonClickEvent);
 	}
 	
 	function _refreshButtonClick(e){

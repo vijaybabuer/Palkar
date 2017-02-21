@@ -133,6 +133,7 @@ em{
 	background-color: #3299BB;
  	color: #ffffff;
  	padding: 1em 0 1em 0.25em;
+	display: none;
  }
  .docItemAcceptPostsBtn{
  	padding: 1em;
@@ -398,12 +399,23 @@ em{
 	font-weight: 800;
 	margin: 0px;
 }
+#containerBackButton{ 
+	background: rgba(0,0,0,0); 
+	border: 0px;
+	text-shadow: none;
+	float: left;
+	color: #3299BB;
+	font-size: 1.5em;
+	font-weight: 800;
+	margin: 0px;
+}
 #showLeftPanel{
 	float: left;
 	background-color: rgba(0,0,0,0);  
 	border: 0px;
 	text-shadow: none;
 }
+
 #showRightPanel, #refreshPanel{
 	float: right; 
 	background-color: rgba(0,0,0,0); 
@@ -455,6 +467,7 @@ em{
  #mainContainer, .subContainer{
  	text-align: center;
 	overflow: scroll;
+	-webkit-overflow-scrolling: touch;
  }
  .fa-spinner{
  	margin-top: 5em;
@@ -511,9 +524,6 @@ em{
  }
  .roberto{
 	 font-family: 'Roboto Condensed', sans-serif;
- }
- .containerBackButton{
- 	color: #ffffff !important;
  }
  div.News{
  	background-color: #00CCFF;
