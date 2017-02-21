@@ -454,8 +454,6 @@ em{
  
  #mainContainer, .subContainer{
  	text-align: center;
-	height: auto;
-	max-height: 5000px;
 	overflow: scroll;
  }
  .fa-spinner{
@@ -630,4 +628,7 @@ em{
  }
  div.PBRTRMK, div.PRRTRMK{
  	padding: 0.25em; 
+ }
+ .Fix{
+ 	position: fixed;
  }

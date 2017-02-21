@@ -1,0 +1,49 @@
+/* CSS Document */
+@media (max-height: 2200px) {          
+ #mainContainer, .subContainer{
+	height: 2200px !important;
+ }
+}
+@media (max-height: 2000px) {          
+ #mainContainer, .subContainer{
+	height: 2000px !important;
+ }
+}
+@media (max-height: 1800px) {          
+ #mainContainer, .subContainer{
+	height: 1800px !important;
+ }
+}
+@media (max-height: 1600px) {          
+ #mainContainer, .subContainer{
+	height: 1600px !important;
+ }
+}
+
+@media (max-height: 1400px) {          
+ #mainContainer, .subContainer{
+	height: 1400px !important;
+ }
+}
+@media (max-height: 1200px) {          
+ #mainContainer, .subContainer{
+	height: 1200px !important;
+ }
+}
+@media (max-height: 1000px) {          
+ #mainContainer, .subContainer{
+	height: 1000px !important;
+ }
+}
+@media (max-height: 800px) {          
+ #mainContainer, .subContainer{
+	height: 800px !important;
+ }
+}
+@media (max-height: 500px) {          
+ #mainContainer, .subContainer{
+	height: 500px !important;
+ }
+}
+
+
