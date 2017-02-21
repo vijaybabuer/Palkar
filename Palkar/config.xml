@@ -3,6 +3,7 @@
     <name>Palkar</name>
     <description>Staty Connected with more than 1 Million Palkars world Wide.</description>
     <author email="welcome@palpostr.com" href="http://palpostr.com">PalPostr Team</author>
+	<access origin="whatsapp:*" launch-external="yes" />
     <content src="index.html" />
     <preference name="permissions" value="none" />
     <preference name="orientation" value="default" />
