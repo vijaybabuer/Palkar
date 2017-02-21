@@ -70,6 +70,21 @@ em{
 	text-shadow: none;
 }
 
+.WhatsAppShare{
+	background-color: #009933;
+	font-size: 1em; 
+	padding: 1em; 
+	margin-top: 1px; 
+	margin-bottom: 1px;	
+	border: 0px;
+	font-weight:: 800;	
+	border-radius: 1px;
+	color: #ffffff !important;
+	text-shadow: none;	
+	border-radius: 1em;
+	
+}
+
 .ShareSummary{
 	margin-right: 0px;
 }
