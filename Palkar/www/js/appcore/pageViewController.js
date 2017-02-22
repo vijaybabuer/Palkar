@@ -428,6 +428,9 @@ var pageViewController = function(sb, input){
 		   var nextContainer = sb.dom.find('.container').first();		   
 		   nextContainer.show();
 		}
+		if(sb.dom.find('.subContainer').length == 0){
+			document.removeEventListener("backbutton", _deviceBackButtonClicked);
+		}
 	}
 
 	function onResume(e) {
@@ -442,8 +445,8 @@ var pageViewController = function(sb, input){
        		Core.subscribe('documentEditStatusUpdate', _documentEditStatusUpdateMessageReceived);
 			Core.subscribe('newStoryAdded', _newStoryAddedToView);
 			Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
-			Core.subscribe('streamUpdateReceived', _streamUpdateReceived);
-			document.addEventListener("backbutton", _deviceBackButtonClicked, false);
+			Core.subscribe('streamUpdateReceived', _streamUpdateReceived);			
+			document.addEventListener("backbutton", _deviceBackButtonClicked, true);
 			document.addEventListener("resume", onResume, false);
 			Core.subscribe('stompClientDisconnect', _stompClientDisconnectMessageReceived);
        		window.onbeforeunload = confirmExit;
