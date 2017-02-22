@@ -513,11 +513,6 @@ var storyItemController = function(sb, input){
 	    		sb.dom.find('.HighlightSummary').bind('click', _HighlightSummaryClick);
 	    		sb.dom.find('.ShareSummary').bind('click', _HighlightSummaryClick);
 	    		
-	    		sb.dom.find('.CommentsSummary').addClass('yui3-button');
-	    		sb.dom.find('.RepliesSummary').addClass('yui3-button');
-	    		sb.dom.find('.HighlightSummary').addClass('yui3-button');
-	    		sb.dom.find('.ShareSummary').addClass('yui3-button');
-	    		
 	    		sb.dom.find('.deleteStory').each(_setDeleteStoryClickEvent);
 	    		sb.dom.find('.editStory').each(_setEditStoryClickEvent);
 	    		sb.dom.find('#showAllHomePageStories').bind('click', _showAllHomePageStoriesClicked);

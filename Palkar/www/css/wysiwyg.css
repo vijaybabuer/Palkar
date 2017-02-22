@@ -1,3 +1,8 @@
+body, html, .app, .appBody{
+	height: 100%;
+	overflow: scroll;
+	-webkit-overflow-scrolling: touch;	
+}
 a{
 	text-decoration: none;
 }
@@ -58,57 +63,17 @@ em{
 	padding: 1px 5px !important;
 }
 
-.CommentsSummary, .RepliesSummary, .HighlightSummary, .ViewSummary, .ShareSummary{
-	font-size: 0.75em; 
-	padding: 1em; 
-	margin-top: 1px; 
+.CommentsSummary, .RepliesSummary, .HighlightSummary, .ViewSummary, .ShareSummary, .WhatsAppShare{
+	font-size: 1.25em; 
+	margin-right: 1em; 
 	margin-bottom: 1px;	
 	border: 0px;
-	font-strength: 200;	
-	border-radius: 1px;
+	font-weight: normal;	
 	color: #333 !important;
 	text-shadow: none;
 }
 
-.WhatsAppShare{
-	background-color: #009933;
-	font-size: 1em; 
-	padding: 1em; 
-	margin-top: 1px; 
-	margin-bottom: 1px;	
-	border: 0px;
-	font-weight:: 800;	
-	border-radius: 1px;
-	color: #ffffff !important;
-	text-shadow: none;	
-	border-radius: 1em;
-	
-}
 
-.ShareSummary{
-	margin-right: 0px;
-}
-.CommentsSummary{
-	background-color: #0066cc;
-	margin-left: 0px;
-	margin-right: -5px;
-	border-top-left-radius: 10px;
-}
-.RepliesSummary{
-	background-color: #33cc33;
-	margin-left: 0px;
-	margin-right: -4px;	
-}
-.HighlightSummary{
-	background-color: #FF7600;
-	margin-left: 0px;	
-	margin-right: 5px;
-	border-bottom-right-radius: 10px;
-}
-.ViewSummary{
-	background-color: #ffffff;
-	margin-right: 10px;
-}
 .ui-dialog-title{
 	color: #3299BB !important;
 	font-strength: 200;

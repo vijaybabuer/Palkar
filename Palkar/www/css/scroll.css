@@ -2,47 +2,56 @@
 @media (max-height: 2200px) {          
  #mainContainer, .subContainer{
 	height: 2200px !important;
+	height: calc(100% - 1px);
  }
 }
 @media (max-height: 2000px) {          
  #mainContainer, .subContainer{
 	height: 2000px !important;
+	height: calc(100% - 1px);
  }
 }
 @media (max-height: 1800px) {          
  #mainContainer, .subContainer{
 	height: 1800px !important;
+	height: calc(100% - 1px);
  }
 }
 @media (max-height: 1600px) {          
  #mainContainer, .subContainer{
 	height: 1600px !important;
+	height: calc(100% - 1px);	
  }
 }
 
 @media (max-height: 1400px) {          
  #mainContainer, .subContainer{
 	height: 1400px !important;
+	height: calc(100% - 1px);	
  }
 }
 @media (max-height: 1200px) {          
  #mainContainer, .subContainer{
 	height: 1200px !important;
+	height: calc(100% - 1px);	
  }
 }
 @media (max-height: 1000px) {          
  #mainContainer, .subContainer{
 	height: 1000px !important;
+	height: calc(100% - 1px);	
  }
 }
 @media (max-height: 800px) {          
  #mainContainer, .subContainer{
 	height: 800px !important;
+	height: calc(100% - 1px);	
  }
 }
 @media (max-height: 500px) {          
  #mainContainer, .subContainer{
 	height: 500px !important;
+	height: calc(100% - 1px);	
  }
 }
 
