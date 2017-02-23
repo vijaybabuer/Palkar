@@ -135,11 +135,11 @@ var pageViewController = function(sb, input){
 	                .css({
 	                    display : 'block',
 	                    opacity : 0,
-	                    top : '-=300',
+	                    top : props.scrTop + 40,
 	                    left : leftPos+'px'
 	                })
 	                .animate({
-	                    top : props.scrTop + 40,
+	                    
 	                    opacity : 1
 	                }, 600);
 	        });

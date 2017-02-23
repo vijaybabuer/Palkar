@@ -126,7 +126,6 @@ em{
 
 	.subContainer {
 	    position: absolute;
-	    top: -20px;
 	    left: 0;
 	    min-height: 200px;
 	    z-index: 99;
@@ -428,7 +427,8 @@ em{
 	margin: 0px;
 	vertical-align: middle;
  }
- 
+
+
  #mainContainer, .subContainer{
  	text-align: center;
 	overflow: scroll;
