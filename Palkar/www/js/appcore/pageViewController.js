@@ -311,6 +311,8 @@ var pageViewController = function(sb, input){
         console.log('snippet : 2' + appPageUrl);
 		sb.dom.find('.appHeader').find('#containerBackButton').on('click', _containerBackButtonClickedV2);
 		sb.dom.find('.appHeader').find('#palpostr-url').on('click', _leftPanelButtonClickEvent);
+		sb.dom.find('#rightPanel').removeClass('nd');
+		sb.dom.find('#leftPanel').removeClass('nd');
 	}
 	
 	function _refreshButtonClick(e){
@@ -409,7 +411,21 @@ var pageViewController = function(sb, input){
 		navigator.notification.alert('We are currently upgrading the ' + message.pageHandle + ' server. Your App may be slow or unresponsive. Please Restart the App in a few minutes to restore full set of features. See you soon!', disconnectAlertDismissed, message.pageHandle, 'Ok, Thanks');
 	}
 	
+	function exitAppConfirm(button){
+		if(button == 2){
+			if(navigator.app){				
+				navigator.app.exitApp();
+			}else{
+				navigator.notification.alert('Your Operating System does not support this feature. Please close the App by pressing the home button on your Device', disconnectAlertDismissed, input.appname, 'Ok, Thanks');		
+			}
+		}else{
+			;
+		}
+	}
+	
 	function _deviceBackButtonClicked(e){
+		var exitApp = false;
+	
 		if(sb.dom.find('.subContainer').length > 0){
 		   e.preventDefault();
 		   closeOverlay();		
@@ -418,7 +434,12 @@ var pageViewController = function(sb, input){
 		   firstSubContainer.remove();
 		   var nextContainer = sb.dom.find('.container').first();		   
 		   nextContainer.show();
-	   }
+			if(sb.dom.find('.subContainer').length == 0){
+				sb.dom.find('#containerBackButton').hide();
+			}			   
+	   }else{
+			exitApp = true;   
+		}
 		if(sb.dom.find('.placeHolderContainer').length > 0){
 		   e.preventDefault();
 		   closeOverlay();		
@@ -428,9 +449,11 @@ var pageViewController = function(sb, input){
 		   var nextContainer = sb.dom.find('.container').first();		   
 		   nextContainer.show();
 		}
-		if(sb.dom.find('.subContainer').length == 0){
-			document.removeEventListener("backbutton", _deviceBackButtonClicked);
+
+		if(exitApp){
+			navigator.notification.confirm('Close the App?', exitAppConfirm, input.appname, 'Keep Browsing, Close');
 		}
+		
 	}
 
 	function onResume(e) {
@@ -445,9 +468,9 @@ var pageViewController = function(sb, input){
        		Core.subscribe('documentEditStatusUpdate', _documentEditStatusUpdateMessageReceived);
 			Core.subscribe('newStoryAdded', _newStoryAddedToView);
 			Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
-			Core.subscribe('streamUpdateReceived', _streamUpdateReceived);			
-			document.addEventListener("backbutton", _deviceBackButtonClicked, true);
+			Core.subscribe('streamUpdateReceived', _streamUpdateReceived);
 			document.addEventListener("resume", onResume, false);
+			document.addEventListener("backbutton", _deviceBackButtonClicked, true);
 			Core.subscribe('stompClientDisconnect', _stompClientDisconnectMessageReceived);
        		window.onbeforeunload = confirmExit;
 			_startControllerV2();
