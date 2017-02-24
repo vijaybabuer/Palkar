@@ -431,6 +431,7 @@ em{
 	height: 100%;
 }
 #containerDiv{
+	position: relative;
 	margin-top: 45px;
 }
 #containerDiv, #mainContainer, .subContainer{

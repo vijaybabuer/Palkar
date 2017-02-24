@@ -135,7 +135,7 @@ var pageViewController = function(sb, input){
 	                .css({
 	                    display : 'block',
 	                    opacity : 0,
-	                    top : props.scrTop + 45
+	                    top : props.scrTop
 	                })
 	                .animate({	                    
 	                    opacity : 1
