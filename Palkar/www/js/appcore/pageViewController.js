@@ -125,7 +125,7 @@ var pageViewController = function(sb, input){
 	        sb.dom.find('#overlay-shade').fadeTo(300, 0.6, function() {
 	            var props = {
 	                oLayWidth       : overLayDiv.width(),
-	                scrTop          : sb.dom.find(window).scrollTop(),
+	                scrTop          : sb.dom.find('.appBody').scrollTop(),
 	                viewPortWidth   : sb.dom.find(window).width()
 	            };
 
@@ -135,11 +135,9 @@ var pageViewController = function(sb, input){
 	                .css({
 	                    display : 'block',
 	                    opacity : 0,
-	                    top : props.scrTop + 40,
-	                    left : leftPos+'px'
+	                    top : props.scrTop + 45
 	                })
-	                .animate({
-	                    
+	                .animate({	                    
 	                    opacity : 1
 	                }, 600);
 	        });
@@ -163,6 +161,7 @@ var pageViewController = function(sb, input){
 		
 	   function _snippetResponseReceived(snippetResponse){
 		   if(snippetResponse != null){
+			   try{
 			   sb.dom.find('.placeHolderContainer').remove();
 			   sb.dom.find('#containerDiv').prepend(snippetResponse);
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerBackButton').show();
@@ -172,6 +171,10 @@ var pageViewController = function(sb, input){
 			   sb.dom.find('.container').first().find('.storyItemBody').show();			   
 			   sb.dom.find('.appHeader').find('#containerBackButton').show();
 			   openOverlay();
+			   }
+			   catch(error){
+					alert('exception ' + error);   
+				}
 		   }else{
 			   sb.dom.find('.placeHolderContainer').remove();
 			   sb.dom.find(this).parents('.subContainer').slideUp();
@@ -313,6 +316,7 @@ var pageViewController = function(sb, input){
 		sb.dom.find('.appHeader').find('#palpostr-url').on('click', _leftPanelButtonClickEvent);
 		sb.dom.find('#rightPanel').removeClass('nd');
 		sb.dom.find('#leftPanel').removeClass('nd');
+		sb.dom.find('#mainContainer').nicescroll();	
 	}
 	
 	function _refreshButtonClick(e){
@@ -415,11 +419,13 @@ var pageViewController = function(sb, input){
 		if(button == 2){
 			if(navigator.app){				
 				navigator.app.exitApp();
+			}else if(navigator.device){
+				navigator.device.exitApp();
 			}else{
 				navigator.notification.alert('Your Operating System does not support this feature. Please close the App by pressing the home button on your Device', disconnectAlertDismissed, input.appname, 'Ok, Thanks');		
 			}
 		}else{
-			;
+			;	
 		}
 	}
 	

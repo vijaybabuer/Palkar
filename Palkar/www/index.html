@@ -37,7 +37,7 @@
 		<link rel="stylesheet" href="css/fa.css" type="text/css" />
 		<link rel="stylesheet" href="css/wysiwyg.css" type="text/css" />
 		<link rel="stylesheet" href="css/swipe.css" type="text/css" />		
-
+		<link rel="stylesheet" href="css/scroll.css" type="text/css" />
         <title>Welcome to Palkar News</title>
 		<style type="text/css" media="all">
 			@font-face{
@@ -49,7 +49,7 @@
     </head>
 
     <body>
-        <div data-role="page" class="app">        
+        <div data-role="page" class="appBody">        
 				<div class="appHeader noshadow">
 					<a href="#rightPanel" class="ui-btn ui-btn-inline noshadow" id="showRightPanel"><i class="fa fa-bars"></i></a>	
 					<button class="ui-btn ui-btn-inline noshadow" id="refreshPanel" disabled>
@@ -62,7 +62,7 @@
 						<i class="fa fa-home" aria-hidden="true"></i>&nbsp;Palkar
 					</a>
 				</div>	        
-				<div class="appBody containers" id="containerDiv">
+				<div class="containers" id="containerDiv">
 						<div class="container" id="mainContainer">
 							<div id="storiesDiv">																																																				
 							</div>
@@ -747,7 +747,7 @@ Ex: john@example.com;sam@example.com</script>
     				<i class="fa fa-retweet"></i>	<span class="bigScreenItem">RePosts</span> ({%=o.pageReferenceInformation.sharedCount%})
 			</a>
     		{% } %}	
-			<a  id="WhatsAppShare-{%=o.storyDocumentPageId%}" href="whatsapp://send?text=http://www.palpostr.com/{%=o.storyDocumentType%}/Story/{%=o.storyDocumentPageId%}-true?fromWhatsApp=true {% if (o.story){ %}{%=o.story%}{% } %} Read more on Palkar App" class="WhatsAppShare">
+			<a  id="WhatsAppShare-{%=o.storyDocumentPageId%}" href="whatsapp://send?text={% if (o.story){ %}{%=o.story%}{% } %} Read more on Palkar App http://www.palpostr.com/{%=o.storyDocumentType%}/Story/{%=o.storyDocumentPageId%}-true?fromWhatsApp=true" class="WhatsAppShare">
 				<i class="fa fa-whatsapp" aria-hidden="true"></i>
 			</a>			
 			<a  id="CommentsReacSummary-{%=o.storyDocumentPageId%}" title="Number of Comments" class="CommentsSummary">

@@ -1,6 +1,6 @@
-body, html{
+body, html, .appBody{
 	height: 100%;
-	overflow: scroll;
+	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;	
 }
 a{
@@ -162,7 +162,6 @@ em{
     padding: 8px;
     line-height: 1;
     text-align: right;
-    overflow: hidden;
 }
 .subContainer .toolbar a.close {
     display: inline-block;
@@ -347,9 +346,9 @@ em{
 	height: 45px;
 }
 .appBody{
-	overflow: auto;	
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
 	display: block;
-	margin-top: 45px;
 	text-align: left;
 	text-shadow: none;
 }
@@ -388,7 +387,7 @@ em{
 	color: #3299BB !important;
 	margin: 0px;	
 	max-height: 1000px;
-	overflow: auto;
+	overflow: scroll;
 }
 #rightPanel{
 	color: #000000;
@@ -428,10 +427,15 @@ em{
 	vertical-align: middle;
  }
 
-
- #mainContainer, .subContainer{
+{
+	height: 100%;
+}
+#containerDiv{
+	margin-top: 45px;
+}
+#containerDiv, #mainContainer, .subContainer{
  	text-align: center;
-	overflow: scroll;
+	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
  }
  .fa-spinner{
