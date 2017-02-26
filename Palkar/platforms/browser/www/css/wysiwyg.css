@@ -1,3 +1,8 @@
+body, html, .appBody{
+	height: 100%;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;	
+}
 a{
 	text-decoration: none;
 }
@@ -58,42 +63,17 @@ em{
 	padding: 1px 5px !important;
 }
 
-.CommentsSummary, .RepliesSummary, .HighlightSummary, .ViewSummary, .ShareSummary{
-	font-size: 0.75em; 
-	padding: 1em; 
-	margin-top: 1px; 
+.CommentsSummary, .RepliesSummary, .HighlightSummary, .ViewSummary, .ShareSummary, .WhatsAppShare{
+	font-size: 1.25em; 
+	margin-right: 1em; 
 	margin-bottom: 1px;	
 	border: 0px;
-	font-strength: 200;	
-	border-radius: 1px;
+	font-weight: normal;	
 	color: #333 !important;
 	text-shadow: none;
 }
 
-.ShareSummary{
-	margin-right: 0px;
-}
-.CommentsSummary{
-	background-color: #0066cc;
-	margin-left: 0px;
-	margin-right: -5px;
-	border-top-left-radius: 10px;
-}
-.RepliesSummary{
-	background-color: #33cc33;
-	margin-left: 0px;
-	margin-right: -4px;	
-}
-.HighlightSummary{
-	background-color: #FF7600;
-	margin-left: 0px;	
-	margin-right: 5px;
-	border-bottom-right-radius: 10px;
-}
-.ViewSummary{
-	background-color: #ffffff;
-	margin-right: 10px;
-}
+
 .ui-dialog-title{
 	color: #3299BB !important;
 	font-strength: 200;
@@ -118,6 +98,7 @@ em{
 	background-color: #3299BB;
  	color: #ffffff;
  	padding: 1em 0 1em 0.25em;
+	display: none;
  }
  .docItemAcceptPostsBtn{
  	padding: 1em;
@@ -145,7 +126,6 @@ em{
 
 	.subContainer {
 	    position: absolute;
-	    top: -20px;
 	    left: 0;
 	    min-height: 200px;
 	    z-index: 99;
@@ -182,7 +162,6 @@ em{
     padding: 8px;
     line-height: 1;
     text-align: right;
-    overflow: hidden;
 }
 .subContainer .toolbar a.close {
     display: inline-block;
@@ -296,6 +275,9 @@ em{
 	#createStoryDocument{
 		width: 100% !important;
 	} 
+	body{
+		font-size: 12px;
+	}
  }
 
 @media (max-width: 767px) {
@@ -315,6 +297,9 @@ em{
   .ViewSummary{
     display: none !important;
   }
+	body{
+		font-size: 12px;
+	}  
 }
 
 @media (min-width: 750px){
@@ -343,6 +328,9 @@ em{
 		left: 20px !important;
 		top: 20px !important;
 	}	
+	body{
+		font-size: 14px;
+	}	
 }
 
 .appHeader{
@@ -358,13 +346,23 @@ em{
 	height: 45px;
 }
 .appBody{
-	overflow: auto;	
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
 	display: block;
-	margin-top: 45px;
 	text-align: left;
 	text-shadow: none;
 }
 #palpostr-url{ 
+	background: rgba(0,0,0,0); 
+	border: 0px;
+	text-shadow: none;
+	float: left;
+	color: #3299BB;
+	font-size: 1.5em;
+	font-weight: 800;
+	margin: 0px;
+}
+#containerBackButton{ 
 	background: rgba(0,0,0,0); 
 	border: 0px;
 	text-shadow: none;
@@ -380,6 +378,7 @@ em{
 	border: 0px;
 	text-shadow: none;
 }
+
 #showRightPanel, #refreshPanel{
 	float: right; 
 	background-color: rgba(0,0,0,0); 
@@ -388,7 +387,7 @@ em{
 	color: #3299BB !important;
 	margin: 0px;	
 	max-height: 1000px;
-	overflow: auto;
+	overflow: scroll;
 }
 #rightPanel{
 	color: #000000;
@@ -427,12 +426,18 @@ em{
 	margin: 0px;
 	vertical-align: middle;
  }
- 
- #mainContainer, .subContainer{
+
+{
+	height: 100%;
+}
+#containerDiv{
+	position: relative;
+	margin-top: 45px;
+}
+#containerDiv, #mainContainer, .subContainer{
  	text-align: center;
-	height: 700px;
-	max-height: 5000px;
-	overflow: scroll;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
  }
  .fa-spinner{
  	margin-top: 5em;
@@ -489,9 +494,6 @@ em{
  }
  .roberto{
 	 font-family: 'Roboto Condensed', sans-serif;
- }
- .containerBackButton{
- 	color: #ffffff !important;
  }
  div.News{
  	background-color: #00CCFF;
@@ -599,4 +601,14 @@ em{
  }
  #placeHolderIcon{
  	margin-top: 128px;
+ }
+ .reactionPhoto{
+ 	margin-top: 5px;
+	 border-radius: 2.5em;
+ }
+ div.PBRTRMK, div.PRRTRMK{
+ 	padding: 0.25em; 
+ }
+ .Fix{
+ 	position: fixed;
  }

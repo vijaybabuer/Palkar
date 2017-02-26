@@ -100,6 +100,22 @@ var pageViewController = function(sb, input){
 		   }*/
 		   nextContainer.show();
 	   }
+	   
+		function _containerBackButtonClickedV2(e){		   
+		   closeOverlay();		
+		   sb.dom.find('.containers').find('.subContainer').first().slideUp();
+		   sb.dom.find('.containers').find('.subContainer').first().remove();
+		   if(sb.dom.find('.containers').find('.subContainer').length == 0){
+				sb.dom.find(this).hide();  
+		   }
+		   var nextContainer = sb.dom.find('.container').first();		   
+/*		   var nextContainerScrollTop = nextContainer.attr("data-scroll-top");
+		   if(nextContainerScrollTop){
+			   alert('have scroll top ' + nextContainerScrollTop);
+			   nextContainer.scrollTop(nextContainerScrollTop);
+		   }*/
+		   nextContainer.show();
+	   }	   
 
 	    function openOverlay() {
 	        var overLayDiv = sb.dom.find('.subContainer').first();	        
@@ -109,7 +125,7 @@ var pageViewController = function(sb, input){
 	        sb.dom.find('#overlay-shade').fadeTo(300, 0.6, function() {
 	            var props = {
 	                oLayWidth       : overLayDiv.width(),
-	                scrTop          : sb.dom.find(window).scrollTop(),
+	                scrTop          : sb.dom.find('.appBody').scrollTop(),
 	                viewPortWidth   : sb.dom.find(window).width()
 	            };
 
@@ -119,11 +135,9 @@ var pageViewController = function(sb, input){
 	                .css({
 	                    display : 'block',
 	                    opacity : 0,
-	                    top : '-=300',
-	                    left : leftPos+'px'
+	                    top : props.scrTop
 	                })
-	                .animate({
-	                    top : props.scrTop + 40,
+	                .animate({	                    
 	                    opacity : 1
 	                }, 600);
 	        });
@@ -131,6 +145,7 @@ var pageViewController = function(sb, input){
 		
     	function _containerCloseButtonClicked(e){
 		   closeOverlay();
+		   sb.dom.find('.appHeader').find('#containerBackButton').hide();
 		   var subContainerList = sb.dom.find('.subContainer');
 		   for(var i= subContainerList.length - 1; i >=0 ; i--){
 			  sb.dom.find(subContainerList[i]).slideUp();
@@ -146,6 +161,7 @@ var pageViewController = function(sb, input){
 		
 	   function _snippetResponseReceived(snippetResponse){
 		   if(snippetResponse != null){
+			   try{
 			   sb.dom.find('.placeHolderContainer').remove();
 			   sb.dom.find('#containerDiv').prepend(snippetResponse);
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerBackButton').show();
@@ -153,7 +169,12 @@ var pageViewController = function(sb, input){
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerCloseButton').show();
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerCloseButton').bind('click', _containerCloseButtonClicked);			   
 			   sb.dom.find('.container').first().find('.storyItemBody').show();			   
+			   sb.dom.find('.appHeader').find('#containerBackButton').show();
 			   openOverlay();
+			   }
+			   catch(error){
+					alert('exception ' + error);   
+				}
 		   }else{
 			   sb.dom.find('.placeHolderContainer').remove();
 			   sb.dom.find(this).parents('.subContainer').slideUp();
@@ -274,6 +295,15 @@ var pageViewController = function(sb, input){
 	function _errorStartController(request, errorMessage, errorObj){
 		document.getElementById("message1").innerHTML = JSON.stringify(request) + " " + errorMessage;
 	}
+	
+	function _leftPanelButtonClickEvent(e){
+		if(sb.dom.find('.subContainer').length > 0){
+			sb.dom.find('#leftPanel').panel({disabled: true});
+			_containerCloseButtonClicked(e);
+		}else{
+			sb.dom.find('#leftPanel').panel({disabled: false});
+		}
+	}
 	function _startControllerV2(){
 		var screenHeight = sb.dom.find(window).height();
 		sb.dom.find('.appBody').css("height", screenHeight + " px");
@@ -282,6 +312,11 @@ var pageViewController = function(sb, input){
 		sb.dom.find('#refreshPanel').on('click', _refreshButtonClick);
 		sb.utilities.appGet(appPageUrl,_loadAppPage,_errorStartController);
         console.log('snippet : 2' + appPageUrl);
+		sb.dom.find('.appHeader').find('#containerBackButton').on('click', _containerBackButtonClickedV2);
+		sb.dom.find('.appHeader').find('#palpostr-url').on('click', _leftPanelButtonClickEvent);
+		sb.dom.find('#rightPanel').removeClass('nd');
+		sb.dom.find('#leftPanel').removeClass('nd');
+		sb.dom.find('#mainContainer').nicescroll();	
 	}
 	
 	function _refreshButtonClick(e){
@@ -380,7 +415,23 @@ var pageViewController = function(sb, input){
 		navigator.notification.alert('We are currently upgrading the ' + message.pageHandle + ' server. Your App may be slow or unresponsive. Please Restart the App in a few minutes to restore full set of features. See you soon!', disconnectAlertDismissed, message.pageHandle, 'Ok, Thanks');
 	}
 	
+	function exitAppConfirm(button){
+		if(button == 2){
+			if(navigator.app){				
+				navigator.app.exitApp();
+			}else if(navigator.device){
+				navigator.device.exitApp();
+			}else{
+				navigator.notification.alert('Your Operating System does not support this feature. Please close the App by pressing the home button on your Device', disconnectAlertDismissed, input.appname, 'Ok, Thanks');		
+			}
+		}else{
+			;	
+		}
+	}
+	
 	function _deviceBackButtonClicked(e){
+		var exitApp = false;
+	
 		if(sb.dom.find('.subContainer').length > 0){
 		   e.preventDefault();
 		   closeOverlay();		
@@ -389,7 +440,12 @@ var pageViewController = function(sb, input){
 		   firstSubContainer.remove();
 		   var nextContainer = sb.dom.find('.container').first();		   
 		   nextContainer.show();
-	   }
+			if(sb.dom.find('.subContainer').length == 0){
+				sb.dom.find('#containerBackButton').hide();
+			}			   
+	   }else{
+			exitApp = true;   
+		}
 		if(sb.dom.find('.placeHolderContainer').length > 0){
 		   e.preventDefault();
 		   closeOverlay();		
@@ -399,6 +455,11 @@ var pageViewController = function(sb, input){
 		   var nextContainer = sb.dom.find('.container').first();		   
 		   nextContainer.show();
 		}
+
+		if(exitApp){
+			navigator.notification.confirm('Close the App?', exitAppConfirm, input.appname, 'Keep Browsing, Close');
+		}
+		
 	}
 
 	function onResume(e) {
@@ -414,8 +475,8 @@ var pageViewController = function(sb, input){
 			Core.subscribe('newStoryAdded', _newStoryAddedToView);
 			Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
 			Core.subscribe('streamUpdateReceived', _streamUpdateReceived);
-			document.addEventListener("backbutton", _deviceBackButtonClicked, false);
 			document.addEventListener("resume", onResume, false);
+			document.addEventListener("backbutton", _deviceBackButtonClicked, true);
 			Core.subscribe('stompClientDisconnect', _stompClientDisconnectMessageReceived);
        		window.onbeforeunload = confirmExit;
 			_startControllerV2();

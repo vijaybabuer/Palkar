@@ -1,7 +1,6 @@
 body{ 
 background-color: #ffffff;
 background-repeat:repeat;
-font-size: 12px;
 padding: 0px;
 margin: 0px;
 font-family: "Times New Roman", Times, serif;
@@ -676,15 +675,9 @@ div.CONTACT{
 }
 
  .storyItemHeader{
-	max-height: 100px;
 	text-overflow: ellipsis;
-	overflow: hidden;	
-	transition: max-height 1s;
 }
-.storyItemHeader:hover{
-	max-height: 500px;
-	transition: max-height 2s;
-}
+
 .shareClick{
 	box-shadow: 0px 0px 15px #3299BB;
 }

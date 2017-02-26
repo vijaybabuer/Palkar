@@ -37,6 +37,7 @@
 		<link rel="stylesheet" href="css/fa.css" type="text/css" />
 		<link rel="stylesheet" href="css/wysiwyg.css" type="text/css" />
 		<link rel="stylesheet" href="css/swipe.css" type="text/css" />		
+		<link rel="stylesheet" href="css/scroll.css" type="text/css" />
         <title>Welcome to Palkar News</title>
 		<style type="text/css" media="all">
 			@font-face{
@@ -48,38 +49,37 @@
     </head>
 
     <body>
-        <div data-role="page" class="app">        
-			<div>
+        <div data-role="page" class="appBody">        
 				<div class="appHeader noshadow">
 					<a href="#rightPanel" class="ui-btn ui-btn-inline noshadow" id="showRightPanel"><i class="fa fa-bars"></i></a>	
-					<button  class="ui-btn ui-btn-inline noshadow" id="refreshPanel" disabled>
+					<button class="ui-btn ui-btn-inline noshadow" id="refreshPanel" disabled>
 							<i class="fa fa-refresh"></i>
 					</button>
+					<a  id="containerBackButton" class="ui-btn ui-btn-inline noshadow nd">
+						<i class="fa fa-chevron-left"></i>
+					</a>					
 					<a  href="#leftPanel" id="palpostr-url" class="ui-btn ui-btn-inline noshadow">
-						Palkar News
-					</a>		
+						<i class="fa fa-home" aria-hidden="true"></i>&nbsp;Palkar
+					</a>
 				</div>	        
-				<div class="appBody">
-					<div class="containers" id="containerDiv">
+				<div class="containers" id="containerDiv">
 						<div class="container" id="mainContainer">
-							<div id="storiesDiv">
-								<img src="img/Palkar.png" height="128" style="margin-top: 150px;" />
+							<div id="storiesDiv">																																																				
 							</div>
 							<div id="storiesDivTrailer">
-								<button class="ui-btn cd stdf al bw noeffect nd" id="showMore" style="text-align: center;"><i class="fa fa-chevron-down"></i>&nbsp;Load More</button>
+								<button class="ui-btn cd stdf al bw noeffect nd" id="showMore" style="text-align: center;"><i class="fa fa-chevron-down"></i>&nbsp;Show More Messages</button>
 							</div>							
-						</div>	
-					</div>  
+						</div>
 				</div>	    
 				<div class="appFooter" id="mainAppFooter">
 					<div id="message1"></div>	
 					<div id="deviceready"></div>
-				</div>
-			</div>
-			<div class="al b" data-position="right" data-position-fixed="true" data-role="panel" data-display="overlay" id="rightPanel">
+				</div>		
+				
+			<div class="al b nd" data-position="right" data-position-fixed="true" data-role="panel" data-display="overlay" id="rightPanel">
 				<div id="documentPageList">Please wait while the section is loading..</div>
 			</div><!-- /panel -->		
-			<div class="al cd" data-position="left" data-position-fixed="true" data-role="panel" data-display="overlay" id="leftPanel">
+			<div class="al cd nd" data-position="left" data-position-fixed="true" data-role="panel" data-display="overlay" id="leftPanel">
 			   <p class="roberto">This App brings you Palkar Community Updates</p>
 			   <p class="roberto"><strong>Logon to www.palpostr.com/palkar</strong> Share your local community stories and pictures with more than 1 Million Palkars worldwide</p>
 			   <p class="roberto">There are an estimated 10 lac Sourashtrians world wide. Lets rediscover our culture and connect with our community world wide in this digital age.</p>
@@ -88,8 +88,9 @@
 			   	Sincerely<br>
 			   	Vasanth(Founder) veervasanth@gmail.com <br>
 			   	</p>	
-			</div><!-- /panel -->					
+			</div><!-- /panel -->								
         </div>
+	
 		
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
@@ -243,6 +244,7 @@ Ex: john@example.com;sam@example.com</script>
 <script  type="text/template" id="jstmpl-allowRepliesLabel-false">Allow Replies</script>
 <script  type="text/template" id="jstmpl-allowHilightsLabel-false">Allow Highlights</script>
 <script  type="text/template" id="jstemplate-more-stories-message"><span class="bf cd"> <i class="fa fa-cogs"></i> Page Under Construction. Older stories can be viewed shortly. </span></script>
+<script  type="text/template" id="jstemplate-show-more-stories">Show More Messages</script>
 <script  type="text/template" id="jstemplate-end-of-stories">The END</script>
 <script  type="text/template" id="jstemplate-no-new-stories">No new stories</script>
 <script type="text/template" id="jstemplate-reaction-highlight-template"><span  title="Highlight" class="ePtr sf cb hiliteResponse"><i class="fa fa-star" style="color: #ffcc33;"></i> Highlight</span>	</script>
@@ -406,11 +408,11 @@ Ex: john@example.com;sam@example.com</script>
 		</span>
 
 		{% if (reactionResponse.userSummary.userHasProfPic) { %}
-		<div class="photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		<div class="reactionPhoto photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
 		{% } %}
 		{% if (!reactionResponse.userSummary.userHasProfPic) { %}
-		<div class="photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		<div class="reactionPhoto photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
 		{% } %}
 		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
@@ -465,11 +467,11 @@ Ex: john@example.com;sam@example.com</script>
 			<span class="memberAdd">false</span>
 		</span>
 		{% if (replyResponse.userSummary.userHasProfPic) { %}
-		<div class="photo-{%=replyResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=replyResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		<div class="reactionPhoto photo-{%=replyResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=replyResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
 		{% } %}
 		{% if (!replyResponse.userSummary.userHasProfPic) { %}
-		<div class="photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		<div class="reactionPhoto photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
 		{% } %}
 		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
@@ -548,11 +550,11 @@ Ex: john@example.com;sam@example.com</script>
 			<span class="memberAdd">false</span>
 		</span>
 		{% if (reactionResponse.userSummary.userHasProfPic) { %}
-		<div class="photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		<div class="reactionPhoto photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
 		{% } %}
 		{% if (!reactionResponse.userSummary.userHasProfPic) { %}
-		<div class="photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		<div class="reactionPhoto photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
 		{% } %}
 		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
@@ -607,11 +609,11 @@ Ex: john@example.com;sam@example.com</script>
 			<span class="memberAdd">false</span>
 		</span>
 		{% if (replyResponse.userSummary.userHasProfPic) { %}
-		<div class="photo-{%=replyResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=replyResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		<div class="reactionPhoto photo-{%=replyResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=replyResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
 		{% } %}
 		{% if (!replyResponse.userSummary.userHasProfPic) { %}
-		<div class="photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
+		<div class="reactionPhoto photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
 		</div>
 		{% } %}		
 		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
@@ -689,10 +691,10 @@ Ex: john@example.com;sam@example.com</script>
 			<span class="memberAdd">false</span>
 		</span>
 		{% if (reactionResponse.userSummary.userHasProfPic) { %}
-		<div class="userPic photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>
+		<div class="reactionPhoto photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>
 		{% } %}
 		{% if (!reactionResponse.userSummary.userHasProfPic) { %}
-		<div class="userPic photo"  style="background-image: url('img/User-plain.gif'); float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>		
+		<div class="reactionPhoto photo"  style="background-image: url('img/User-plain.gif'); float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>		
 		{% } %}
 	   </a>
 	  </div>
@@ -741,11 +743,14 @@ Ex: john@example.com;sam@example.com</script>
 				<button type="button" id="unSharePage-{%=o.referenceID%}" class="unSharePageButton yui3-button sf cb bw"><i class="fa fa-times"></i><span class="bigScreenItem">Remove from {%=o.referencedDocumentName%}</span></button>
 			{% } %}			
    			{% if (o.pageReferenceInformation && o.pageReferenceInformation.sharedCount > 0) { %}
-			<a  id="ShareReacSummary-{%=o.storyDocumentPageId%}" class="yui3-button ShareSummary">
+			<a  id="ShareReacSummary-{%=o.storyDocumentPageId%}" class="ShareSummary"> 
     				<i class="fa fa-retweet"></i>	<span class="bigScreenItem">RePosts</span> ({%=o.pageReferenceInformation.sharedCount%})
 			</a>
     		{% } %}	
-			<a  id="CommentsReacSummary-{%=o.storyDocumentPageId%}" title="Number of Comments" class="yui3-button CommentsSummary">
+			<a  id="WhatsAppShare-{%=o.storyDocumentPageId%}" href="whatsapp://send?text={% if (o.story){ %}{%=o.story%}{% } %} Read more on Palkar App http://www.palpostr.com/{%=o.storyDocumentType%}/Story/{%=o.storyDocumentPageId%}-true?fromWhatsApp=true" class="WhatsAppShare">
+				<i class="fa fa-whatsapp" aria-hidden="true"></i>
+			</a>			
+			<a  id="CommentsReacSummary-{%=o.storyDocumentPageId%}" title="Number of Comments" class="CommentsSummary">
 				{% if (o.publicTextResponse) { %}
 					{% if (o.publicTextResponse.pageReactionCount == 0 || !o.publicTextResponse.pageReactionCount) { %}
 						<i class="fa fa-comments-o"></i>
@@ -759,7 +764,7 @@ Ex: john@example.com;sam@example.com</script>
 					{% } %}
 				{% } %}
 			</a>
-			<a  id="HighlightReacSummary-{%=o.clickResponsePageReactionId%}" title="Number of Highlights" class="yui3-button HighlightSummary">
+			<a  id="HighlightReacSummary-{%=o.clickResponsePageReactionId%}" title="Number of Highlights" class="HighlightSummary">
 				{% if (o.clickReactionResponse) { %}
 					{% if (o.clickReactionResponse.pageReactionCount == 0) { %}
 						<i class="fa fa-star-o"></i>
@@ -774,7 +779,7 @@ Ex: john@example.com;sam@example.com</script>
 				{% } %}
 			</a>
 			{% if (o.viewReactionResponse) { %}
-			<a  id="ViewReacSummary-{%=o.viewReactionResponse.pageReactionId%}" title="Number of people who viewed this story" class="yui3-button ViewSummary">
+			<a  id="ViewReacSummary-{%=o.viewReactionResponse.pageReactionId%}" title="Number of people who viewed this story" class="ViewSummary">
 					{% if (o.viewReactionResponse.pageReactionCount == 0) { %}
 						<i class="fa fa-eye"></i>
 					{% } %}
@@ -824,4 +829,31 @@ Ex: john@example.com;sam@example.com</script>
 </a>
 {% } %}
 </script>
+
+<script type="text/unittest">
+$(document).ready(function(){
+
+	try{
+	Core.register('clickReactionsController',clickReactionsController,{relPath: "http://www.palpostr.com/}", reactionCountPerPage: "5"});
+	Core.register('textReactionsController',textReactionsController,{relPath: "http://www.palpostr.com/", reactionCountPerPage: "5"});
+	Core.register('storyItemController',storyItemController, {relPath: "http://www.palpostr.com/", storyPage: false, authenticatedUser: "none", storyJSTemplateName: "template-storyTemplate", getMoreStories: true, storiesDivId: "#storiesDiv", appname: "palkar", numberOfStoriesToGet: 5});
+	Core.register('pageViewController', pageViewController, {relPath: "http://www.palpostr.com/", loadingText: "Welcome, <br> We are downloading your stream.", appname: "Palkar", appmaintitle: "Community Updates", appextendedtitle: "Share your local community stories and pictures with more than 1 Million Palkars worldwide", streamSize: 5});	
+	Core.register('sseController',sseController, {relPath: "http://54.186.148.79:8080/", username: "guest", userAuthenticated: "false", pageHandle: "Palkar"});
+	
+	Core.start('clickReactionsController');
+	Core.start('textReactionsController');
+	Core.start('storyItemController');
+	Core.start('pageViewController');
+	Core.start('sseController');
+	
+	}catch(err){
+		alert(err);
+	}
+
+
+});
+</script>
+
+
+
 </html>

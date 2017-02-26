@@ -37,7 +37,15 @@ var sseController = function(sb, input){
     }
     
     function _storyUpdateMessageReceived(message) {
-		navigator.notification.beep(2);
+		if(navigator.notification){	
+			try{
+			navigator.notification.beep(2);
+			}catch(e){
+				navigator.notification.alert(e);
+			}
+		}else{
+			alert('notification not defined..');	
+		}
 		Core.publish('streamUpdateReceived', null);
     	//Core.publish('getNewStories', null);
     }
