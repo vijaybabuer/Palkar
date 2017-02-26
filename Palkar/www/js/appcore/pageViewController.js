@@ -317,6 +317,11 @@ var pageViewController = function(sb, input){
 		sb.dom.find('#rightPanel').removeClass('nd');
 		sb.dom.find('#leftPanel').removeClass('nd');
 		sb.dom.find('#mainContainer').nicescroll();	
+		document.addEventListener("deviceready", function(){
+		   navigator.notification.vibrate(1000);
+		   navigator.notification.alert("Hello");
+		   navigator.notification.beep(1);   
+		}, false);
 	}
 	
 	function _refreshButtonClick(e){
