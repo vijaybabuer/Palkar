@@ -39,6 +39,7 @@ var sseController = function(sb, input){
     function _storyUpdateMessageReceived(message) {
 		if(navigator.notification){	
 			try{
+			navigator.notification.alert('New message', null, 'New Message', 'Ok');
 			navigator.notification.beep(2);
 			}catch(e){
 				navigator.notification.alert(e);
