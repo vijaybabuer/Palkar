@@ -362,7 +362,7 @@ em{
 	font-weight: 800;
 	margin: 0px;
 }
-#containerBackButton{ 
+#containerBackButton, #showMainPageButton, .loginMenuBar, .registerMenuBar{ 
 	background: rgba(0,0,0,0); 
 	border: 0px;
 	text-shadow: none;
@@ -379,7 +379,7 @@ em{
 	text-shadow: none;
 }
 
-#showRightPanel, #refreshPanel{
+#showRightPanel, #refreshPanel, #loginRegisterButton{
 	float: right; 
 	background-color: rgba(0,0,0,0); 
 	border: 0px;
@@ -611,4 +611,30 @@ em{
  }
  .Fix{
  	position: fixed;
+ }
+ #loginRegisterButton, #guestWelcome{
+ 	display: none;
+ }
+ 
+ #loginSlideScrollBar, #termsAndConditions{
+   	margin-top: 45px;
+	background-color: #ffffff !important;
+ }
+  
+#loginRegisterPageSlides{
+  	padding-top: 1em;	
+}
+ #loginSlideScrollBar, #loginRegisterPageSlides{
+	width: 100%;
+	clear: both;
+	text-align: center;
+ }
+ #loginDiv, #registrationDiv{
+ 	width: 90%;
+ }
+ .activeButton{
+ 	border-bottom: 2px solid #3299BB !important;
+ }
+ #username, #password, #rusername, #remailAddress, #rpassword, #ruserFullName{
+ 	height: 3em !important;
  }

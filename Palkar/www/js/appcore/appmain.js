@@ -25,6 +25,7 @@ Sandbox = Class.extend({
 */
 Core = function(_$) {
 	var moduleData = {},
+		userData = null,
 		cache = {}, 
 		_dom = {
 			find: function(selector) {
@@ -48,6 +49,15 @@ Core = function(_$) {
 			}
 		},
 		_utilities = {
+			getUserInfo: function(){
+				return userData;
+			},
+			setUserInfo: function(username, authorization){
+				createUserData(username, authorization);
+			},
+			deleteUserInfo: function(){
+				alert('not supported');
+			},			
 			merge: _$.extend,
 			map: _$.map,
 			data: _$.data,
@@ -164,6 +174,54 @@ Core = function(_$) {
 			parse: _$.parseJSON
 		};
 
+
+	function loadUserData(){
+				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {				
+					fs.root.getFile("userInfo.txt", { create: false, exclusive: false }, function (fileEntry) {
+						readUserData(fileEntry);
+					}, function(error){createUserData('guest',null);});				
+				}, function(error){console.log('Problem Accessing File System');});		
+	}
+	
+	function onErrorReadFile(){
+		alert('error on file read');	
+	}
+	function readUserData(fileEntry){
+		fileEntry.file(function (file) {
+			var reader = new FileReader();	
+			reader.onloadend = function() {
+				console.log("Successful file read: " + this.result);
+				var userDataText = this.result;
+				userData = JSON.parse(userDataText.toString());
+			};
+			reader.readAsText(file);
+		}, onErrorReadFile);			
+	}
+	function writeUserData(fileEntry, dataObj){
+    // Create a FileWriter object for our FileEntry (log.txt).
+		fileEntry.createWriter(function (fileWriter) {
+	
+			fileWriter.onwriteend = function() {
+				console.log('Success Write');
+			};
+	
+			fileWriter.onerror = function (e) {
+				console.log('Failure Write');
+			};
+	
+			fileWriter.write(dataObj);
+		});		
+	}
+	function createUserData(username, authorization){
+				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+					fs.root.getFile("userInfo.txt", { create: true, exclusive: false }, function (fileEntry) {					
+					var userDataTemp = {username: username, authorization: authorization};
+					writeUserData(fileEntry, userDataTemp);
+					readUserData(fileEntry);
+					}, function(error){console.log(error);});
+				
+				}, function(error){console.log(error);});			
+	}
 	return {
 		dom: _dom,
 		utilities: _utilities,
@@ -217,6 +275,9 @@ Core = function(_$) {
 			} catch (err) {
 				console.log(err);
 			}
+		},
+		loadUserData: function(){
+			loadUserData();
 		},
 		subscribe: function(message, callback) {
 			if (!cache[message]) {

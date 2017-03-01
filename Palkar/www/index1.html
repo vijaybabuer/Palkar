@@ -63,7 +63,7 @@
 				</div>	        
 				<div class="containers" id="containerDiv">
 						<div class="container" id="mainContainer">
-							<p id="guestWelcome">You are missing out! Login or Register today to activitate tons of exciting features on the App.</p>
+							<p id="guestWelcome">You have been logged in as Guest. You can only browse Palkar App. Please Login or Register to activate full set of features.</p>
 							<a class="ui-btn ui-btn-inline noshadow nd lt" id="refreshPanel" disabled>
 									<i class="fa fa-refresh"></i> Show Latest Stories
 							</a>							
@@ -77,8 +77,6 @@
 				<div class="appFooter" id="mainAppFooter">
 					<div id="message1"></div>	
 					<div id="deviceready"></div>
-					Copyright PalPostr.COM, All Rights Reserved.
-					<a href="#termsAndConditions">Terms and Conditions</a>	
 				</div>		
 				
 			<div class="al b nd" data-position="right" data-position-fixed="true" data-role="panel" data-display="overlay" id="rightPanel">
@@ -91,73 +89,53 @@
 			   <p class="roberto">We have a team of volunteers who will share news from our community on this App. We will add more features as we grow. Your feedback and ideas are most welcome.</p>			   
 			   	<p class="roberto">
 			   	Sincerely<br>
-			    PalPostr.COM <br>
-				Facebook: Palkar Mobile App
+			   	Vasanth(Founder) veervasanth@gmail.com <br>
 			   	</p>	
 			</div><!-- /panel -->								
         </div>
 		 <div data-role="page" class="login" id="loginRegisterPage"> 
 				<div class="appHeader noshadow">	
 					<a  id="showMainPageButton" href="#mainPage" class="ui-btn ui-btn-inline noshadow">
-						<i class="fa fa-chevron-left"></i>&nbsp;Palkar
+						<i class="fa fa-chevron-left"></i>
 					</a>
-				</div>
-				<div id="loginSlideScrollBar">
-						<a class="registerMenuBar ui-btn ui-btn-inline noshadow cd activeButton" onClick="loginSlides.slide(0, 1000);" id="0">
-							Register
-						</a>				
-						<a class="loginMenuBar ui-btn ui-btn-inline noshadow cd" onClick="loginSlides.slide(1, 1000);" id="1">
-							Login
-						</a>
-						
-				</div>
-				<div class="swipe" id="loginRegisterPageSlides">
-					<div class="swipe-wrap" >
-						<div id="registrationDiv">
-								<span  style="padding: 0px; margin: 0px;"><i class="fa fa-lock"></i>&nbsp;Please create PalPostr Account</span><br /><br />
-								<a class="ui-btn ba" id="alreadyHaveAccount" onClick="loginSlides.slide(1, 1000)" >Already Registered?</a>
-								<input type="text"  id="ruserFullName" placeholder="Your Full Name Ex: Kumar Patel" value=''/>
-								<input type="email"  id="remailAddress" placeholder="Email Address" value=''/>								
-								<input type="text" id="rusername" placeholder="User Name or Telephone Ex: kpatel" value=''/>
-								<input type="password"  id="rpassword"  placeholder="Password" />
-								<a class="ui-btn cd" id="registerUser" >Register</a><br>
-								<a href="#termsAndConditions">Terms and Conditions</a>
-						</div>					
-						<div id="loginDiv">					
-								<span  style="padding: 0px; margin: 0px;"><i class="fa fa-lock"></i>&nbsp;Please Login using PalPostr Account</span><br />
-								<input type="text" id="username"  placeholder="User Name or Telephone" value=''/>
-								<input type="password" id="password"   placeholder="Password" style=" height: 2em;"/>
-								<a class="ui-btn ui-btn-inline cd" id="authorizeUser" >Login</a>
-								<a class="ui-btn ui-btn-inline cd" id="register" onClick="loginSlides.slide(0, 1000)" >Register</a>
-								<a class="ui-btn ui-btn-inline cd" id="forgotUsername" >Forgot?</a><br>
-								<a href="#termsAndConditions">Terms and Conditions</a>								
+				</div>	        
+				<div class="containers yui3-g" id="loginDiv">
+					<div class="yui3-u-1">					
+					<form class="p"  style="" name="f"   method="post">		
+						<p class="" style="padding: 0px; margin: 0px;">
+							<span  style="padding: 0px; margin: 0px;"><i class="fa fa-lock"></i>&nbsp;Login</span><br /><br />
+						</p>  
+						<p class="" style="padding: 0px; margin: 0px;">
+						<div class="input-group margin-bottom-sm">
+						  <span class="input-group-addon ab na"><i class="fa fa-user fa-fw"></i></span>
+						 <input type="text" id="username" maxlength="" class="form-control inp na" style="height: 2em;"  placeholder="User Name or Telephone" name='j_username' value=''/>
+						</div>	
+						<div class="input-group margin-bottom-sm">
+						  <span class="input-group-addon ab na bigScreenItem"><i class="fa fa-key fa-fw"></i></span>
+						  <input type="password" id="password" maxlength="75" class="form-control inp na"  name='j_password' placeholder="Password" style=" height: 2em;"/>
 						</div>
+						</p>								
+						<p class="" style="padding: 0px; margin: 5px;">
+						<input type="checkbox" class="na"/><span class="p lt">Remember me on this device.</span></p>
+			
+						<div class="input-group margin-bottom-sm">
+						  <span class="input-group-addon ab na bigScreenItem"><i class="fa fa-sign-in fa-fw"></i></span>
+						  <input class="form-control ab p cw" id="authorizeUser" style="height: 3em; border: 0px;" type="submit" value="Login">
+						</div>			
+						</p>      
+					</form>	
 					</div>
+				</div>	    
+				<div class="appFooter" id="mainAppFooter">
+					<div id="message1"></div>	
+					<div id="deviceready"></div>
 				</div>
 		 </div>	
-		 		<div data-role="page" id="termsAndConditions"> 
-					<div class="appHeader noshadow">	
-						<a  id="showMainPageButton" href="#mainPage" class="ui-btn ui-btn-inline noshadow">
-							<i class="fa fa-chevron-left"></i>&nbsp;Palkar
-						</a>
-					</div>
-					<div id="termsAndConditions">
-						<p>Palkar App is a free service, run by PalPostr.COM</p>
-						<p>PalPostr.COM can delete or modify your content with or without your permission.</p>
-						<p>No Pornographic, profane, personally provoking content is allowed in any sections of the App</p>
-						<p>No Pronograpic, profane, personally provoking content is allowed in any sections of the App</p>
-						<p>For more information, please visit the terms and conditions page of PalPostr.COM</p>					
-					</div>				
-					<div class="appFooter" id="mainAppFooter">
-						<div id="message1"></div>	
-						<div id="deviceready"></div>
-						Copyright PalPostr.COM, All Rights Reserved.					
-					</div>
-				</div>		
+		
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
-            app.initialize();
+            //app.initialize();
         </script>
     </body>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -892,7 +870,7 @@ Ex: john@example.com;sam@example.com</script>
 {% } %}
 </script>
 
-<script type="text/unittest">
+<script type="text/JavaScript">
 $(document).ready(function(){
 
 	try{

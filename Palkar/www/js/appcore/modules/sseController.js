@@ -37,16 +37,6 @@ var sseController = function(sb, input){
     }
     
     function _storyUpdateMessageReceived(message) {
-		if(navigator.notification){	
-			try{
-			navigator.notification.alert('New message', null, 'New Message', 'Ok');
-			navigator.notification.beep(2);
-			}catch(e){
-				navigator.notification.alert(e);
-			}
-		}else{
-			alert('notification not defined..');	
-		}
 		Core.publish('streamUpdateReceived', null);
     	//Core.publish('getNewStories', null);
     }
@@ -114,6 +104,12 @@ var sseController = function(sb, input){
            		publicConnect(message.sseDetails.parameterInfoList[0].parameterValue);
            		appendFooterMessage('publis connect..4');
        		}
+		  if (window.webkitNotifications.checkPermission() == 0) { // 0 is PERMISSION_ALLOWED
+			// function defined in step 2
+
+		  } else {
+			window.webkitNotifications.requestPermission();
+		  }			
 		}
    return{
 	   init:function() {

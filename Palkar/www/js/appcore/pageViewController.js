@@ -273,7 +273,7 @@ var pageViewController = function(sb, input){
 	}
 	
 	function _loadAppPage(appPage){
-		   if(appPage != null){				
+		   if(appPage != null){	
  			    sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").html(appPage);
 				var token = sb.dom.find("meta[name='_csrf']").attr("content");
 				var header = sb.dom.find("meta[name='_csrf_header']").attr("content");
@@ -285,9 +285,22 @@ var pageViewController = function(sb, input){
 				sb.dom.find('head').prepend(headerHtml);
 				
 			   updateFooterMessage("Getting data stream");
-			   var snippetUrl = relPathIn+"appView?mediaType=json";
-			   var data = {appname: appname, streamSize: streamSize};
-			   setTimeout(function(){sb.utilities.postV2(snippetUrl, data, _loadMainPage, _errorStartController);}, 1000);
+				if(sb.utilities.getUserInfo() != null){
+						_checkLoginStatus();
+				}else{
+						setTimeout(_checkLoginStatus, 500);
+				}			   
+				var userData = sb.utilities.getUserInfo();
+				 var snippetUrl = null;
+				  var data = null;
+				if(userData.username == 'guest' || !userData || userData.username == null){
+				   snippetUrl = relPathIn+"/appView?mediaType=json";
+				   data = {appname: appname, streamSize: streamSize};				
+				}else{
+				   snippetUrl = relPathIn+"/api/appView?mediaType=json&a="+userData.authorization;
+				   data = {username: userData.username, appname: appname, streamSize: streamSize};										   
+				}
+				setTimeout(function(){sb.utilities.postV2(snippetUrl, data, _loadMainPage, _errorStartController);}, 1000);	   
 		   }else{
 			   sb.dom.find('#message1').html("There was a problem loading the Page. Please try again after some time.");
 			}
@@ -304,24 +317,42 @@ var pageViewController = function(sb, input){
 			sb.dom.find('#leftPanel').panel({disabled: false});
 		}
 	}
+	
+	function _checkLoginStatus(){
+		if(sb.utilities.getUserInfo() == null || sb.utilities.getUserInfo().username == 'guest'){
+			sb.dom.find('#loginRegisterButton').show();
+			if(sb.utilities.getUserInfo().username == 'guest'){
+				sb.dom.find('#guestWelcome').show();
+				sb.dom.find('#guestWelcome').addClass('cr');
+			}
+		}else{
+			//Show User Icon
+		}
+	}
+	
 	function _startControllerV2(){
-		var screenHeight = sb.dom.find(window).height();
-		sb.dom.find('.appBody').css("height", screenHeight + " px");
-		document.getElementById("message1").innerHTML = "Loading "+appname+"..";
-		var appPageUrl = relPathIn + "appPage/"+appname+"/"+input.appmaintitle+"/"+input.appextendedtitle+"?mediaType=text";
-		sb.dom.find('#refreshPanel').on('click', _refreshButtonClick);
-		sb.utilities.appGet(appPageUrl,_loadAppPage,_errorStartController);
-        console.log('snippet : 2' + appPageUrl);
-		sb.dom.find('.appHeader').find('#containerBackButton').on('click', _containerBackButtonClickedV2);
-		sb.dom.find('.appHeader').find('#palpostr-url').on('click', _leftPanelButtonClickEvent);
-		sb.dom.find('#rightPanel').removeClass('nd');
-		sb.dom.find('#leftPanel').removeClass('nd');
-		sb.dom.find('#mainContainer').nicescroll();	
+		try{			
+			var screenHeight = sb.dom.find(window).height();
+			sb.dom.find('.appBody').css("height", screenHeight + " px");
+			document.getElementById("message1").innerHTML = "Loading "+appname+"..";
+			var appPageUrl = relPathIn + "appPage/"+appname+"/"+input.appmaintitle+"/"+input.appextendedtitle+"?mediaType=text";
+			sb.dom.find('#refreshPanel').on('click', _refreshButtonClick);
+			sb.utilities.appGet(appPageUrl,_loadAppPage,_errorStartController);
+			console.log('snippet : 2' + appPageUrl);
+			sb.dom.find('.appHeader').find('#containerBackButton').on('click', _containerBackButtonClickedV2);
+			sb.dom.find('.appHeader').find('#palpostr-url').on('click', _leftPanelButtonClickEvent);
+			sb.dom.find('#rightPanel').removeClass('nd');
+			sb.dom.find('#leftPanel').removeClass('nd');
+		}catch(error){
+			alert(error);	
+		}
+		
 	}
 	
 	function _refreshButtonClick(e){
 			var snippetUrl = relPathIn+"appView?mediaType=json";
 			var data = {appname: appname, streamSize: streamSize};
+			sb.dom.find(this).find('.fa').addClass('fa-spin');
 			sb.utilities.postV2(snippetUrl, data, _processNewStream, _errorProcessNewStream);
 	}
 	 function _initializePicturePresentation(){
@@ -397,13 +428,16 @@ var pageViewController = function(sb, input){
 		   if(newStreamResponse != null && newStreamResponse.antahRequestStatus == "SUCCESS"){
 				_loadMainPage(newStreamResponse);
 				sb.dom.find('#refreshPanel').prop('disabled', true);
+				sb.dom.find('#refreshPanel').find('.fa').removeClass('fa-spin');
+				sb.dom.find('#refreshPanel').hide();
 		   }else{
 			   _errorProcessNewStream('There was a problem getting message ' + antahResponseMessage);
 			}
 	}
-	function _streamUpdateReceived(message){	
-		 if(sb.dom.find('#refreshPanel').is(":disabled")){
+	function _streamUpdateReceived(message){
+		 if(sb.dom.find('#refreshPanel').is(":disabled")){				
 			 sb.dom.find('#refreshPanel').prop('disabled', false);
+			 sb.dom.find('#refreshPanel').show();
 		  }
 	}
 	
