@@ -40,6 +40,7 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
+		alert('device ready');
 	try{
 	Core.register('clickReactionsController',clickReactionsController,{relPath: "http://192.168.0.101:8080/palpostr/", reactionCountPerPage: "5"});
 	Core.register('textReactionsController',textReactionsController,{relPath: "http://192.168.0.101:8080/palpostr/", reactionCountPerPage: "5"});
@@ -47,10 +48,6 @@ var app = {
 	Core.register('pageViewController', pageViewController, {relPath: "http://192.168.0.101:8080/palpostr/", loadingText: "Welcome, <br> We are downloading your stream.", appname: "PalkarTest", appmaintitle: "Community Updates", appextendedtitle: "Share your local community stories and pictures with more than 1 Million Palkars worldwide", streamSize: 5});	
 	Core.register('sseController',sseController, {relPath: "http://54.186.148.79:8080/", username: "guest", userAuthenticated: "false", pageHandle: "PalkarTest"});
 	Core.register('userLoginController',userLoginController, {relPath: "http://192.168.0.101:8080/palpostr/", pageHandle: "PalkarTest"});
-		
-	}catch(err){
-		alert(err);
-	}
 
 	Core.loadUserData();
 	Core.start('clickReactionsController');
@@ -59,6 +56,12 @@ var app = {
 	Core.start('pageViewController');
 	Core.start('sseController');
 	Core.start('userLoginController');
+	
+	}catch(err){
+		alert(err);
+	}
+
+
 	
     },
     // Update DOM on a Received Event
