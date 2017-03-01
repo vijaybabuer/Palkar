@@ -616,9 +616,10 @@ em{
  	display: none;
  }
  
- #loginSlideScrollBar, #termsAndConditions{
+ #loginSlideScrollBar, #termsAndConditions, #inviteFriendsDiv{
    	margin-top: 45px;
 	background-color: #ffffff !important;
+	padding: 2px;
  }
   
 #loginRegisterPageSlides{
@@ -637,4 +638,8 @@ em{
  }
  #username, #password, #rusername, #remailAddress, #rpassword, #ruserFullName{
  	height: 3em !important;
+ }
+ #inviteFriendsDiv{
+ 	font-size: 10em;
+	text-align: center;
  }
