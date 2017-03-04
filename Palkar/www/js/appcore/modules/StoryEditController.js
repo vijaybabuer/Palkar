@@ -1,7 +1,7 @@
 var storyEditController = function(sb, input){
-	var htmlBody = sb.dom.find(input.elemHandle), relPathIn=input.relPath, cancelButton=null, addPostForm=null, submitButtonForm=null, documentidBox=null, picturesDivId=null, tinyMceInstance=null,
+	var htmlBody = null, relPathIn=input.relPath, cancelButton=null, addPostForm=null, submitButtonForm=null, documentidBox=null, picturesDivId=null, tinyMceInstance=null,
 	    subjectBox=null, messageBox=null, picturesDiv=null, createStoryHeaderDiv=null, albumForStoryID=null, addPicturesButton=null,  removePicturesButton=null, newMessageButton=null, editStoryDocumentPageId=null;
-	    addPostTextAreaHandle=input.addPostTextAreaHandle, wysiwygEditorStatus=false, httpMethod=null, thumnailhtmltemplate = null, albumcontainer = htmlBody.find('.PVTSTYPIC'), picturecontainer = albumcontainer.find(".albumpictures"), storyItemTemplate = null, storiesDiv= input.storiesDiv,
+	    addPostTextAreaHandle=input.addPostTextAreaHandle, wysiwygEditorStatus=false, httpMethod=null, thumnailhtmltemplate = null, albumcontainer = null, picturecontainer = null, storyItemTemplate = null, storiesDiv= input.storiesDiv,
 	    thisIsStoryPage = input.thisIsStoryPage, storyJSTemplateName = input.storyJSTemplateName, storyEditorCloseButton = null, allowPublicTextReactionsButton = null, allowPrivateTextReactionsButton = null, allowClickReactionsButton = null, allMessagesButtonSet = null,
 	    tinyMCEObject = null, storyContent = null, alertBeforeNavigatingAway = false;
    function _removePicturesClick(){
@@ -62,9 +62,10 @@ var storyEditController = function(sb, input){
 		   try{
 		   _initializeWYSIWYGEditor();		   
 		   }catch(err){
-			   messageBox.html("There was a problem loading editor. Please try again later.");
+			   alert("There was a problem loading editor. Please try again later."+err);
 		   }	   
 	   htmlBody.fadeIn();
+
 	   subjectBox.show();
 	   messageBox.show();
 	   messageBox.html(sb.dom.find('#template-storytemplate-Default').html());
@@ -78,7 +79,7 @@ var storyEditController = function(sb, input){
 			   try{
 			   _initializeWYSIWYGEditor();		   
 			   }catch(err){
-				   messageBox.html("There was a problem loading editor. Please try again later.");
+				  alert("There was a problem loading editor. Please try again later.");
 			   }
 		   //messageBox.html(storyResponse.storyitem.story);
 		   albumForStoryID=storyResponse.storyitem.storyPictureAlbumId;
@@ -106,7 +107,7 @@ var storyEditController = function(sb, input){
 		   subjectBox.show();
 		   messageBox.show();
 		   httpMethod="PUT";
-		   
+		   _closeOverlayPanel();
 	   }else{
 		   Core.publish("displayMessage",{message: "Operation could not be completed. Please try again later.", messageType: "failure"});
 	   }
@@ -125,7 +126,6 @@ var storyEditController = function(sb, input){
 	}
 	
    function _showAddPhotosForm(){
-
 	   subjectBox.val(sb.dom.find("#storyAddController-AlbumTitle").html());
 	   subjectBox.val(sb.dom.find("#storyAddController-AlbumTitle").html());
 	   subjectBox.val(sb.dom.find("#storyAddController-AlbumTitle").html());
@@ -135,6 +135,9 @@ var storyEditController = function(sb, input){
 	   messageBox.hide();
 	   
 	   htmlBody.fadeIn();
+	   
+
+	   
 	   addPicturesButton.click();
 	   httpMethod="POST";
    }
@@ -215,7 +218,7 @@ var storyEditController = function(sb, input){
    }
    
    function refreshForm(data){
-	   sb.dom.find(htmlBody).fadeOut();
+	   //sb.dom.find(htmlBody).fadeOut();
 	   enableFormSubmitting(true);
 	   albumForStoryID=null;
 	   sb.dom.find(htmlBody).find('.PVTSTYPIC').find(".albumpictures").html("");
@@ -251,11 +254,13 @@ var storyEditController = function(sb, input){
    function sendMessageSuccess(data){
 	   if(data.antahRequestStatus=="SUCCESS"){
 		   refreshForm(data);
+		   sb.dom.find("#storySendStatus").html(sb.dom.find("#jstemplate-SuccessMessage").html());
 	   }else{
-		   sb.dom.find(htmlBody).fadeOut();
-		   Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
+		   //sb.dom.find(htmlBody).fadeOut();
+		   //Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
+		   refreshForm(data)
+  		   sb.dom.find("#storySendStatus").html(sb.dom.find("#jstemplate-ErrorMessage").html());
 	   }
-	  
    }
    
    function updateMessageSuccess(data){
@@ -275,34 +280,33 @@ var storyEditController = function(sb, input){
 	   Core.publish("displayMessage",{message: "Message has been posted to server.", messageType: "alert"});
    }
    
-   function _editStoryButtonClick(input){
-	   
+   function _editStoryButtonClick(input){	   
 	   var storyId = input.storyId;
 	   var storyDocumentType = input.storyDocumentType;
-	   sb.utilities.get(relPathIn+storyDocumentType+'/Story.pvt/'+storyId+'?mediaType=json',null,_showEditMessageForm);
+	   sb.utilities.get(relPathIn+storyDocumentType+'/Story/'+storyId+'?mediaType=json',null,_showEditMessageForm);
    }
    function _initializeWYSIWYGEditor(){
 	   try{
 		   alertBeforeNavigatingAway = true;
 		   Core.publish('storyEditStatusUpdate', {storyEditHappening: alertBeforeNavigatingAway});
 		   messageBox.tinymce({
-				  script_url: relPathIn+'jscripts/plugins/tinymce/js/tinymce/tinymce.min.js',
+				  script_url: 'js/plugins/tinymce/js/tinymce/tinymce.min.js',
 				  theme: "modern",
 				  plugins: [
 				              "emoticons template paste textcolor link fontawesome"
 				          ],
-				  toolbar1: "forecolor backcolor emoticons fontawesome | insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+				  toolbar1: "forecolor backcolor emoticons | styleselect",
 				  menubar: false,
 				  statusbar: false,
 				  resize: "both",
-				  height: 250,
+				  paste_data_images: true,
+				  height: 150,
 				  entity_encoding : "numeric",
 				  content_css : [relPathIn+'css/wysiwyg.css', relPathIn+'css/font-awesome/4.4.0/css/font-awesome.min.css'],
 		   		  init_instance_callback: insertDefaultContent
 			   });
 		   	   messageBox.find('.mce-content-body ').html('<span>Add a story with the message</span>');
-			   messageBox.find('.mce-statusbar').hide();
-			   
+			   messageBox.find('.mce-statusbar').hide();			   
 	   }catch(err){
 		   console.log(err);
 		   throw err;
@@ -397,6 +401,7 @@ var storyEditController = function(sb, input){
    
    function _addStoryToDocumentClickEvent(e){
 	   e.preventDefault();
+	   _closeOverlayPanel();
 	   var buttonID = sb.dom.find(this).attr('id');
 	   var documentId = buttonID.split('-')[1];
 	   htmlBody.find("#createStoryDocument").val(documentId);
@@ -406,6 +411,7 @@ var storyEditController = function(sb, input){
    
    function _addAlbumToDocumentClickEvent(e){
 	   e.preventDefault();
+	   _closeOverlayPanel();
 	   var buttonID = sb.dom.find(this).attr('id');
 	   var documentId = buttonID.split('-')[1];
 	   htmlBody.find("#createStoryDocument").val(documentId);
@@ -414,17 +420,44 @@ var storyEditController = function(sb, input){
    }
 
    function _newStoryMessageReceived(message){
+	   _closeOverlayPanel();
 	   _showNewMessageForm();
    }
    function _newAlbumMessageReceived(message){
+	   _closeOverlayPanel();
 	   _showAddPhotosForm();
    }
-   return{
-	   init:function() {
-       	try{
-       			sb.utilities.trace('initializing module: createStory'); 
-       		
+   function _pageSnippetAddedProcess(pageSnippetAddedMessage){
+	   var pageSnippetElement = sb.dom.find(pageSnippetAddedMessage.snippetId);
+	   sb.dom.find(pageSnippetElement).find(".addStoryToDocument").bind('click',_addStoryToDocumentClickEvent);
+   	   sb.dom.find(pageSnippetElement).find(".addAlbumToDocument").bind('click',_addAlbumToDocumentClickEvent);
+   }
+   
+   function _closeOverlayPanel(){
+	   closeOverlay();
+	   sb.dom.find('.subContainer').each(function(){
+		  sb.dom.find(this).slideUp(); 
+	   });
+	   sb.dom.find('.subContainer').each(function(){
+			  sb.dom.find(this).remove(); 
+	   });
+	   sb.dom.find('.container').first().show();
+   }
+   function closeOverlay() {
+       sb.dom.find('.subContainer').first().animate({
+           top : '-=300',
+           opacity : 0
+       }, 600, function() {
+           sb.dom.find('#overlay-shade').fadeOut(300);
+           sb.dom.find(this).css('display','none');
+       });
+   }
+   function _startController(){
+				try{
        			//Module Initializing
+				htmlBody = sb.dom.find(input.elemHandle);
+				albumcontainer = htmlBody.find('.PVTSTYPIC');
+				picturecontainer = albumcontainer.find(".albumpictures");
        			newMessageButton=sb.dom.find("#newMessageButton");
        			addPhotosButton=sb.dom.find("#addPhotosButton");
        			addPostForm=htmlBody.find("#addPostForm");
@@ -443,12 +476,15 @@ var storyEditController = function(sb, input){
 	    		htmlBody.find("#validateUrl").click(_validateUrl);
 	    		removePicturesButton=allMessagesButtonSet.find('#removePictures');
 	    		thumnailhtmltemplate = sb.dom.find("#template-albumpicturethumbnail").html();
-	    		htmlBody.find('#allReactionsButtonSet').buttonset();
+	    		//htmlBody.find('#allReactionsButtonSet').buttonset();
+				//htmlBody.find("#allowComments").checkboxradio( "refresh" );
+				//htmlBody.find("#allowReplies").checkboxradio( "refresh" );
+				//htmlBody.find("#allowHilights").checkboxradio( "refresh" );
+
 	    		allowPublicTextReactionsButton = sb.dom.find('#createStory').find('#allReactionsButtonSet').find('#allowComments');
 	    		allowPrivateTextReactionsButton = sb.dom.find('#createStory').find('#allReactionsButtonSet').find('#allowReplies');
 	    		allowClickReactionsButton = sb.dom.find('#createStory').find('#allReactionsButtonSet').find('#allowHilights');
 	    		subjectBox.bind('keyup', _validateUrl);
-	    		sb.dom.find("#createStoryDocument" ).selectmenu({width: 500});
 
        			//Event Setup
        			addPostForm.submit(sendMessage);       		
@@ -470,8 +506,18 @@ var storyEditController = function(sb, input){
 	    		Core.subscribe('validateUrl', _validateUrlPublish);
 	    		Core.subscribe('newMessageButtonClick', _newStoryMessageReceived);
 	    		Core.subscribe('addAlbumButtonClick', _newAlbumMessageReceived);
-	    		sb.utilities.trace('initialization done : createStory');
-	    		
+	    		Core.subscribe('pageSnippetAdded', _pageSnippetAddedProcess);
+				}catch(e){
+					alert(e);	
+				}
+	   
+	}
+   return{
+	   init:function() {
+       	try{
+			
+				_startController();
+
        	}catch(err){
        		console.log(err);
        	}

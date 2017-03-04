@@ -27,6 +27,7 @@ Core = function(_$) {
 	var moduleData = {},
 		userData = null,
 		cache = {}, 
+		deviceAccounts = null,
 		_dom = {
 			find: function(selector) {
 				return _$(selector);
@@ -52,8 +53,8 @@ Core = function(_$) {
 			getUserInfo: function(){
 				return userData;
 			},
-			setUserInfo: function(username, authorization){
-				createUserData(username, authorization);
+			setUserInfo: function(username, authorization, authorizationType){
+				createUserData(username, authorization, authorizationType);
 			},
 			deleteUserInfo: function(){
 				alert('not supported');
@@ -175,11 +176,20 @@ Core = function(_$) {
 		};
 
 
+	function _showDeviceAccounts(accounts){
+		deviceAccounts = accounts;
+		alert('device accounts ' + accounts);
+		alert('device accounts ' + JSON.stringify(accounts));
+	}
+	
+	function _getDeviceAccountsError(error){
+		alert(error);	
+	}
 	function loadUserData(){
 				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {				
 					fs.root.getFile("userInfo.txt", { create: false, exclusive: false }, function (fileEntry) {
 						readUserData(fileEntry);
-					}, function(error){createUserData('guest',null);});				
+					}, function(error){createUserData('guest',null, null);});				
 				}, function(error){console.log('Problem Accessing File System');});		
 	}
 	
@@ -212,10 +222,10 @@ Core = function(_$) {
 			fileWriter.write(dataObj);
 		});		
 	}
-	function createUserData(username, authorization){
+	function createUserData(username, authorization, authorizationType){
 				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
 					fs.root.getFile("userInfo.txt", { create: true, exclusive: false }, function (fileEntry) {					
-					var userDataTemp = {username: username, authorization: authorization};
+					var userDataTemp = {username: username, authorization: authorization, authorizationType: authorizationType};
 					writeUserData(fileEntry, userDataTemp);
 					readUserData(fileEntry);
 					}, function(error){console.log(error);});

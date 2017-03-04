@@ -1,5 +1,5 @@
 var pageViewController = function(sb, input){
-	var thisIsMobileDevice = true, albumContainerJS=null, storyEditHappening = false, documentEditHappening = false, placeHolderContainer=sb.dom.find("#jstemplate-pageViewController-placeHolderContainer").html(), relPathIn = input.relPath, appname=input.appname, streamSize = input.streamSize, newStream = null;
+	var thisIsMobileDevice = true, storyEditorInitialized=false, albumContainerJS=null, storyEditHappening = false, documentEditHappening = false, placeHolderContainer=sb.dom.find("#jstemplate-pageViewController-placeHolderContainer").html(), relPathIn = input.relPath, appname=input.appname, streamSize = input.streamSize, newStream = null, userLoggedIn = false;;
 	
 	function _enableBigScreenFeatures(){
 		sb.dom.find(".bigScreenItem").show();
@@ -69,9 +69,28 @@ var pageViewController = function(sb, input){
 
 	   }
 	   
-	function addPagesToRightPanel(snippetResponse){
+	function processPageInformation(snippetResponse){
 		   var pageListHtml = tmpl("template-documentItemList", snippetResponse);
 		   sb.dom.find("#rightPanel").find("#documentPageList").html(sb.utilities.htmlDecode(pageListHtml));
+		   if(userLoggedIn){
+			   var optionsHtml = "";
+			   var showWriteToButton = false;
+			   for(var i=0; i < snippetResponse.documentListResponse.documentItemList.length; i++){
+					  if(snippetResponse.documentListResponse.documentItemList[i].acceptPosts){
+						optionsHtml = optionsHtml + '<option value="'+snippetResponse.documentListResponse.documentItemList[i].documentId+'">'+snippetResponse.documentListResponse.documentItemList[i].documentTitle+'</option>';
+						showWriteToButton = true;
+					  } 
+			   }
+			   optionsHtml = optionsHtml + "</select>";
+			   if(showWriteToButton){
+					sb.dom.find("#createStoryDocument").html(sb.dom.wrap(optionsHtml));
+					sb.dom.find("#createStoryDocument").selectmenu();
+					sb.dom.find("#newMessageButton").fadeIn();
+					sb.dom.find("#submitButtonForm").removeClass('nd');
+					sb.dom.find("#attachPictures").removeClass('nd');
+					sb.dom.find("#removePictures").removeClass('nd');					
+				}
+		   }
 	}
 	
 	function _setAnchorClickEvent(){
@@ -219,7 +238,7 @@ var pageViewController = function(sb, input){
 		}
 	}
 	
-	
+
 	function _loadMainPage(snippetResponse){
 		   if(snippetResponse != null && snippetResponse.antahRequestStatus == "SUCCESS"){	
 			   updateFooterMessage("");
@@ -238,13 +257,14 @@ var pageViewController = function(sb, input){
 				}
 			   if(snippetResponse.documentListResponse && snippetResponse.documentListResponse.documentItemList && snippetResponse.documentListResponse.documentItemList.length > 0){
 						try{
-						addPagesToRightPanel(snippetResponse);
+						processPageInformation(snippetResponse);
+						
 						}catch(e){
 							updateFooterMessage('problem loading page ' + snippetResponse.streamResponse.storyItemList[i].storyDocumentPageId + " " + e);
 						}
 				}else{
 					updateFooterMessage("No Pages Received");
-				}	
+				}
 			   sb.dom.find("#rightPanel").find("#documentPageList").find('a').each(_setAnchorClickEvent);			
 			   sb.dom.find('#containerDiv').find('#mainContainer').find('div').first().removeClass('subContainer');
    			   sb.dom.find('#containerDiv').find('#mainContainer').find('div').first().removeClass('container');
@@ -272,6 +292,26 @@ var pageViewController = function(sb, input){
 		document.getElementById("message1").innerHTML = msg;
 	}
 	
+	function _loadAppTemplates(){
+		sb.dom.find('body').append(sb.dom.find(this));
+	}
+	
+	function _triggerMainPageRequest(){
+			_checkLoginStatus();		
+			updateFooterMessage("Proceeding after check login status");
+			var snippetUrl = null;
+			var data = null;
+			if(userLoggedIn){
+				var userData = sb.utilities.getUserInfo();				
+				snippetUrl = relPathIn+"api/appView?mediaType=json&a="+userData.authorization;
+				data = {username: userData.username, appname: appname, streamSize: streamSize};
+			}else{
+			   snippetUrl = relPathIn+"appView?mediaType=json";
+			   data = {appname: appname, streamSize: streamSize};				
+			}
+			appendFooterMessage("Getting data stream");
+			sb.utilities.postV2(snippetUrl, data, _loadMainPage, _errorStartController);
+	}
 	function _loadAppPage(appPage){
 		   if(appPage != null){	
  			    sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").html(appPage);
@@ -281,32 +321,28 @@ var pageViewController = function(sb, input){
 				var tokenHtml =  '<meta name="_csrf" content="'+token+'"/>';
 				var headerHtml =  '<meta name="_csrf_header" content="'+header+'"/>';
 				
+				sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").find('script').each(_loadAppTemplates);
 				sb.dom.find('head').prepend(tokenHtml);
 				sb.dom.find('head').prepend(headerHtml);
-				
-			   updateFooterMessage("Getting data stream");
-				if(sb.utilities.getUserInfo() != null){
-						_checkLoginStatus();
-				}else{
-						setTimeout(_checkLoginStatus, 500);
-				}			   
-				var userData = sb.utilities.getUserInfo();
-				 var snippetUrl = null;
-				  var data = null;
-				if(userData.username == 'guest' || !userData || userData.username == null){
-				   snippetUrl = relPathIn+"/appView?mediaType=json";
-				   data = {appname: appname, streamSize: streamSize};				
-				}else{
-				   snippetUrl = relPathIn+"/api/appView?mediaType=json&a="+userData.authorization;
-				   data = {username: userData.username, appname: appname, streamSize: streamSize};										   
+			   try{
+					if(sb.utilities.getUserInfo() != null){
+						_triggerMainPageRequest();
+						appendFooterMessage("User Info Not Null");						
+					}else{
+						appendFooterMessage("User Info Null");
+						alert('timeout set since userinfo is null');
+						setTimeout(function(){_triggerMainPageRequest()}, 500);
+					}
+			   }catch(error){
+					alert('error while logging in ' + error);   
 				}
-				setTimeout(function(){sb.utilities.postV2(snippetUrl, data, _loadMainPage, _errorStartController);}, 1000);	   
+   
 		   }else{
 			   sb.dom.find('#message1').html("There was a problem loading the Page. Please try again after some time.");
 			}
 	}
 	function _errorStartController(request, errorMessage, errorObj){
-		document.getElementById("message1").innerHTML = JSON.stringify(request) + " " + errorMessage;
+		document.getElementById("message1").innerHTML = JSON.stringify(request) + " " + JSON.stringify(errorObj);
 	}
 	
 	function _leftPanelButtonClickEvent(e){
@@ -319,14 +355,14 @@ var pageViewController = function(sb, input){
 	}
 	
 	function _checkLoginStatus(){
-		if(sb.utilities.getUserInfo() == null || sb.utilities.getUserInfo().username == 'guest'){
-			sb.dom.find('#loginRegisterButton').show();
-			if(sb.utilities.getUserInfo().username == 'guest'){
-				sb.dom.find('#guestWelcome').show();
-				sb.dom.find('#guestWelcome').addClass('cr');
+		if(sb.utilities.getUserInfo()){			
+			if(sb.utilities.getUserInfo().username == 'guest' || sb.utilities.getUserInfo().username == 'undefined' || sb.utilities.getUserInfo().username == null){
+				userLoggedIn = false;
+			}else{
+				userLoggedIn = true;	
 			}
 		}else{
-			//Show User Icon
+			userLoggedIn = false;	
 		}
 	}
 	
@@ -343,6 +379,9 @@ var pageViewController = function(sb, input){
 			sb.dom.find('.appHeader').find('#palpostr-url').on('click', _leftPanelButtonClickEvent);
 			sb.dom.find('#rightPanel').removeClass('nd');
 			sb.dom.find('#leftPanel').removeClass('nd');
+			sb.dom.find('#mainPage').page({
+				domCache: true							  
+			});
 		}catch(error){
 			alert(error);	
 		}
@@ -500,6 +539,21 @@ var pageViewController = function(sb, input){
 		e.preventDefault();
 	}
 
+	function _userLoginEventReceived(message){
+				sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>');		   
+				var userData = sb.utilities.getUserInfo();
+				 var snippetUrl = null;
+				  var data = null;
+				if(userData.username == 'guest' || !userData || userData.username == null){
+				   snippetUrl = relPathIn+"/appView?mediaType=json";
+				   data = {appname: appname, streamSize: streamSize};				
+				}else{
+				   snippetUrl = relPathIn+"/api/appView?mediaType=json&a="+userData.authorization;
+				   data = {username: userData.username, appname: appname, streamSize: streamSize};										   
+				}
+				sb.utilities.postV2(snippetUrl, data, _loadMainPage, _errorStartController);	 		
+	
+	}
    return{
 	   init:function() {
        	try{
@@ -509,6 +563,7 @@ var pageViewController = function(sb, input){
 			Core.subscribe('newStoryAdded', _newStoryAddedToView);
 			Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
 			Core.subscribe('streamUpdateReceived', _streamUpdateReceived);
+			Core.subscribe('userLoginEvent', _userLoginEventReceived);			
 			document.addEventListener("resume", onResume, false);
 			document.addEventListener("backbutton", _deviceBackButtonClicked, true);
 			Core.subscribe('stompClientDisconnect', _stompClientDisconnectMessageReceived);
