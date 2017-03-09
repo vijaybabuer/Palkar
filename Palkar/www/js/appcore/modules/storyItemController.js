@@ -41,19 +41,7 @@ var storyItemController = function(sb, input){
 	   var deleteStoryButton = sb.dom.find(this);
 	   var buttonId = deleteStoryButton.attr('id');
 	   var storyId = buttonId.split('-')[1];
-	   
-	   var deleteStoryDialog=sb.dom.find("#DeleteDocument-Confirm");
-	   deleteStoryDialog.html(sb.dom.find("#StoryItemController-StoryItemDelete-Confirm").html());
-	   deleteStoryDialog.dialog({
-		  resizable: false,
-	   	  title: sb.dom.find("#jstemplate-MessageDisplayController-GeneralNote").html(),
-	   	  dialogClass: "opaque",
-	   	  modal: true,
-	   	  buttons: [
-	   		{text: sb.dom.find("#jstemplate-confirmLabel").html(), click: function(){_deleteStoryConfirm(storyId);sb.dom.find(this).dialog("close");}, class: "ab"},
-	   		{text: sb.dom.find("#jstemplate-cancelLabel").html(), click: function(){sb.dom.find(this).dialog("close");}, class: "br"}
-	   	  ]
-	   });
+	   _deleteStoryConfirm(storyId);
    }
    
    function _deleteStoryConfirm(storyId){

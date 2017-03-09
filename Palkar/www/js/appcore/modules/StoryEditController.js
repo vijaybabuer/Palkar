@@ -34,16 +34,16 @@ var storyEditController = function(sb, input){
    }
    
    function _startPictureUploadController(){
-	   sb.utilities.trace('Picture Upload Controller Start Requesting');
 	   if(albumForStoryID == null || albumForStoryID ==  0 ){
 		   Core.publish('addAlbum',{documenttype: 'PVTSTYPIC', documentname: subjectBox.val()});
 	   }else{
-		   Core.publish('addPictureFromDevice',{documentid: albumForStoryID, documenttype: 'PVTSTYPIC'});
+			sb.dom.find("#createStory").find("#storyMedia").find('#myComp').show();
+			sb.dom.find("#createStory").find("#storyMedia").find('#webCam').show();
 	   }
+	   removePicturesButton.show();
    }
    
    function _receiveAlbumUpdatePublish(publishData){
-	   sb.utilities.trace('Received upblish for album update : ' + publishData.documentid + " " + publishData.documenttype + publishData.actioncode);
 	   if(publishData.documenttype == "PVTSTYPIC"){
 		   if(publishData.actioncode == "ADD"){
 			   albumForStoryID=publishData.documentid; 			   
@@ -52,11 +52,10 @@ var storyEditController = function(sb, input){
 			   picturesDiv.show();
 			   removePicturesButton.fadeIn();
 		   }else if(publishData.actioncode == "UPDATE"){
-			   sb.utilities.trace("New photos added for this story..");
+			   alert("New photos added for this story..");
 		   }
 	   }
    }
-	
    function _showNewMessageForm(){
 	       storyContent = sb.dom.find("#storyAddController-DefaultContent").html();
 		   try{
@@ -158,7 +157,9 @@ var storyEditController = function(sb, input){
 	   picturecontainer.html("");
 	   enableFormSubmitting(true);
 	   htmlBody.fadeOut();
+	   htmlBody.find();
 	   alertBeforeNavigatingAway = false;
+	   albumcontainer.attr("id","");	   
 	   Core.publish('storyEditStatusUpdate', {storyEditHappening: alertBeforeNavigatingAway});
    }
    
@@ -171,6 +172,7 @@ var storyEditController = function(sb, input){
 	   var allowPublicTextReactions = sb.dom.find('#createStory').find('#allReactionsButtonSet').find('#allowComments').is(':checked');
 	   var allowPrivateTextReactions = sb.dom.find('#createStory').find('#allReactionsButtonSet').find('#allowReplies').is(':checked');
 	   var allowClickReactions = sb.dom.find('#createStory').find('#allReactionsButtonSet').find('#allowHilights').is(':checked');
+	   sb.dom.find("#transactionStatus").html("");
 	   if(documentId == "" || documentId == null || documentId == "null" || documentId == "undefined"){
 		   Core.publish("displayMessage",{message: "Please choose the document to post the story to.", messageType: "alert"});
 	   }else{
@@ -210,6 +212,8 @@ var storyEditController = function(sb, input){
 	   sb.dom.enable(removePicturesButton);
 	   sb.dom.find(htmlBody).find('.PVTSTYPIC').find('#uploadControllerPane').remove();
 	   sb.dom.find(htmlBody).find('.PVTSTYPIC').attr('id', '');
+		sb.dom.find("#createStory").find("#storyMedia").find('#myComp').hide();
+		sb.dom.find("#createStory").find("#storyMedia").find('#webCam').hide();	   
 	   sb.dom.enable(cancelButton);
 	   subjectBox.removeClass("ab");
 	   if(tinyMceInstance != null && setDefaultContent){
@@ -223,19 +227,21 @@ var storyEditController = function(sb, input){
 	   albumForStoryID=null;
 	   sb.dom.find(htmlBody).find('.PVTSTYPIC').find(".albumpictures").html("");
 	   
-	   var storyItem = data.antahRestfulTxnResponse.storyitem;
-	   var storyItemDocumentPageId = storyItem.storyDocumentPageId;
-	   
-	   if(thisIsStoryPage){
-		   sb.utilities.pageReload();   
-	   }else{
-		   var storyItemNode = sb.dom.find("#storyItem-"+storyItemDocumentPageId);
-		   if(storyItemNode){
-			   sb.dom.find(storyItemNode).remove();
-			   addStoryItemToView(storyItem);
+	   if(data.antahRequestStatus=="SUCCESS"){
+		   var storyItem = data.antahRestfulTxnResponse.storyitem;
+		   var storyItemDocumentPageId = storyItem.storyDocumentPageId;
+		   
+		   if(thisIsStoryPage){
+			   sb.utilities.pageReload();   
 		   }else{
-			   addStoryItemToView(storyItem);
-		   }		   
+			   var storyItemNode = sb.dom.find("#storyItem-"+storyItemDocumentPageId);
+			   if(storyItemNode){
+				   sb.dom.find(storyItemNode).remove();
+				   addStoryItemToView(storyItem);
+			   }else{
+				   addStoryItemToView(storyItem);
+			   }		   
+		   }
 	   }
 
 	   
@@ -254,12 +260,12 @@ var storyEditController = function(sb, input){
    function sendMessageSuccess(data){
 	   if(data.antahRequestStatus=="SUCCESS"){
 		   refreshForm(data);
-		   sb.dom.find("#storySendStatus").html(sb.dom.find("#jstemplate-SuccessMessage").html());
+		   sb.dom.find("#contentCreate").find("#showMainPageButton").click();
 	   }else{
 		   //sb.dom.find(htmlBody).fadeOut();
-		   //Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
-		   refreshForm(data)
-  		   sb.dom.find("#storySendStatus").html(sb.dom.find("#jstemplate-ErrorMessage").html());
+   		   sb.dom.find("#contentCreate").find("#showMainPageButton").click();
+		   Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
+		   refreshForm(data)		   
 	   }
    }
    
@@ -295,14 +301,13 @@ var storyEditController = function(sb, input){
 				  plugins: [
 				              "emoticons template paste textcolor link fontawesome"
 				          ],
-				  toolbar1: "forecolor backcolor emoticons | styleselect",
+				  toolbar1: "forecolor backcolor emoticons | insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
 				  menubar: false,
 				  statusbar: false,
 				  resize: "both",
 				  paste_data_images: true,
 				  height: 150,
 				  entity_encoding : "numeric",
-				  content_css : [relPathIn+'css/wysiwyg.css', relPathIn+'css/font-awesome/4.4.0/css/font-awesome.min.css'],
 		   		  init_instance_callback: insertDefaultContent
 			   });
 		   	   messageBox.find('.mce-content-body ').html('<span>Add a story with the message</span>');
@@ -472,7 +477,7 @@ var storyEditController = function(sb, input){
 	    		picturesDiv=htmlBody.find('.PVTSTYPIC');
 	    		createStoryHeaderDiv=htmlBody.find('#createStoryHeaderDiv');
 	    		allMessagesButtonSet = htmlBody.find('#allMessagesButtonSet');
-	    		addPicturesButton=allMessagesButtonSet.find('#attachPictures');
+	    		addPicturesButton=htmlBody.find('#attachPictures');
 	    		htmlBody.find("#validateUrl").click(_validateUrl);
 	    		removePicturesButton=allMessagesButtonSet.find('#removePictures');
 	    		thumnailhtmltemplate = sb.dom.find("#template-albumpicturethumbnail").html();

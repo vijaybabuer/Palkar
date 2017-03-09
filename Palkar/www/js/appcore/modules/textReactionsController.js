@@ -6,6 +6,7 @@ var textReactionsController = function(sb, input){
 	 try{
 		
 		reactionText = sb.dom.find('#'+e.currentTarget.id).parent().find('.txtara').val();
+		sb.dom.find('#'+e.currentTarget.id).parent().find('.txtara').val("");
 		docPageId = e.currentTarget.id.split("-")[1];
 		var addPageReactionTitle=sb.dom.find("#TxtReactionList-"+docPageId).find(".textReacSelection").html();
 		var addPageReactionType = null;
@@ -234,7 +235,7 @@ var textReactionsController = function(sb, input){
 		   var deleteStoryButton = sb.dom.find(this);
 		   var buttonId = deleteStoryButton.attr('id');
 		   var storyId = buttonId.split('-')[1];
-		   
+		   _deleteStoryConfirm(storyId);
 		   var deleteStoryDialog=sb.dom.find("#DeleteDocument-Confirm");
 		   deleteStoryDialog.html(sb.dom.find("#StoryItemController-StoryItemDelete-Confirm").html());
 		   deleteStoryDialog.dialog({
@@ -262,19 +263,8 @@ var textReactionsController = function(sb, input){
 			var reactionId = e.currentTarget.id.split("-")[1];
 			var pageReactionType = e.currentTarget.id.split("-")[2];
 			var reactionType = e.currentTarget.id.split("-")[3];
+			_removeReactionConfirm(reactionId, pageReactionType, reactionType);
 
-			   var deleteReactionDialog=sb.dom.find("#DeleteDocument-Confirm");
-			   deleteReactionDialog.html(sb.dom.find("#TextReactionController-ReactionDelete-Confirm").html());
-			   deleteReactionDialog.dialog({
-				  resizable: false,
-			   	  title: sb.dom.find("#jstemplate-MessageDisplayController-GeneralNote").html(),
-			   	  dialogClass: "opaque",
-			   	  modal: true,
-			   	  buttons: [
-			   		{text: sb.dom.find("#jstemplate-confirmLabel").html(), click: function(){_removeReactionConfirm(reactionId, pageReactionType, reactionType);sb.dom.find(this).dialog("close");}, class: "ab"},
-			   		{text: sb.dom.find("#jstemplate-cancelLabel").html(), click: function(){sb.dom.find(this).dialog("close");}, class: "br"}
-			   	  ]
-			   });
 			
 		}catch(err){
 			console.log(err);
@@ -286,18 +276,7 @@ var textReactionsController = function(sb, input){
 			var reactionId = e.currentTarget.id.split("-")[1];
 			var pageReactionType = e.currentTarget.id.split("-")[2];
 			var reactionType = e.currentTarget.id.split("-")[3];
-			   var deleteReactionDialog=sb.dom.find("#DeleteDocument-Confirm");
-			   deleteReactionDialog.html(sb.dom.find("#TextReactionController-ReactionDelete-Confirm").html());
-			   deleteReactionDialog.dialog({
-				  resizable: false,
-			   	  title: sb.dom.find("#jstemplate-MessageDisplayController-GeneralNote").html(),
-			   	  dialogClass: "opaque",
-			   	  modal: true,
-			   	  buttons: [
-			   		{text: sb.dom.find("#jstemplate-confirmLabel").html(), click: function(){_removeAllReactionsFromUserConfirm(reactionId, pageReactionType, reactionType);sb.dom.find(this).dialog("close");}, class: "ab"},
-			   		{text: sb.dom.find("#jstemplate-cancelLabel").html(), click: function(){sb.dom.find(this).dialog("close");}, class: "br"}
-			   	  ]
-			   });
+			_removeAllReactionsFromUserConfirm(reactionId, pageReactionType, reactionType);
 		}catch(err){
 			console.log(err);
 		}
@@ -456,6 +435,7 @@ var textReactionsController = function(sb, input){
 		sb.dom.find('#'+e.currentTarget.id).parent().fadeOut();
 		 try{
 			reactionText = sb.dom.find('#'+e.currentTarget.id).parent().find('.rplytxtara').val();
+			sb.dom.find('#'+e.currentTarget.id).parent().find('.rplytxtara').val("");
 			docPageId = e.currentTarget.id.split("-")[1];
 			toReactionId=e.currentTarget.id.split("-")[2];			
 			if(reactionText != "" && reactionText != null && reactionText != sb.dom.find("#jstemplate-commentMsg").html() &&  reactionText != sb.dom.find("#jstemplate-replyMsg").html()){

@@ -33,6 +33,7 @@
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />	
 		<link rel="stylesheet" href="css/font-awesome/4.4.0/css/font-awesome.min.css" type="text/css" />
 		<link rel="stylesheet" href="js/plugins/jquery.powertip-1.2.0/css/jquery.powertip.css" type="text/css" />
+		<link rel="stylesheet" href="css/effects.css" type="text/css" />
 		<link rel="stylesheet" href="css/standard.css" type="text/css" />
 		<link rel="stylesheet" href="css/storyItem.css" type="text/css" />
 		<link rel="stylesheet" href="css/fa.css" type="text/css" />
@@ -65,6 +66,9 @@
 				<div class="containers" id="containerDiv">
 						<div class="container" id="mainContainer">
 							<p id="guestWelcome">You are missing out! Login or Register today to activitate tons of exciting features on the App.</p>
+							<div id="transactionStatus">
+								
+							</div>							
 							<a class="ui-btn ui-btn-inline noshadow nd lt" id="refreshPanel" disabled>
 									<i class="fa fa-refresh"></i> Show Latest Stories
 							</a>							
@@ -187,61 +191,62 @@
 							<i class="fa fa-chevron-left"></i>&nbsp;Palkar
 						</a>
 					</div>				
-					<div id="storyPostContainer">
-						<div id="storySendStatus">
-							
-						</div>	
+					<div id="storyPostContainer">	
 						<div id="createStory" class="pane" style="display: none; background-color: #ffffff; padding-top: 2px;">	
 						<form class="bw" id="addPostForm"  method="POST" action=''>
 							<div data-role="collapsibleset" data-theme="a" data-content-theme="a" data-mini="true">
-									<div id="createStoryHeaderDiv"  data-role="collapsible" data-mini="true">	
-										<h3>Choose Section You are writing to</h3>		
+									<div id="createStoryHeaderDiv">	
+										<h5>Writing To</h5>		
 										<select id='createStoryDocument' title='Choose the page where you want write your message' class='stdf p' style='border: 0px; margin: 0px; height: 50px;'>
 										</select>			
 									</div>								
 									<div id="storyCreateTitle" data-role="collapsible" data-mini="true">
-										<h3>Choose A URL Name (optional) </h3>
+										<h3>Choose A Subject for Message(optional) </h3>
 										<textarea placeholder="Subject/URL" id="subject" type="text" rows="2" cols="50" style="resize: none;" class="sq fill p stdf box"></textarea>
 									</div>
 									<div id="storyMedia" data-role="collapsible" data-mini="true" data-collapsed="false">
-										<h3>Message and Photos</h3>									
-										<div class="bw yui3-u-1 nd PVTSTYPIC">
+										<h3>Message and Photos</h3>	
+										<div id="panel-hdr" class=" p h3 ar">
+											<button type="button"  id="attachPictures" title="Attach Pictures from your computer" class="ui-btn ui-btn-inline p ePtr">
+												<i class="fa fa-camera"></i>				
+											</button> 
+											<button type="button" id="myComp" style="margin: 0px;" class="ui-btn ui-btn-inline p ePtr nd"><i class="fa fa-file-image-o"></i>&nbsp;Gallery</button>&nbsp;
+											<button type="button" style="margin: 0px;" id="webCam" class="ui-btn ui-btn-inline p ePtr nd"><i class="fa fa-camera"></i>&nbsp;Camera</button>   			
+										</div>																		
+										<div class="bw PVTSTYPIC">											
 										</div>	     
 										<textarea class="al addPostTextArea" style="margin: 0px; padding: 0px;"></textarea>
-										<p class="ac p" style="margin-top: 2px; padding: 0px;">  							
-											<div id="allMessagesButtonSet" class="sf" style="width: 100%;"> 
-														<button id="submitButtonForm" type="submit" title="Post Message" class="ui-btn ui-btn-inline cb nd" style="margin: 2px; padding: 5px; border: 0px; font-weight: 100;">
-																Post
-														</button>  		
-														<button type="button"  id="attachPictures" title="Attach Pictures from your computer" class="ui-btn ui-btn-inline cb nd" style="margin: 2px; padding: 5px; border: 0px;">
-																<i class="fa fa-camera"></i>				
-														</button>     
-														<button type="button"  id="removePictures" title="Remove Pictures from Message" class="ui-btn ui-btn-inline cb" style="display: none;  margin: 2px; padding: 5px; border: 0px;">
-																<i class="fa fa-camera"><i class="fa fa-times" style="vertical-align: sub;"></i></i>		
-														</button>            
-														<a href="#mainPage" type="button"  id="cancel" title="Don't Send this Message" class="ui-btn ui-btn-inline bw cg" style="margin: 2px; padding: 5px; float: right; border: 0px;">
-																Cancel
-														</a>       
-											</div>	  
-										</p>
 									</div>
 									<div id="storyCreateOptions" data-role="collapsible" data-mini="true">
 											<h3>Reaction Preferences (Optional)</h3>
-											<fieldset id="allReactionsButtonSet" data-role="controlgroup" data-type="horizontal" class="sf" data-mini="true"> 
-														<input type="checkbox"  id="allowComments" style="margin: 2px; padding: 5px; border: 0px; font-weight: normal;" checked >
-															<label id="allowCommentsLabel" class="yui3-button"  for="allowComments">
-																<i class="fa fa-comments"></i>&nbsp;<span id="label" class="nd bigScreenItem">Allow Comments</span>
+											<fieldset id="allReactionsButtonSet" data-role="controlgroup" class="sf" data-mini="true"> 
+														<input type="checkbox"  id="allowComments" checked >
+															<label id="allowCommentsLabel" for="allowComments">
+																<i class="fa fa-comments"></i>&nbsp;<span id="label">Allow Comments</span>
 															</label>
-														<input type="checkbox" id="allowReplies" style="margin: 2px; padding: 5px; border: 0px; font-weight: normal;" checked >
-															<label id="allowRepliesLabel" class="yui3-button"  for="allowReplies" >
-																<i class="fa fa-reply"></i>&nbsp;<span id="label" class="nd bigScreenItem">Allow Replies</span>
+														<input type="checkbox" id="allowReplies"  checked >
+															<label id="allowRepliesLabel"  for="allowReplies" >
+																<i class="fa fa-reply"></i>&nbsp;<span id="label">Allow Replies</span>
 															</label>
-														<input type="checkbox" id="allowHilights" style="margin: 2px; padding: 5px; border: 0px; font-weight: normal;" checked >
-															<label id="allowHilightsLabel" class="yui3-button"  for="allowHilights">
-																<i class="fa fa-star"></i>&nbsp;<span id="label" class="nd bigScreenItem">Allow Highlights</span>
+														<input type="checkbox" id="allowHilights"  checked >
+															<label id="allowHilightsLabel"   for="allowHilights">
+																<i class="fa fa-star"></i>&nbsp;<span id="label">Allow Highlights</span>
 															</label>       
 											</fieldset>							
-									</div>	
+									</div>
+								<p class="ac p" style="margin-top: 2px; padding: 0px;">  							
+									<div id="allMessagesButtonSet" class="sf" style="width: 100%;"> 
+										<button type="submit" id="submitButtonForm" title="Post Message" class="ui-btn ui-btn-inline cd nd">
+											Post
+										</button>  		    
+										<button type="button"  id="removePictures" title="Remove Pictures from Message" class="ui-btn ui-btn-inline cb" style="display: none;  margin: 2px; padding: 5px; border: 0px;">
+											<i class="fa fa-camera"><i class="fa fa-times" style="vertical-align: sub;"></i></i>		
+										</button>            
+										<a href="#mainPage" type="button"  id="cancel" title="Don't Send this Message" class="ui-btn ui-btn-inline bw cg" style="margin: 2px; padding: 5px; float: right; border: 0px;">
+											Cancel
+										</a>       
+									</div>	  
+								</p>										
 								</div>							
 							</form>						
 						</div>				
@@ -268,7 +273,6 @@
 <script type="text/javascript" src="js/plugins/photoupload/js/jquery.fileupload-video.js"></script>
 <script type="text/javascript" src="js/plugins/photoupload/js/jquery.fileupload-validate.js"></script>
 <script type="text/javascript" src="js/plugins/photoupload/js/jquery.fileupload-ui.js"></script>
-<script type="text/javascript" src="js/plugins/photoupload/ojs/main.js"></script>
 <script type="text/javascript" src="js/plugins/jquery.photobooth/jquery.photobooth.min.js"></script>
 <script type="text/javascript" src="js/plugins/tinymce/js/tinymce/jquery.tinymce.min.js"></script>
 <script type="text/javascript" src="js/plugins/jquery-visible/jquery.visible.min.js"></script>
@@ -287,6 +291,9 @@
 <script type="text/javascript" src="js/appcore/appmain.js"></script>
 <script type="text/javascript" src="js/appcore/pageViewController.js"></script>	
 
+<script type="text/javascript" src="js/appcore/modules/photoUploadController_PG.js"></script>	 
+<script type="text/javascript" src="js/appcore/modules/albumsController.js"></script>	
+<script type="text/javascript" src="js/appcore/modules/MessageDisplayController.js"></script>	
 <script type="text/javascript" src="js/appcore/modules/textReactionsController.js"></script>	
 <script type="text/javascript" src="js/appcore/modules/clickReactionsController.js"></script>	
 <script type="text/javascript" src="js/appcore/modules/StoryEditController.js"></script>
@@ -318,16 +325,10 @@
 <script type="text/template" id="jstemplate-NoRepliesLabel">No replies yet from your contacts. You can send a reply by typing your reply message in the text area and clicking the reply button.</script>
 <script type="text/template" id="jstemplate-SearchUserLabel">Search members by providing their full name e.g., John Smith</script>
 <script type="text/template" id="jstemplate-SuccessMessage">
-	There was a problem processing your request. Please try again later.<br>
-	<a  href="#leftPanel" id="palpostr-url" class="ui-btn ui-btn-inline noshadow">
-		<i class="fa fa-home" aria-hidden="true"></i>&nbsp;Palkar
-	</a>	
+		Success!	
 </script>
 <script type="text/template" id="jstemplate-ErrorMessage">
-	Success!<br>
-	<a  href="#leftPanel" id="palpostr-url" class="ui-btn ui-btn-inline noshadow">
-		<i class="fa fa-home" aria-hidden="true"></i>&nbsp;Palkar
-	</a>	
+		There was a problem processing your request. Please try again later.	
 </script>
 <script type="text/template" id="jstemplate-ProcessingMessage">Processing..</script>
 <script type="text/template" id="jstemplate-ProcessingSuccessMessage">Complete</script>
@@ -335,7 +336,7 @@
 <script type="text/template" id="jstemplate-MessageDisplayController-GeneralNote">Note</script>
 <!-- Story Add Controller Labels -->
 <script type="text/template" id="storyAddController-StoryTitle">Subject/URL</script>
-<script type="text/template" id="storyAddController-DefaultContent"><p style="color: grey; font-size: 1em;"><br></p></script>
+<script type="text/template" id="storyAddController-DefaultContent"><p style="color: #000000; font-size: 1em;">  <br></p></script>
 <script type="text/template" id="storyAddController-AlbumTitle">Album</script>
 <script type="text/template" id="storyAddController-MessageContent">your story/message..</script>
 <script type="text/template" id="storyAddController-AttachAlbumTitle">Attach Album</script>
@@ -439,18 +440,27 @@ $(document).ready(function(){
 	try{
 	Core.register('clickReactionsController',clickReactionsController,{relPath: "http://192.168.0.101:8080/palpostr/", reactionCountPerPage: "5"});
 	Core.register('textReactionsController',textReactionsController,{relPath: "http://192.168.0.101:8080/palpostr/", reactionCountPerPage: "5"});
-	Core.register('storyItemController',storyItemController, {relPath: "http://192.168.0.101:8080/palpostr/", storyPage: false, authenticatedUser: "none", storyJSTemplateName: "template-storyTemplate", getMoreStories: true, storiesDivId: "#storiesDiv", appname: "palkartest", numberOfStoriesToGet: 5});
-	Core.register('pageViewController', pageViewController, {relPath: "http://192.168.0.101:8080/palpostr/", loadingText: "Welcome, <br> We are downloading your stream.", appname: "PalkarTest", appmaintitle: "Community Updates", appextendedtitle: "Share your local community stories and pictures with more than 1 Million Palkars worldwide", streamSize: 5});	
-	Core.register('sseController',sseController, {relPath: "http://192.168.0.101:8080/palpostr/", username: "guest", userAuthenticated: "false", pageHandle: "PalkarTest"});
-	Core.register('userLoginController',userLoginController, {relPath: "http://192.168.0.101:8080/palpostr/", pageHandle: "PalkarTest"});
+	Core.register('storyEditController',storyEditController,{elemHandle: '#createStory', relPath: "http://192.168.0.101:8080/palpostr/", addPostTextAreaHandle: ".addPostTextArea", storiesDiv: "#storiesDiv", storyJSTemplateName: "template-storyTemplate"});		
+	Core.register('storyItemController',storyItemController, {relPath: "http://192.168.0.101:8080/palpostr/", storyPage: false, authenticatedUser: "none", storyJSTemplateName: "template-storyTemplate", getMoreStories: true, storiesDivId: "#storiesDiv", appname: "Palkar", numberOfStoriesToGet: 5});
+	Core.register('pageViewController', pageViewController, {relPath: "http://192.168.0.101:8080/palpostr/", loadingText: "Welcome, <br> We are downloading your stream.", appname: "Palkar", appmaintitle: "Community Updates", appextendedtitle: "Share your local community stories and pictures with more than 1 Million Palkars worldwide", streamSize: 5});	
+	Core.register('sseController',sseController, {relPath: "http://54.186.148.79:8080/", username: "guest", userAuthenticated: "false", pageHandle: "Palkar"});
+	Core.register('userLoginController',userLoginController, {relPath: "http://192.168.0.101:8080/palpostr/", pageHandle: "Palkar"});
+	Core.register('messageDisplayController',messageDisplayController,{appname: 'Palkar'});
+	Core.register('photoUploadController',photoUploadController, {relPath: "http://192.168.0.101:8080/palpostr/", containerDiv: "#photoUploadContainerDiv"});
+	Core.register('albumsController',albumsController,{relPath: "http://192.168.0.101:8080/palpostr/"});
 	
-	Core.start('clickReactionsController');
-	Core.start('textReactionsController');
-	Core.start('storyItemController');
+	Core.loadUserData();
 	Core.start('pageViewController');
+	Core.start('photoUploadController');
+	Core.start('clickReactionsController');
+	Core.start('messageDisplayController');
+	Core.start('textReactionsController');
+	Core.start('storyEditController');
+	Core.start('storyItemController');
 	Core.start('sseController');
 	Core.start('userLoginController');
-	
+	Core.start('albumsController');
+		
 	}catch(err){
 		alert(err);
 	}

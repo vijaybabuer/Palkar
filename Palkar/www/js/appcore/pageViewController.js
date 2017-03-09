@@ -21,7 +21,6 @@ var pageViewController = function(sb, input){
 		sb.dom.find('.storyItemFooter').each(_setFontSize2EM);
 		sb.dom.find("#GContacts").css("font-size", "2em");
 	}
-	
 	function _ShowStream(data){
 		console.log('data received..' + JSON.stringify(data));
 		sb.dom.find('#message').html(data);
@@ -330,7 +329,6 @@ var pageViewController = function(sb, input){
 						appendFooterMessage("User Info Not Null");						
 					}else{
 						appendFooterMessage("User Info Null");
-						alert('timeout set since userinfo is null');
 						setTimeout(function(){_triggerMainPageRequest()}, 500);
 					}
 			   }catch(error){

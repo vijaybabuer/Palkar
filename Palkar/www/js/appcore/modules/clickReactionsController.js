@@ -62,7 +62,7 @@ var clickReactionsController = function(sb, input){
 	}	
 	
 	
-	function _updateReactionList(pageReactionDetail, loadFlag){		
+	function _updateReactionList(pageReactionDetail, loadFlag){
 		var reactionsDiv = sb.dom.find("#reactions-"+pageReactionDetail.pageReactionId);
 		var clickReactionsShowButton = sb.dom.find("#clickReacMessage-"+pageReactionDetail.pageReactionId);
 		var clickReactionsSummaryButton = sb.dom.find('#HighlightReacSummary-'+pageReactionDetail.pageReactionId);

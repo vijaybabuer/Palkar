@@ -363,7 +363,7 @@ em{
 	font-weight: 800;
 	margin: 0px;
 }
-#containerBackButton, #showMainPageButton, .loginMenuBar, .registerMenuBar, .socialMenuBar{ 
+#containerBackButton, #showMainPageButton, .loginMenuBar, .registerMenuBar, .socialMenuBar, #submitButtonForm{ 
 	background: rgba(0,0,0,0); 
 	border: 0px;
 	text-shadow: none;
