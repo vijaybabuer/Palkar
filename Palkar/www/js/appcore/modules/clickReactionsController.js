@@ -372,7 +372,6 @@ var clickReactionsController = function(sb, input){
 		var pageReactionType = response.pageReactionType;
 		var pageReactionTitle = response.pageReactionTitle;
 		var agreeCount = response.agreeCount;
-		console.log(documentPageID + " " + toReactionID + " " + pageReactionID + " " + pageReactionType + " " + pageReactionTitle + " " + agreeCount);
 		sb.dom.find("#HighlightReacSubmit-"+documentPageID+"-"+toReactionID+"-"+pageReactionID+"-"+pageReactionType+"-"+pageReactionTitle).remove();
 		var agreeCountHtml = sb.dom.find("#jstemplate-reaction-highlight-count").html() + "(" + agreeCount + ")";
 		sb.dom.find("#reactionAgreeCount-"+response.toReactionId).html(agreeCountHtml);

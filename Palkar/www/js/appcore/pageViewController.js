@@ -185,7 +185,13 @@ var pageViewController = function(sb, input){
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerBackButton').show();
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerBackButton').bind('click', _containerBackButtonClicked);
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerCloseButton').show();
-			   sb.dom.find('#containerDiv').find('.container').first().find('.containerCloseButton').bind('click', _containerCloseButtonClicked);			   
+			   sb.dom.find('#containerDiv').find('.container').first().find('.containerCloseButton').bind('click', _containerCloseButtonClicked);		
+			   sb.dom.find('#containerDiv').find('.container').first().find('.CommentsSummary').removeClass('yui3-button');
+			   sb.dom.find('#containerDiv').find('.container').first().find('.RepliesSummary').removeClass('yui3-button');
+			   sb.dom.find('#containerDiv').find('.container').first().find('.HighlightSummary').removeClass('yui3-button');
+			   sb.dom.find('#containerDiv').find('.container').first().find('.ViewSummary').removeClass('yui3-button');
+			   sb.dom.find('#containerDiv').find('.container').first().find('.ShareSummary').removeClass('yui3-button');
+			   sb.dom.find('#containerDiv').find('.container').first().find('.WhatsAppShare').removeClass('yui3-button');
 			   sb.dom.find('.container').first().find('.storyItemBody').show();			   
 			   sb.dom.find('.appHeader').find('#containerBackButton').show();
 			   openOverlay();

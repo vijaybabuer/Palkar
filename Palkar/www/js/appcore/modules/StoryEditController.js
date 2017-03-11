@@ -37,8 +37,7 @@ var storyEditController = function(sb, input){
 	   if(albumForStoryID == null || albumForStoryID ==  0 ){
 		   Core.publish('addAlbum',{documenttype: 'PVTSTYPIC', documentname: subjectBox.val()});
 	   }else{
-			sb.dom.find("#createStory").find("#storyMedia").find('#myComp').show();
-			sb.dom.find("#createStory").find("#storyMedia").find('#webCam').show();
+		   Core.publish('manageStoryPictures', {documentid: albumForStoryID, documenttype: 'PVTSTYPIC', documentname: subjectBox.val()});
 	   }
 	   removePicturesButton.show();
    }
@@ -52,7 +51,7 @@ var storyEditController = function(sb, input){
 			   picturesDiv.show();
 			   removePicturesButton.fadeIn();
 		   }else if(publishData.actioncode == "UPDATE"){
-			   alert("New photos added for this story..");
+			   //alert("New photos added for this story..");
 		   }
 	   }
    }
@@ -73,9 +72,11 @@ var storyEditController = function(sb, input){
    }
    
    function _showEditMessageForm(storyResponse){
+	   try{
 	   storyContent = storyResponse.storyitem.story;
 	   if(storyResponse.txnStatus == "SUCCESS"){
 			   try{
+				   
 			   _initializeWYSIWYGEditor();		   
 			   }catch(err){
 				  alert("There was a problem loading editor. Please try again later.");
@@ -94,14 +95,27 @@ var storyEditController = function(sb, input){
 		   var allowClickResponseButton = htmlBody.find("#allReactionsButtonSet").find("#allowHilights");
 		   allowClickResponseButton.prop('checked', storyResponse.storyitem.allowClickReactions);
 
-		   allowCommentsButton.button("refresh");
-		   allowRepliesButton.button("refresh");
-		   allowClickResponseButton.button("refresh");
-		   
-		   if(storyResponse.storyitem.storyPictures){
-			   albumcontainer.attr("id", "attachments-"+storyResponse.storyitem.storyPictureAlbumId+"-"+storyResponse.storyitem.storyPictureAlbumTypeCd);
-			   _paintAlbumPictures(storyResponse.storyitem.storyPictures);
-		   }
+			try{
+			   allowCommentsButton.button("refresh");
+			   allowRepliesButton.button("refresh");
+			   allowClickResponseButton.button("refresh");
+			}catch(error){
+				console.log(error);
+			}
+
+			try{
+				if(storyResponse.storyitem.storyPictures){
+				   albumcontainer.attr("id", "album-"+storyResponse.storyitem.storyPictureAlbumId+"-"+storyResponse.storyitem.storyPictureAlbumTypeCd);
+				   picturesDiv.show();
+				   removePicturesButton.fadeIn();
+					albumcontainer.prepend(sb.dom.find('#template-uploadController').html());
+					picturecontainer = albumcontainer.find('.albumpictures');
+				   _paintAlbumPictures(storyResponse.storyitem.storyPictures);
+				}
+			}catch(error){
+				alert(error);
+			}
+
 		   htmlBody.fadeIn();
 		   subjectBox.show();
 		   messageBox.show();
@@ -110,13 +124,18 @@ var storyEditController = function(sb, input){
 	   }else{
 		   Core.publish("displayMessage",{message: "Operation could not be completed. Please try again later.", messageType: "failure"});
 	   }
+	   }catch(err){
+			alert(err);   
+		}
    }
    
 	function _paintAlbumPictures(mediaItemList){
 		var	thumnailhtml = null;	
 		picturecontainer.html("");
 		for(var i=0; i<mediaItemList.length; i++){
-			thumnailhtml=thumnailhtmltemplate.replace("albumpicid",relPathIn+"alb/"+mediaItemList[i].documentPageId);
+			thumnailhtml=thumnailhtmltemplate.replace("albumpicid",mediaItemList[i].documentPageId);
+			thumnailhtml=thumnailhtml.replace("albumpicid",mediaItemList[i].documentPageId);	
+			thumnailhtml=thumnailhtml.replace("albumpicid",mediaItemList[i].documentPageId);
 			thumnailhtml=thumnailhtml.replace("pictureurl",relPathIn+"photo/"+mediaItemList[i].documentPageId);
 			picturecontainer.append(thumnailhtml);
 		}
@@ -272,7 +291,9 @@ var storyEditController = function(sb, input){
    function updateMessageSuccess(data){
 	   if(data.antahRequestStatus=="SUCCESS"){
 		   refreshForm(data);
+		   sb.dom.find("#contentCreate").find("#showMainPageButton").click();
 	   }else{
+		   sb.dom.find("#contentCreate").find("#showMainPageButton").click();
 		   Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
 	   }
 	  
@@ -286,7 +307,7 @@ var storyEditController = function(sb, input){
 	   Core.publish("displayMessage",{message: "Message has been posted to server.", messageType: "alert"});
    }
    
-   function _editStoryButtonClick(input){	   
+   function _editStoryButtonClick(input){	
 	   var storyId = input.storyId;
 	   var storyDocumentType = input.storyDocumentType;
 	   sb.utilities.get(relPathIn+storyDocumentType+'/Story/'+storyId+'?mediaType=json',null,_showEditMessageForm);
@@ -295,6 +316,11 @@ var storyEditController = function(sb, input){
 	   try{
 		   alertBeforeNavigatingAway = true;
 		   Core.publish('storyEditStatusUpdate', {storyEditHappening: alertBeforeNavigatingAway});
+		   try{
+		   messageBox.tinymce().remove();
+		   }catch(err){
+				console.log('ignore error:- ' + err);   
+			}
 		   messageBox.tinymce({
 				  script_url: 'js/plugins/tinymce/js/tinymce/tinymce.min.js',
 				  theme: "modern",
@@ -323,7 +349,6 @@ var storyEditController = function(sb, input){
    function insertDefaultContent(inst){
 	   console.log('inside default content');
 	   tinyMceInstance = inst;
-	   console.log('printing story content..' + storyContent);
 	   tinyMceInstance.setContent(storyContent);
    }
    
@@ -520,9 +545,7 @@ var storyEditController = function(sb, input){
    return{
 	   init:function() {
        	try{
-			
-				_startController();
-
+			Core.subscribe('startStoryItemController', _startController);
        	}catch(err){
        		console.log(err);
        	}

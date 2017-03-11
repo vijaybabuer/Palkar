@@ -45,6 +45,7 @@ var textReactionsController = function(sb, input){
 		_updateReactionList(pageReactionDetail, "LOAD");
 	}
 	function _updateReactionList(pageReactionDetail, loadFlag){
+		try{
 		var allTextRactionsDiv = sb.dom.find("#TxtReactionList-"+pageReactionDetail.documentPageId);	
 		var reactionsDiv=allTextRactionsDiv.find("#"+pageReactionDetail.pageReactionTitle+"Div-"+pageReactionDetail.documentPageId);
 		var reactionsDivMessageArea=reactionsDiv.find(".TextReactionList-message");
@@ -70,9 +71,10 @@ var textReactionsController = function(sb, input){
 
 				reactionsListArea.append(sb.utilities.htmlDecode(tmpl("tmpl-txtPageReactionlist", pageReactionDetail)));
 				reactionsListArea.find(".timeago").timeago();
-				if(pageReactionDetail.pageReactionType == 'PRRTRMK' || pageReactionDetail.pageReactionType == 'PBRTRMK'){
-					_showRepliesToReactions(pageReactionDetail.reactionResponseList);
-				}
+				// not needed as the txtPageReactionList includes the replies as well. 
+				//if(pageReactionDetail.pageReactionType == 'PRRTRMK' || pageReactionDetail.pageReactionType == 'PBRTRMK'){
+					//_showRepliesToReactions(pageReactionDetail.reactionResponseList);
+				//}
 				
 
 				if(pageReactionDetail.hasNewEntry){
@@ -116,7 +118,7 @@ var textReactionsController = function(sb, input){
 		reactionsListArea.find('a.remtxtreac').bind('click', _removeReaction);
 		reactionsListArea.find('a.remtxtreacall').bind('click', _removeAllReactionsFromUser);
 		reactionsListArea.find('.hiliteResponse').each(_setHiliteResponseButtonEvents);
-		reactionsListArea.find('.unhiliteResponse').each(_setUnHiliteResponseButtonEvents);
+		reactionsListArea.find('.unhiliteResponse').each(_setUnHiliteResponseButtonEvents);		
 
 		allTextRactionsDiv.addClass(reactionsLoadedStatus);
 		sb.dom.find('#storyItemFooter-'+pageReactionDetail.documentPageId).addClass(reactionsLoadedStatus);
@@ -136,6 +138,9 @@ var textReactionsController = function(sb, input){
 			showMoreButton=null;
 		}else{
 			reactionsDiv.find('.showMore').hide();
+		}
+		}catch(err){
+			alert(err);	
 		}
 			
 	}
@@ -198,7 +203,6 @@ var textReactionsController = function(sb, input){
 		var pageReactionType = response.pageReactionType;
 		var pageReactionTitle = response.pageReactionTitle;
 		var agreeCount = response.agreeCount;
-		console.log(documentPageID + " " + toReactionID + " " + pageReactionID + " " + pageReactionType + " " + pageReactionTitle + " " + agreeCount);
 		sb.dom.find("#HighlightReacSubmit-"+documentPageID+"-"+toReactionID+"-"+pageReactionID+"-"+pageReactionType+"-"+pageReactionTitle).remove();
 		var agreeCountHtml = sb.dom.find("#jstemplate-reaction-highlight-count").html() + "(" + agreeCount + ")";
 		sb.dom.find("#reactionAgreeCount-"+response.toReactionId).html(agreeCountHtml);
@@ -344,7 +348,7 @@ var textReactionsController = function(sb, input){
 		}
 		
 		
-		sb.dom.find("#submitTxtReaction-"+documentPageId).attr("value",sb.dom.find("#jstemplate-commentMsg").html());
+		//sb.dom.find("#submitTxtReaction-"+documentPageId).attr("value",sb.dom.find("#jstemplate-commentMsg").html());
 		sb.dom.find("#CommentReplyArea-"+documentPageId).html(sb.dom.find("#jstemplate-commentMsg").html());
 		
 	}
@@ -383,7 +387,7 @@ var textReactionsController = function(sb, input){
 		var reacTypeToShow = inputPgReactionTitle;
 		sb.dom.find('#'+reacTypeToShow+'Div-'+docPageId).fadeIn();
 		
-		sb.dom.find("#submitTxtReaction-"+docPageId).attr("value",sb.dom.find("#jstemplate-commentMsg").html());
+		sb.dom.find("#submitTxtCommentReaction-"+docPageId).attr("value",sb.dom.find("#jstemplate-commentMsg").html());
 		sb.dom.find("#CommentArea-"+docPageId).val(sb.dom.find("#jstemplate-commentMsg").html());
 		sb.dom.find("#Comments-"+docPageId).addClass("cmt");sb.dom.find("#Replies-"+docPageId).removeClass("cmt");
 		sb.dom.find("#Comments-"+docPageId).addClass("ca");sb.dom.find("#Replies-"+docPageId).removeClass("ca");
@@ -411,7 +415,7 @@ var textReactionsController = function(sb, input){
 		var reacTypeToShow = inputPgReactionTitle;
 		sb.dom.find('#'+reacTypeToShow+'Div-'+docPageId).fadeIn();
 		
-		sb.dom.find("#submitTxtReaction-"+docPageId).attr("value",sb.dom.find("#jstemplate-replyMsg").html());
+		sb.dom.find("#submitTxtReplyReaction-"+docPageId).attr("value",sb.dom.find("#jstemplate-replyMsg").html());
 		sb.dom.find("#ReplyArea-"+docPageId).val(sb.dom.find("#jstemplate-replyMsg").html());
 		sb.dom.find("#Replies-"+docPageId).addClass("cmt");sb.dom.find("#Comments-"+docPageId).removeClass("cmt");
 		sb.dom.find("#Replies-"+docPageId).addClass("ca");sb.dom.find("#Comments-"+docPageId).removeClass("ca");	

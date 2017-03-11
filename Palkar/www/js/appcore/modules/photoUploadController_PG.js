@@ -34,7 +34,7 @@ var photoUploadController = function(sb, input){
 		if(divId && sb.dom.find(divId)){
 			sb.dom.find(divId).find("#uploadControllerPane").remove();	
 			currentAlbumDivId = divId;
-			sb.dom.find(currentAlbumDivId).prepend(sb.dom.find('#template-uploadController').html());
+			sb.dom.find("#createStory").find("#storyMedia").find(currentAlbumDivId).html(sb.dom.find('#template-uploadController').html());
 			if(divId.split("-")[2] == 'PROFPICS'){
 				sb.dom.find(".profpicturecapturediv").show();
 			}
@@ -160,9 +160,7 @@ var photoUploadController = function(sb, input){
 			 quality: 50,
 			 destinationType: navigator.camera.DestinationType.DATA_URL,
 			 sourceType: navigator.camera.PictureSourceType.CAMERA,
- 			 mediaType: navigator.camera.PictureSourceType.PICTURE,
-			 targetWidth: 640,
-			 targetHeight: 480
+ 			 mediaType: navigator.camera.PictureSourceType.PICTURE
 			 });
 			//Create Pictures for album
 		}else{
@@ -183,9 +181,7 @@ var photoUploadController = function(sb, input){
 			 quality: 50,
 			 destinationType: navigator.camera.DestinationType.DATA_URL,
 			 sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY,
- 			 mediaType: navigator.camera.PictureSourceType.PICTURE,
-			 targetWidth: 640,
-			 targetHeight: 480
+ 			 mediaType: navigator.camera.PictureSourceType.PICTURE
 			 });
 			//Create Pictures for album
 		}else{
@@ -222,12 +218,21 @@ var photoUploadController = function(sb, input){
 		   sb.utilities.serverDelete(relPathIn+"photo/"+data.photoId+"?mediaType=json",null,_photoDeleteResponseReceived);
 	   }
 	   
+	function _manageStoryPictures(data){
+		appPicInput=data;
+		alert('manage pics ' + data.documentid);
+		_ControllerStart("#album-"+data.documentid+"-"+data.documenttype);
+		sb.dom.find(myComp).fadeIn();
+		sb.dom.find(webCam).fadeIn();		
+	}
+	   
    return{
 	   init: function() {
        	try{
 				var addPicsButtonList = sb.dom.find(".addpics");
 				addPicsButtonList.each(_showAddPicsButton);     			
        			Core.subscribe('addAlbum',_addAlbum);
+				Core.subscribe('manageStoryPictures', _manageStoryPictures);
        			Core.subscribe('addPictureFromDevice',_addPictureFromDevice);
 				Core.subscribe('addPictureFromWebCam',_addPictureFromWebCam);
        			Core.subscribe("deleteDownloadPhoto", _deleteDownloadPhotoClicked);

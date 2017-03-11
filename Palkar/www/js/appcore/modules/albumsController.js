@@ -48,7 +48,7 @@ var albumsController = function(sb, input){
 	}
 	
 	function _paintPictures(input){
-		albumcontainer=sb.dom.find("#album-"+input.documentid+"-"+input.documenttype);
+		albumcontainer=sb.dom.find("#createStory").find("#storyMedia").find("#album-"+input.documentid+"-"+input.documenttype);
 		picturecontainer = albumcontainer.find(".albumpictures");
 		picturecontainer.append(loadingHtml);
 		_getPicturesFromServer(input);
@@ -65,8 +65,8 @@ var albumsController = function(sb, input){
 			thumnailhtml = thumnailhtmltemplate;
 			thumnailhtml=thumnailhtml.replace("albumpicid",data.documentPageIDList[i]);
 			thumnailhtml=thumnailhtml.replace("albumpicid",data.documentPageIDList[i]);
+			thumnailhtml=thumnailhtml.replace("albumpicid",data.documentPageIDList[i]);			
 			thumnailhtml=thumnailhtml.replace("pictureurl",relPathIn+"tnphoto1.pvt/"+data.documentPageIDList[i]+"?mediaType=jpeg");
-			alert(thumnailhtml);
 			picturecontainer.append(sb.dom.wrap(thumnailhtml));
 		}
 		albumcontainer.show();
@@ -103,7 +103,7 @@ var albumsController = function(sb, input){
 	
 	function _getPicturesFromServer(input){
 		try{
-			sb.utilities.get(relPathIn+"galb/"+input.documentid+".5?mediaType=json",_paintAlbumPictures);
+			sb.utilities.get(relPathIn+"galb/"+input.documentid+".100?mediaType=json",_paintAlbumPictures);
 		}catch(err){
 			serverLog(err);
 		}
