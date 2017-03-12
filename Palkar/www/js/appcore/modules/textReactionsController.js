@@ -3,27 +3,30 @@ var textReactionsController = function(sb, input){
 	TxtReactionListDiv=null, reactionType=null, pageReactionType=null, reactionText = null, reactionsLoadedStatus = "LOADED";
 	
 	function _addTextReaction(e){
-	 try{
-		
-		reactionText = sb.dom.find('#'+e.currentTarget.id).parent().find('.txtara').val();
-		sb.dom.find('#'+e.currentTarget.id).parent().find('.txtara').val("");
-		docPageId = e.currentTarget.id.split("-")[1];
-		var addPageReactionTitle=sb.dom.find("#TxtReactionList-"+docPageId).find(".textReacSelection").html();
-		var addPageReactionType = null;
-		var addReactionType = null;
-		if(addPageReactionTitle == "Comments"){
-			addPageReactionType="PBRTRMK";
-			addReactionType="PBRTRMK";
-		}else if(addPageReactionTitle == "Replies"){
-			addPageReactionType="PRRTRMK";
-			addReactionType="PRRTRMK";
+	 try{		
+		if(sb.utilities.isUserLoggedIn()){
+			reactionText = sb.dom.find('#'+e.currentTarget.id).parent().find('.txtara').val();
+			sb.dom.find('#'+e.currentTarget.id).parent().find('.txtara').val("");
+			docPageId = e.currentTarget.id.split("-")[1];
+			var addPageReactionTitle=sb.dom.find("#TxtReactionList-"+docPageId).find(".textReacSelection").html();
+			var addPageReactionType = null;
+			var addReactionType = null;
+			if(addPageReactionTitle == "Comments"){
+				addPageReactionType="PBRTRMK";
+				addReactionType="PBRTRMK";
+			}else if(addPageReactionTitle == "Replies"){
+				addPageReactionType="PRRTRMK";
+				addReactionType="PRRTRMK";
+			}else{
+				Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
+			}
+			if(reactionText != "" && reactionText != null && reactionText != sb.dom.find("#jstemplate-commentMsg").html() &&  reactionText != sb.dom.find("#jstemplate-replyMsg").html()){
+				sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{reactionId: "", pageReactionId: "", documentPageId: docPageId, pageReactionType: addPageReactionType, reactionType: addReactionType, pageReactionTitle: addPageReactionTitle, reactionRichText: sb.utilities.htmlEncode(reactionText)},_reactionAdded);
+			}else{
+				//Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-plsEntrTxt").html(), messageType: "failure"});
+			}			
 		}else{
-			Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
-		}
-		if(reactionText != "" && reactionText != null && reactionText != sb.dom.find("#jstemplate-commentMsg").html() &&  reactionText != sb.dom.find("#jstemplate-replyMsg").html()){
-			sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{reactionId: "", pageReactionId: "", documentPageId: docPageId, pageReactionType: addPageReactionType, reactionType: addReactionType, pageReactionTitle: addPageReactionTitle, reactionRichText: sb.utilities.htmlEncode(reactionText)},_reactionAdded);
-		}else{
-			//Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-plsEntrTxt").html(), messageType: "failure"});
+			Core.publish('unAuthorizedFunctionality', {module: 'Comment or Reply'});
 		}
 	 }
 	 catch(err){
@@ -186,13 +189,17 @@ var textReactionsController = function(sb, input){
 	}
 	
 	function _addHighlightToResponseButtonClicked(e){
-		
-		var documentPageID = sb.dom.find(this).attr('id').split('-')[1];
-		var reactionID = sb.dom.find(this).attr('id').split('-')[2];
-		var pageReactionID = sb.dom.find(this).attr('id').split('-')[3];
-		var pageReactionType = sb.dom.find(this).attr('id').split('-')[4];
-		var pageReactionTitle = sb.dom.find(this).attr('id').split('-')[5];
-		sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{toReactionId: reactionID, pageReactionId: pageReactionID, documentPageId: documentPageID, pageReactionType: pageReactionType, reactionType: "AGREE", pageReactionTitle: pageReactionTitle, reactionRichText: ""},_addHighlightToResponseReceived);
+		if(sb.utilities.isUserLoggedIn()){
+			var documentPageID = sb.dom.find(this).attr('id').split('-')[1];
+			var reactionID = sb.dom.find(this).attr('id').split('-')[2];
+			var pageReactionID = sb.dom.find(this).attr('id').split('-')[3];
+			var pageReactionType = sb.dom.find(this).attr('id').split('-')[4];
+			var pageReactionTitle = sb.dom.find(this).attr('id').split('-')[5];
+			sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{toReactionId: reactionID, pageReactionId: pageReactionID, documentPageId: documentPageID, pageReactionType: pageReactionType, reactionType: "AGREE", pageReactionTitle: pageReactionTitle, reactionRichText: ""},_addHighlightToResponseReceived);
+		}else{
+			Core.publish('unAuthorizedFunctionality', {module: 'Comment or Reply'});
+		}		
+
 	}
 	
 	function _addHighlightToResponseReceived(response){
@@ -438,14 +445,18 @@ var textReactionsController = function(sb, input){
 	function _replySubmit(e){
 		sb.dom.find('#'+e.currentTarget.id).parent().fadeOut();
 		 try{
-			reactionText = sb.dom.find('#'+e.currentTarget.id).parent().find('.rplytxtara').val();
-			sb.dom.find('#'+e.currentTarget.id).parent().find('.rplytxtara').val("");
-			docPageId = e.currentTarget.id.split("-")[1];
-			toReactionId=e.currentTarget.id.split("-")[2];			
-			if(reactionText != "" && reactionText != null && reactionText != sb.dom.find("#jstemplate-commentMsg").html() &&  reactionText != sb.dom.find("#jstemplate-replyMsg").html()){
-				sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{reactionId: "", pageReactionId: "", documentPageId: docPageId, pageReactionType: "PRRTRMK", reactionType: "PRRTRPL", pageReactionTitle: pgReactionTitle, reactionRichText: sb.utilities.htmlEncode(reactionText), toReactionId: toReactionId},_reactionAdded);
+			if(sb.utilities.isUserLoggedIn()){
+				reactionText = sb.dom.find('#'+e.currentTarget.id).parent().find('.rplytxtara').val();
+				sb.dom.find('#'+e.currentTarget.id).parent().find('.rplytxtara').val("");
+				docPageId = e.currentTarget.id.split("-")[1];
+				toReactionId=e.currentTarget.id.split("-")[2];			
+				if(reactionText != "" && reactionText != null && reactionText != sb.dom.find("#jstemplate-commentMsg").html() &&  reactionText != sb.dom.find("#jstemplate-replyMsg").html()){
+					sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{reactionId: "", pageReactionId: "", documentPageId: docPageId, pageReactionType: "PRRTRMK", reactionType: "PRRTRPL", pageReactionTitle: pgReactionTitle, reactionRichText: sb.utilities.htmlEncode(reactionText), toReactionId: toReactionId},_reactionAdded);
+				}else{
+					Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-plsEntrTxt").html(), messageType: "failure"});
+				}
 			}else{
-				Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-plsEntrTxt").html(), messageType: "failure"});
+				Core.publish('unAuthorizedFunctionality', {module: 'Comment or Reply'});
 			}
 		 }
 		 catch(err){

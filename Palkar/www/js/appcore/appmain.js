@@ -50,6 +50,19 @@ Core = function(_$) {
 			}
 		},
 		_utilities = {
+			showDialog: _$.mobile.changePage,
+			isUserLoggedIn: function(){
+				if(userData){		
+					if(userData.username == 'guest' || userData.username == 'undefined' || userData.username == null){
+						userLoggedIn = false;
+					}else{
+						userLoggedIn = true;	
+					}
+				}else{
+					userLoggedIn = false;	
+				}	
+				return userLoggedIn;
+			},
 			getUserInfo: function(){
 				return userData;
 			},
@@ -228,9 +241,9 @@ Core = function(_$) {
 					var userDataTemp = {username: username, authorization: authorization, authorizationType: authorizationType};
 					writeUserData(fileEntry, userDataTemp);
 					readUserData(fileEntry);
-					}, function(error){console.log(error);});
+					}, function(error){alert(error);});
 				
-				}, function(error){console.log(error);});			
+				}, function(error){alert(error);});			
 	}
 	return {
 		dom: _dom,

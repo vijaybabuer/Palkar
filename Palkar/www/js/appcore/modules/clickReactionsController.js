@@ -3,17 +3,21 @@ var clickReactionsController = function(sb, input){
 	    defaultClickReactionsDivList=null, reactionType='CLICK', pageReactionType='CLICK', reactionsLoadedStatus = "LOADED", pageHasLists=input.pageHasLists, shareCardDialog = null, shareCardForm = null;
 	function _addReaction(e){
 	 try{
-		pgReacInfo=e.currentTarget.id.split("-");
-		pgReaction=pgReacInfo[0];
-		pgReacId=pgReacInfo[1];
-		pgReacEnabled=pgReacInfo[2];
-		
-		if(pgReacEnabled == 'enabled' && pgReacId != '0'){
-			sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{reactionId: "", pageReactionId: pgReacId, documentPageId: "", pageReactionType: pageReactionType, reactionType: reactionType, reactionRichText: ""},_reactionAdded);
-		}else if(pgReacEnabled == 'disabled' && pgReacId != '0'){
-			sb.utilities.serverDelete(relPathIn+'clickreaction.pvt/'+pgReacId+'?mediaType=json',null,_reactionDeleted);
+		if(sb.utilities.isUserLoggedIn()){
+			pgReacInfo=e.currentTarget.id.split("-");
+			pgReaction=pgReacInfo[0];
+			pgReacId=pgReacInfo[1];
+			pgReacEnabled=pgReacInfo[2];
+			
+			if(pgReacEnabled == 'enabled' && pgReacId != '0'){
+				sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{reactionId: "", pageReactionId: pgReacId, documentPageId: "", pageReactionType: pageReactionType, reactionType: reactionType, reactionRichText: ""},_reactionAdded);
+			}else if(pgReacEnabled == 'disabled' && pgReacId != '0'){
+				sb.utilities.serverDelete(relPathIn+'clickreaction.pvt/'+pgReacId+'?mediaType=json',null,_reactionDeleted);
+			}else{
+				Core.publish("displayMessage",{messageTitle: "Failure", message: "Could not complete the process.", messageType: "failure"});
+			}
 		}else{
-			Core.publish("displayMessage",{messageTitle: "Failure", message: "Could not complete the process.", messageType: "failure"});
+			Core.publish('unAuthorizedFunctionality', {module: 'Highlight'});
 		}
 	 }
 	 catch(err){
@@ -234,18 +238,27 @@ var clickReactionsController = function(sb, input){
 	   }
 	   
 	function _shareConfirmClicked(e){
-		
-		var documentPageToBeSharedID = sb.dom.find(this).attr("id").split("-")[1];
-		var shareTitle = sb.dom.find(this).parents(".sharePageDiv").find("#sharePageTitle-"+documentPageToBeSharedID).val();
-		var documentoBeSharedOn = sb.dom.find(this).parents(".sharePageDiv").find("#sharePageOptions-"+documentPageToBeSharedID).val();
-
-		sb.utilities.postV2(relPathIn+"sharepage.pvt?mediaType=json",{title: shareTitle, details: null, documentId: documentoBeSharedOn, documentpageid: documentPageToBeSharedID, albumId: null, allowPublicTextReactions: true, allowPrivateTextReactions: true, allowClickReactions: true}, _sharePageSuccess);
-		
-		sb.dom.find(this).parents(".sharePageDiv").slideUp();
+		if(sb.utilities.isUserLoggedIn()){		
+			var documentPageToBeSharedID = sb.dom.find(this).attr("id").split("-")[1];
+			var shareTitle = sb.dom.find(this).parents(".sharePageDiv").find("#sharePageTitle-"+documentPageToBeSharedID).val();
+			var documentoBeSharedOn = sb.dom.find(this).parents(".sharePageDiv").find("#sharePageOptions-"+documentPageToBeSharedID).val();
+	
+	
+			sb.utilities.postV2(relPathIn+"sharepage.pvt?mediaType=json",{title: shareTitle, details: null, documentId: documentoBeSharedOn, documentpageid: documentPageToBeSharedID, albumId: null, allowPublicTextReactions: true, allowPrivateTextReactions: true, allowClickReactions: true}, _sharePageSuccess);
+			
+			sb.dom.find(this).parents(".sharePageDiv").slideUp();
+		}else{
+			Core.publish('unAuthorizedFunctionality', {module: 'Highlight'});
+		}
 	}
 	
 	function _shareConfirmFormSubmit(shareTitle, documentToBeSharedOn, documentPageToBeSharedID){
-		sb.utilities.postV2(relPathIn+"sharepage.pvt?mediaType=json",{title: shareTitle, details: null, documentId: documentToBeSharedOn, documentpageid: documentPageToBeSharedID, albumId: null, allowPublicTextReactions: true, allowPrivateTextReactions: true, allowClickReactions: true}, _sharePageSuccess);
+		if(sb.utilities.isUserLoggedIn()){
+			sb.utilities.postV2(relPathIn+"sharepage.pvt?mediaType=json",{title: shareTitle, details: null, documentId: documentToBeSharedOn, documentpageid: documentPageToBeSharedID, albumId: null, allowPublicTextReactions: true, allowPrivateTextReactions: true, allowClickReactions: true}, _sharePageSuccess);
+		}else{
+			Core.publish('unAuthorizedFunctionality', {module: 'Highlight'});
+		}		
+
 	}
 	
 	function _shareButtonClickEvent(e){
@@ -355,13 +368,16 @@ var clickReactionsController = function(sb, input){
 	}
 	
 	function _addHighlightToResponseButtonClicked(e){
-		
-		var documentPageID = sb.dom.find(this).attr('id').split('-')[1];
-		var reactionID = sb.dom.find(this).attr('id').split('-')[2];
-		var pageReactionID = sb.dom.find(this).attr('id').split('-')[3];
-		var pageReactionType = sb.dom.find(this).attr('id').split('-')[4];
-		var pageReactionTitle = sb.dom.find(this).attr('id').split('-')[5];
-		sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{toReactionId: reactionID, pageReactionId: pageReactionID, documentPageId: documentPageID, pageReactionType: pageReactionType, reactionType: "AGREE", pageReactionTitle: pageReactionTitle, reactionRichText: ""},_addHighlightToResponseReceived);
+		if(sb.utilities.isUserLoggedIn()){
+			var documentPageID = sb.dom.find(this).attr('id').split('-')[1];
+			var reactionID = sb.dom.find(this).attr('id').split('-')[2];
+			var pageReactionID = sb.dom.find(this).attr('id').split('-')[3];
+			var pageReactionType = sb.dom.find(this).attr('id').split('-')[4];
+			var pageReactionTitle = sb.dom.find(this).attr('id').split('-')[5];
+			sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{toReactionId: reactionID, pageReactionId: pageReactionID, documentPageId: documentPageID, pageReactionType: pageReactionType, reactionType: "AGREE", pageReactionTitle: pageReactionTitle, reactionRichText: ""},_addHighlightToResponseReceived);
+		}else{
+			Core.publish('unAuthorizedFunctionality', {module: 'Highlight'});
+		}
 	}
 	
 	function _addHighlightToResponseReceived(response){

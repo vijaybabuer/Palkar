@@ -54,7 +54,7 @@
         <div data-role="page" class="appBody" id="mainPage"> 		       
 				<div class="appHeader noshadow">
 					<a href="#rightPanel" class="ui-btn ui-btn-inline noshadow" id="showRightPanel"><i class="fa fa-bars"></i></a>	
-					<a href="#loginRegisterPage" class="ui-btn ui-btn-inline noshadow" id="loginRegisterButton">Register</a>
+					<a href="#loginRegisterPage" class="ui-btn ui-btn-inline noshadow" id="loginRegisterButton">Register</a>				
 					<a href="#contentCreate" class="ui-btn ui-btn-inline noshadow" id="newMessageButton">Write To</a>	
 					<a  id="containerBackButton" class="ui-btn ui-btn-inline noshadow nd">
 						<i class="fa fa-chevron-left"></i>
@@ -251,13 +251,14 @@
 							</form>						
 						</div>				
 					</div>				
-				</div>				
+				</div>	
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
             app.initialize();
         </script>
     </body>
+
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <script type="text/javascript" src="js/plugins/jquery-timeago/jquery.timeago.js" ></script>
@@ -433,6 +434,12 @@ Ex: john@example.com;sam@example.com</script>
 	<img src="img/Palkar.png" height="64" /><br>
 	<span class="sr-only bigScreenItem">Loading...</span>
 </div>
+</script>
+<script type="text/template" id="jstemplate-unAuthorizedAccessDialog">
+				<div id="unAuthorizedAccessDialog" class="container subContainer">
+					<p>To protect your identity, you need to login or register to use this feature. </p>
+					<a href="#loginRegisterPage" onclick="Core.publish('initializeUserRegistration', null);" class="containerBackButton">Continue</a>
+				</div>			
 </script>
 <script type="text/unittest">
 $(document).ready(function(){

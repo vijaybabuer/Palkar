@@ -523,7 +523,7 @@ var storyEditController = function(sb, input){
        			sb.dom.find(".addStoryToDocument").bind('click',_addStoryToDocumentClickEvent);
        			sb.dom.find(".addAlbumToDocument").bind('click',_addAlbumToDocumentClickEvent);
        			newMessageButton.bind('click',_showNewMessageForm);    
-       			newMessageButton.show();
+       			//newMessageButton.show();
        			addPhotosButton.bind('click',_showAddPhotosForm);
        			addPhotosButton.show();
        			addPicturesButton.bind('click',_startPictureUploadController);       	

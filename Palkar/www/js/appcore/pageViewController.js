@@ -89,7 +89,10 @@ var pageViewController = function(sb, input){
 					sb.dom.find("#attachPictures").removeClass('nd');
 					sb.dom.find("#removePictures").removeClass('nd');					
 				}
-		   }
+		   }else{
+				sb.dom.find("#loginRegisterButton").fadeIn();   
+				sb.dom.find("#guestWelcome").fadeIn();   
+			}
 	}
 	
 	function _setAnchorClickEvent(){
@@ -359,7 +362,7 @@ var pageViewController = function(sb, input){
 	}
 	
 	function _checkLoginStatus(){
-		if(sb.utilities.getUserInfo()){			
+		if(sb.utilities.getUserInfo()){		
 			if(sb.utilities.getUserInfo().username == 'guest' || sb.utilities.getUserInfo().username == 'undefined' || sb.utilities.getUserInfo().username == null){
 				userLoggedIn = false;
 			}else{
@@ -534,7 +537,12 @@ var pageViewController = function(sb, input){
 		}
 
 		if(exitApp){
+			try{
+			Core.utilities.setUserInfo("guest", null, null);
 			navigator.notification.confirm('Close the App?', exitAppConfirm, input.appname, 'Keep Browsing, Close');
+			}catch(err){
+				alert(err);	
+			}
 		}
 		
 	}
@@ -558,6 +566,25 @@ var pageViewController = function(sb, input){
 				sb.utilities.postV2(snippetUrl, data, _loadMainPage, _errorStartController);	 		
 	
 	}
+	
+	function _unAuthorizedFunctionalityResponse(button){
+		if(button == 1){
+			try{
+			sb.dom.find("#loginRegisterButtonHidden").click();
+			}catch(e){alert(e);}
+		}else{
+			;	
+		}		
+	}
+	function _unAuthorizedFunctionality(message){
+		try{
+			var unAuthHtml = sb.dom.find("#jstemplate-unAuthorizedAccessDialog").html();
+			var unAuthHtmlDom = sb.dom.wrap(unAuthHtml);
+			_snippetResponseReceived(unAuthHtml);
+		}catch(e){
+			alert(e);	
+		}
+	}
    return{
 	   init:function() {
        	try{
@@ -567,7 +594,8 @@ var pageViewController = function(sb, input){
 			Core.subscribe('newStoryAdded', _newStoryAddedToView);
 			Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
 			Core.subscribe('streamUpdateReceived', _streamUpdateReceived);
-			Core.subscribe('userLoginEvent', _userLoginEventReceived);			
+			Core.subscribe('userLoginEvent', _userLoginEventReceived);	
+			Core.subscribe('unAuthorizedFunctionality', _unAuthorizedFunctionality);
 			document.addEventListener("resume", onResume, false);
 			document.addEventListener("backbutton", _deviceBackButtonClicked, true);
 			Core.subscribe('stompClientDisconnect', _stompClientDisconnectMessageReceived);

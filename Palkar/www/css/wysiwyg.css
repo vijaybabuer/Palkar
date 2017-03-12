@@ -620,6 +620,9 @@ em{
  .Fix{
  	position: fixed;
  }
+ #guestWelcome{
+ 	color: #FF0000;
+ }
  #loginRegisterButton, #guestWelcome, #newMessageButton{
  	display: none;
  }

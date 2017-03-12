@@ -95,6 +95,8 @@ var userLoginController = function(sb, input){
 		sb.dom.find("#loginDiv").find("#message").html(sb.dom.find("#jstemplate-login-message").html());
 		sb.dom.find("#loginDiv").find("#authorizeUser").unbind('click', _loginUser);
 		sb.dom.find("#loginDiv").find("#authorizeUser").on('click', _loginUser);
+		sb.dom.find("#registrationDiv").find("#registerUser").unbind('click', _registrationSubmit);
+		sb.dom.find("#registrationDiv").find("#registerUser").on('click', _registrationSubmit);	
 		sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
 	}
 	
@@ -171,6 +173,7 @@ var userLoginController = function(sb, input){
 			sb.dom.find("#remailAddress").change(_emailAddressChange);
 			sb.dom.find("#registrationDiv").find('.invalidInfo').keyup(_registrationInputChange);
 			sb.dom.find("#registerUser").click(_registrationSubmit);
+			Core.subscribe('initializeUserRegistration', _registerButtonClick);
 			setTimeout(_initializeLoginSlides, 500);
        	}catch(err){
        		sb.utilities.log("Error while initializing userLogoModule: " + err);
