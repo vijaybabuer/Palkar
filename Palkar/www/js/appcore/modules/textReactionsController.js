@@ -47,15 +47,8 @@ var textReactionsController = function(sb, input){
 	function _loadReactionList(pageReactionDetail){
 		_updateReactionList(pageReactionDetail, "LOAD");
 	}
-	function _updateReactionList(pageReactionDetail, loadFlag){
-		try{
-		var allTextRactionsDiv = sb.dom.find("#TxtReactionList-"+pageReactionDetail.documentPageId);	
-		var reactionsDiv=allTextRactionsDiv.find("#"+pageReactionDetail.pageReactionTitle+"Div-"+pageReactionDetail.documentPageId);
-		var reactionsDivMessageArea=reactionsDiv.find(".TextReactionList-message");
-		var noReactionsMessage = sb.dom.find("#jstemplate-No"+pageReactionDetail.pageReactionTitle+"Label").html();
-		var reactionsListArea=reactionsDiv.find(".textReactionList");
-		
-		if(pageReactionDetail.txnStatus == "SUCCESS"){
+	
+	function _updateReactionListForDiv(allTextRactionsDiv, reactionsDiv, reactionsDivMessageArea, noReactionsMessage, reactionsListArea, pageReactionDetail, loadFlag){
 			if(pageReactionDetail.pageReactionCount == "0" || pageReactionDetail.pageReactionCount == "" || pageReactionDetail.pageReactionCount == null){
 				reactionsDivMessageArea.html(noReactionsMessage);
 				reactionsDivMessageArea.show();
@@ -93,55 +86,80 @@ var textReactionsController = function(sb, input){
 				}else{
 					allTextRactionsDiv.addClass(pageReactionDetail.pageReactionTitle);
 				}
+			}	
+			var reacTitleToShow = allTextRactionsDiv.find('.textReacSelection').html();
+			if(loadFlag == "LOAD"){
+				if(allTextRactionsDiv.hasClass("Comments")){
+					_commentsSelected("Comments", pageReactionDetail.documentPageId);
+				}else if(allTextRactionsDiv.hasClass("Replies")){			
+					_repliesSelected("Replies", pageReactionDetail.documentPageId);			
+				}else{
+					_commentsSelected("Comments", pageReactionDetail.documentPageId);
+				}				
+			}else{
+				if(pageReactionDetail.pageReactionTitle=="Comments"){
+					_commentsSelected("Comments", pageReactionDetail.documentPageId);
+				}else if(pageReactionDetail.pageReactionTitle=="Replies"){
+					_repliesSelected("Replies", pageReactionDetail.documentPageId);	
+				}
+			}
+	
+			reactionsListArea.find('.rpltxtreac').bind('click',_replyLinkClicked);
+			reactionsListArea.find('.cancelrpltxtreac').bind('click',_replyCancelled);
+			reactionsListArea.find('.ReplyReacSubmit').bind('click',_replySubmit);
+			reactionsListArea.find('.rplytxtara').bind('keydown', _replySubmitKeyPressed);
+			reactionsListArea.find('a.remtxtreac').bind('click', _removeReaction);
+			reactionsListArea.find('a.remtxtreacall').bind('click', _removeAllReactionsFromUser);
+			reactionsListArea.find('.hiliteResponse').each(_setHiliteResponseButtonEvents);
+			reactionsListArea.find('.unhiliteResponse').each(_setUnHiliteResponseButtonEvents);		
+	
+			allTextRactionsDiv.addClass(reactionsLoadedStatus);
+			sb.dom.find('#storyItemFooter-'+pageReactionDetail.documentPageId).addClass(reactionsLoadedStatus);
+			Core.publish('contactToolTipAdded', {divId: "#"+allTextRactionsDiv.attr('id')});
+			if(pageReactionDetail.pageReactionHasMoreReactions){
+				var showMoreButton = reactionsDiv.find('.showMore');
+				showMoreButton.data("showMoreData", {
+					documentPageId: pageReactionDetail.documentPageId,
+					pageReactionType: pageReactionDetail.pageReactionType,
+					pageReactionTitle: pageReactionDetail.pageReactionTitle,
+					latestReactionDate: pageReactionDetail.latestReactionDate
+				});
+				showMoreButton.unbind('click', _showMoreButtonClickEvent);
+				showMoreButton.unbind('click', _showMoreButtonClickEventFirst);
+				showMoreButton.click(_showMoreButtonClickEvent);
+				reactionsDiv.find('.showMore').fadeIn();
+				showMoreButton=null;
+			}else{
+				reactionsDiv.find('.showMore').hide();
+			}
+		
+	}
+	function _updateReactionList(pageReactionDetail, loadFlag){
+		try{		
+		if(pageReactionDetail.txnStatus == "SUCCESS"){
+			try{
+			var allTextRactionsDiv = sb.dom.find("#storiesDiv").find("#TxtReactionList-"+pageReactionDetail.documentPageId);	
+			var reactionsDiv=allTextRactionsDiv.find("#"+pageReactionDetail.pageReactionTitle+"Div-"+pageReactionDetail.documentPageId);
+			var reactionsDivMessageArea=reactionsDiv.find(".TextReactionList-message");
+			var noReactionsMessage = sb.dom.find("#jstemplate-No"+pageReactionDetail.pageReactionTitle+"Label").html();
+			var reactionsListArea=reactionsDiv.find(".textReactionList");
+			_updateReactionListForDiv(allTextRactionsDiv, reactionsDiv, reactionsDivMessageArea, noReactionsMessage, reactionsListArea, pageReactionDetail, loadFlag);
+			alert(sb.dom.find('.subContainer').length + 'subcontainer list');
+			if(sb.dom.find('.subContainer').length > 0){
+				allTextRactionsDiv = sb.dom.find(".subContainer").first().find("#TxtReactionList-"+pageReactionDetail.documentPageId);	
+				reactionsDiv=allTextRactionsDiv.find("#"+pageReactionDetail.pageReactionTitle+"Div-"+pageReactionDetail.documentPageId);
+				reactionsDivMessageArea=reactionsDiv.find(".TextReactionList-message");
+				noReactionsMessage = sb.dom.find("#jstemplate-No"+pageReactionDetail.pageReactionTitle+"Label").html();
+				reactionsListArea=reactionsDiv.find(".textReactionList");
+				_updateReactionListForDiv(allTextRactionsDiv, reactionsDiv, reactionsDivMessageArea, noReactionsMessage, reactionsListArea, pageReactionDetail, loadFlag);
+			}
+			}catch(e){
+				alert('1 ' + e);	
 			}
 		}else{
 			Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
 		}
-		var reacTitleToShow = allTextRactionsDiv.find('.textReacSelection').html();
-		if(loadFlag == "LOAD"){
-			if(allTextRactionsDiv.hasClass("Comments")){
-				_commentsSelected("Comments", pageReactionDetail.documentPageId);
-			}else if(allTextRactionsDiv.hasClass("Replies")){			
-				_repliesSelected("Replies", pageReactionDetail.documentPageId);			
-			}else{
-				_commentsSelected("Comments", pageReactionDetail.documentPageId);
-			}				
-		}else{
-			if(pageReactionDetail.pageReactionTitle=="Comments"){
-				_commentsSelected("Comments", pageReactionDetail.documentPageId);
-			}else if(pageReactionDetail.pageReactionTitle=="Replies"){
-				_repliesSelected("Replies", pageReactionDetail.documentPageId);	
-			}
-		}
 
-		reactionsListArea.find('.rpltxtreac').bind('click',_replyLinkClicked);
-		reactionsListArea.find('.cancelrpltxtreac').bind('click',_replyCancelled);
-		reactionsListArea.find('.ReplyReacSubmit').bind('click',_replySubmit);
-		reactionsListArea.find('.rplytxtara').bind('keydown', _replySubmitKeyPressed);
-		reactionsListArea.find('a.remtxtreac').bind('click', _removeReaction);
-		reactionsListArea.find('a.remtxtreacall').bind('click', _removeAllReactionsFromUser);
-		reactionsListArea.find('.hiliteResponse').each(_setHiliteResponseButtonEvents);
-		reactionsListArea.find('.unhiliteResponse').each(_setUnHiliteResponseButtonEvents);		
-
-		allTextRactionsDiv.addClass(reactionsLoadedStatus);
-		sb.dom.find('#storyItemFooter-'+pageReactionDetail.documentPageId).addClass(reactionsLoadedStatus);
-		Core.publish('contactToolTipAdded', {divId: "#"+allTextRactionsDiv.attr('id')});
-		if(pageReactionDetail.pageReactionHasMoreReactions){
-			var showMoreButton = reactionsDiv.find('.showMore');
-			showMoreButton.data("showMoreData", {
-				documentPageId: pageReactionDetail.documentPageId,
-				pageReactionType: pageReactionDetail.pageReactionType,
-				pageReactionTitle: pageReactionDetail.pageReactionTitle,
-				latestReactionDate: pageReactionDetail.latestReactionDate
-			});
-			showMoreButton.unbind('click', _showMoreButtonClickEvent);
-			showMoreButton.unbind('click', _showMoreButtonClickEventFirst);
-			showMoreButton.click(_showMoreButtonClickEvent);
-			reactionsDiv.find('.showMore').fadeIn();
-			showMoreButton=null;
-		}else{
-			reactionsDiv.find('.showMore').hide();
-		}
 		}catch(err){
 			alert(err);	
 		}
@@ -157,10 +175,15 @@ var textReactionsController = function(sb, input){
 	}
 	
 	function _removeHighlightToResponseButtonClicked(e){
-		console.log('remove agree clicked');
-		var reactionID = sb.dom.find(this).attr('id').split('-')[1];
-		var pageReactionType = sb.dom.find(this).attr('id').split('-')[2];		
-		sb.utilities.serverDelete(relPathIn+'agreereaction.pvt/'+reactionID+'/'+pageReactionType+'?mediaType=json',null,_AgreeReactionDeleteReceived);		
+		if(sb.utilities.isUserLoggedIn()){
+			console.log('remove agree clicked');
+			var reactionID = sb.dom.find(this).attr('id').split('-')[1];
+			var pageReactionType = sb.dom.find(this).attr('id').split('-')[2];		
+			sb.utilities.serverDelete(relPathIn+'agreereaction.pvt/'+reactionID+'/'+pageReactionType+'?mediaType=json',null,_AgreeReactionDeleteReceived);		
+		}else{
+			Core.publish('unAuthorizedFunctionality', {module: 'Highlight'});
+		}		
+
 	}
 		
 	function _AgreeReactionDeleteReceived(response){
@@ -262,11 +285,19 @@ var textReactionsController = function(sb, input){
 	   }
 	   
 	   function _removeReactionConfirm(reactionId, pageReactionType, reactionType){
-		   sb.utilities.serverDelete(relPathIn+'textreaction.pvt/'+reactionId+'/'+pageReactionType+'/'+reactionType+'/false?mediaType=json',null,_reactionDeleted);
+			if(sb.utilities.isUserLoggedIn()){
+			   sb.utilities.serverDelete(relPathIn+'textreaction.pvt/'+reactionId+'/'+pageReactionType+'/'+reactionType+'/false?mediaType=json',null,_reactionDeleted);
+			}else{
+				Core.publish('unAuthorizedFunctionality', {module: 'Highlight'});
+			}
 	   }
 	   
 	   function _removeAllReactionsFromUserConfirm(reactionId, pageReactionType, reactionType){
-		   sb.utilities.serverDelete(relPathIn+'textreaction.pvt/'+reactionId+'/'+pageReactionType+'/'+reactionType+'/true?mediaType=json',null,_reactionDeleted);
+			if(sb.utilities.isUserLoggedIn()){
+			   sb.utilities.serverDelete(relPathIn+'textreaction.pvt/'+reactionId+'/'+pageReactionType+'/'+reactionType+'/true?mediaType=json',null,_reactionDeleted);
+			}else{
+				Core.publish('unAuthorizedFunctionality', {module: 'Highlight'});
+			}
 	   }
 	   
 	function _removeReaction(e){

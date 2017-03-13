@@ -238,6 +238,7 @@ var storyEditController = function(sb, input){
 	   if(tinyMceInstance != null && setDefaultContent){
 		   tinyMceInstance.setContent(sb.dom.find("#storyAddController-DefaultContent").html());		   
 	   }
+	   sb.dom.find('#palpostr-url-sec').hide();
    }
    
    function refreshForm(data){
@@ -279,6 +280,7 @@ var storyEditController = function(sb, input){
    function sendMessageSuccess(data){
 	   if(data.antahRequestStatus=="SUCCESS"){
 		   refreshForm(data);
+		   sb.dom.find('#palpostr-url-sec').show();
 		   sb.dom.find("#contentCreate").find("#showMainPageButton").click();
 	   }else{
 		   //sb.dom.find(htmlBody).fadeOut();
@@ -292,6 +294,7 @@ var storyEditController = function(sb, input){
 	   if(data.antahRequestStatus=="SUCCESS"){
 		   refreshForm(data);
 		   sb.dom.find("#contentCreate").find("#showMainPageButton").click();
+		   sb.dom.find('#palpostr-url-sec').show();
 	   }else{
 		   sb.dom.find("#contentCreate").find("#showMainPageButton").click();
 		   Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
@@ -430,6 +433,7 @@ var storyEditController = function(sb, input){
    }
    
    function _addStoryToDocumentClickEvent(e){
+	   try{
 	   e.preventDefault();
 	   _closeOverlayPanel();
 	   var buttonID = sb.dom.find(this).attr('id');
@@ -437,6 +441,9 @@ var storyEditController = function(sb, input){
 	   htmlBody.find("#createStoryDocument").val(documentId);
 	   htmlBody.find("#createStoryDocument").selectmenu("refresh");
 	   _showNewMessageForm();
+	   }catch(e){
+			alert(e);   
+		}
    }
    
    function _addAlbumToDocumentClickEvent(e){
@@ -482,6 +489,7 @@ var storyEditController = function(sb, input){
            sb.dom.find(this).css('display','none');
        });
    }
+   
    function _startController(){
 				try{
        			//Module Initializing

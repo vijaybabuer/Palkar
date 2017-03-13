@@ -3,8 +3,7 @@ var userLoginController = function(sb, input){
    
    function _userLoginSuccess(txnResponse){
 	   if(txnResponse.authorizationSuccess && txnResponse.authorizationSuccess == 'SUCCESS'){
-			alert('Authorization ' + txnResponse.authorization);  
-			Core.utilities.setUserInfo(txnResponse.userName, txnResponse.authorization, "PalPostr");
+			sb.utilities.setUserInfo(txnResponse.userName, txnResponse.authorization, "PalPostr");
 			sb.dom.find("#guestWelcome").hide();
 			sb.dom.find("#loginRegisterButton").hide();
 			Core.publish('userLoginEvent', null);
@@ -12,6 +11,7 @@ var userLoginController = function(sb, input){
 			sb.dom.find("#loginDiv").find("#message").html(sb.dom.find("#jstemplate-login-success-message").html());
 			sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
 			sb.dom.find("#loginDiv").find("#authorizeUser").unbind('click', _loginUser);
+			sb.dom.find("#loginDiv").find("#loginForm").slideUp();
 		}else{
 			navigator.notification.alert("Information you provided did not match our records. Please provide valid username and password. If you do not have an username and password, please click on Register Button", null, input.pageHandle, "Ok"); 
 			sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
@@ -22,17 +22,21 @@ var userLoginController = function(sb, input){
 			navigator.notification.alert("Information you provided did not match our records. Please provide valid username and password and try again. If you do not have a username, click on the Register button.", null, input.pageHandle, "Ok"); 
 			sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
 	}
+	
+   function _userRegistrationFailure(request, errorMessage, errorObj){
+			navigator.notification.alert(errorMessage, null, input.pageHandle, "Ok"); 
+			sb.dom.find("#registrationDiv").find("#registerUser").button('enable');
+	}
+	
+	
    function _loginUser(e){
 	   e.preventDefault();
 	   loginButtonClickEvent = e;
 	   var userName = sb.dom.find('#username').val();
 	   var password = sb.dom.find('#password').val();	   
 	   var token = userName+":"+password;
-	  
-	   alert('about to login');
 	   if(userName && userName != "" && password && password != "" && userName != null && password != null){
 			   sb.dom.find("#loginDiv").find("#authorizeUser").button('disable');		   
-		   	   alert('about to login-post');
 		   	   sb.utilities.postV2(relPathIn+'api/userLogin?a='+token+'&pageHandle='+input.pageHandle+'&mediaType=json',{appname: input.pageHandle},_userLoginSuccess, _errorLogin);
 	   }else{
 			navigator.notification.alert("Please Enter User Name and Password.", null, input.pageHandle, "Ok");   
@@ -74,20 +78,45 @@ var userLoginController = function(sb, input){
 
 		if(_registrationFormValid()){
 			var registrationInfo = {
-				fullname: sb.dom.find("#ruserFullName").val(),
-				email: sb.dom.find("#remailAddress").val(),
-				username: sb.dom.find("#rusername").val(),
+				fullName: sb.dom.find("#ruserFullName").val(),
+				emailAddress: sb.dom.find("#remailAddress").val(),
+				userName: sb.dom.find("#rusername").val(),
 				password: sb.dom.find("#rpassword").val(),
-				community: input.pageHandle,
+				vPassword: sb.dom.find("#rpassword").val(),
+				communityName: input.pageHandle,
 				acceptTermsAndConditions: true
 			};
-			alert('Signup Ready ' + JSON.stringify(registrationInfo));
+			sb.utilities.postV2(relPathIn+'apipublic/membership?mediaType=json',registrationInfo,_userRegistrationSuccess, _userRegistrationFailure);
 		}else{			
 			var invalidRegistrationInfoText = sb.dom.find('#invalidRegistrationInfoText').html();		
 			navigator.notification.alert(invalidRegistrationInfoText, _invalidRegistrationPromtResponse, input.pageHandle, 'Ok');				
 		}
-		
-		
+	}
+	
+	function _userRegistrationSuccess(response){
+		if(response.authorizationSuccess == "SUCCESS"){
+			sb.dom.find('#loginDiv').find('#message').html('Registration was successful');
+			sb.utilities.setUserInfo(response.userName, response.authorization, "PalPostr");
+			sb.dom.find("#guestWelcome").hide();
+			sb.dom.find("#loginRegisterButton").hide();
+			Core.publish('userLoginEvent', null);
+			sb.dom.find("#registrationDiv").find("#message").html(sb.dom.find("#jstemplate-registration-success-message").html());	
+			sb.dom.find("#registrationDiv").find("#registrationForm").slideUp();
+		}else{
+			if(response.errorInfoList && response.errorInfoList.length == 1 && response.errorInfoList[0].code == 'UserAlreadyMember'){
+				sb.dom.find('#loginDiv').find('#message').html('Welcome back, ' + response.errorInfoList[0].reason.split(":")[1] +'!, please login.');
+				sb.dom.find('#loginDiv').find('#username').val(response.errorInfoList[0].reason.split(":")[0]);
+				loginSlides.slide(1, 1000);
+			}else{
+				var responseHtml = "<h3>Registration was not successful. Please correct the below and retry.</h3>"
+				if(response.errorInfoList && response.errorInfoList.length > 0){
+					for(var i=0; i<response.errorInfoList.length; i++){
+						responseHtml = responseHtml+"<p>"+response.errorInfoList[i].reason+"</p>"
+					}
+				}
+				sb.dom.find("#registrationDiv").find("#message").html(responseHtml);
+			}
+		}
 	}
 	function _registerButtonClick(e){
 		setTimeout(_initializeLoginSlides, 1000);

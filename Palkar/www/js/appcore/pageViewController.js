@@ -1,5 +1,5 @@
 var pageViewController = function(sb, input){
-	var thisIsMobileDevice = true, storyEditorInitialized=false, albumContainerJS=null, storyEditHappening = false, documentEditHappening = false, placeHolderContainer=sb.dom.find("#jstemplate-pageViewController-placeHolderContainer").html(), relPathIn = input.relPath, appname=input.appname, streamSize = input.streamSize, newStream = null, userLoggedIn = false;;
+	var thisIsMobileDevice = true, storyEditorInitialized=false, albumContainerJS=null, storyEditHappening = false, documentEditHappening = false, placeHolderContainer=sb.dom.find("#jstemplate-pageViewController-placeHolderContainer").html(), relPathIn = input.relPath, appname=input.appname, streamSize = input.streamSize, newStream = null, userLoggedIn = false, storyItemControllerPublish = true;
 	
 	function _enableBigScreenFeatures(){
 		sb.dom.find(".bigScreenItem").show();
@@ -64,6 +64,9 @@ var pageViewController = function(sb, input){
 		   sb.dom.find("#mainContainer").find("#storiesDiv").append(sb.utilities.htmlDecode(storyItemHtml));
 			if(storyItem.storyDocumentPageId){
 	   		   sb.dom.find("#mainContainer").find("#storiesDiv").find("#storyItem-"+storyItem.storyDocumentPageId).find('a').each(_setAnchorClickEvent);
+			   if(!storyItemControllerPublish){
+				   Core.publish("newStoryAdded", {storyItemDivId: "#storyItem-"+storyItem.storyDocumentPageId});
+				}
 		   }
 
 	   }
@@ -87,7 +90,11 @@ var pageViewController = function(sb, input){
 					sb.dom.find("#newMessageButton").fadeIn();
 					sb.dom.find("#submitButtonForm").removeClass('nd');
 					sb.dom.find("#attachPictures").removeClass('nd');
-					sb.dom.find("#removePictures").removeClass('nd');					
+					sb.dom.find("#removePictures").removeClass('nd');	
+					sb.dom.find("#loginRegisterButton").fadeOut();   
+					sb.dom.find("#guestWelcome").fadeOut();  					
+				}else{
+					sb.dom.find("#createStoryDocument").html("Currently no sections accept user posts.");				
 				}
 		   }else{
 				sb.dom.find("#loginRegisterButton").fadeIn();   
@@ -259,7 +266,10 @@ var pageViewController = function(sb, input){
 							updateFooterMessage('problem loading story ' + snippetResponse.streamResponse.storyItemList[i].storyDocumentPageId + " " + e);
 						}							
 					} 
-					Core.publish("startStoryItemController", {appname: appname, lastUpdatedStreamDate: snippetResponse.streamResponse.storyItemList[snippetResponse.streamResponse.storyItemList.length-1].storyTimeStampStringFormat, sseDetails: snippetResponse.sseHostDetails});					
+					if(storyItemControllerPublish){
+						storyItemControllerPublish = false;
+					Core.publish("startStoryItemController", {appname: appname, lastUpdatedStreamDate: snippetResponse.streamResponse.storyItemList[snippetResponse.streamResponse.storyItemList.length-1].storyTimeStampStringFormat, sseDetails: snippetResponse.sseHostDetails});
+					}
 				}else{
 					updateFooterMessage("No Stories Received");
 				}
@@ -277,6 +287,7 @@ var pageViewController = function(sb, input){
 			   sb.dom.find('#containerDiv').find('#mainContainer').find('div').first().removeClass('subContainer');
    			   sb.dom.find('#containerDiv').find('#mainContainer').find('div').first().removeClass('container');
 			   sb.dom.find('#containerDiv').find('#mainContainer').find('div').first().find('.containerHeader').remove();
+			   sb.dom.find("#storiesDivTrailer").find("#showMore").show();
 			if(sb.dom.find('.grid').length > 0){
 				var gridList = sb.dom.find('.grid');
 				setTimeout(function(){gridList.each(_enableGrid)}, 5000);
@@ -538,7 +549,7 @@ var pageViewController = function(sb, input){
 
 		if(exitApp){
 			try{
-			Core.utilities.setUserInfo("guest", null, null);
+			sb.utilities.setUserInfo("guest", null, null);
 			navigator.notification.confirm('Close the App?', exitAppConfirm, input.appname, 'Keep Browsing, Close');
 			}catch(err){
 				alert(err);	
@@ -551,20 +562,29 @@ var pageViewController = function(sb, input){
 		e.preventDefault();
 	}
 
+	function _userLoginEventReceivedRetry(obj1, obj2, obj3){
+		var userData = sb.utilities.getUserInfo();
+		var snippetUrl = null;
+		var data = null;
+		snippetUrl = relPathIn+"api/appView?mediaType=json&a="+userData.authorization;
+		data = {username: userData.username, appname: appname, streamSize: streamSize};			
+		alert('There was a problem loggin in. Performing retry.' + JSON.stringify(data));
+		sb.utilities.postV2(snippetUrl, data, _loadMainPage, _errorStartController);			
+	}
 	function _userLoginEventReceived(message){
+		try{
+				userLoggedIn=true;
+				sb.dom.find("#storiesDivTrailer").find("#showMore").hide();
 				sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>');		   
 				var userData = sb.utilities.getUserInfo();
-				 var snippetUrl = null;
-				  var data = null;
-				if(userData.username == 'guest' || !userData || userData.username == null){
-				   snippetUrl = relPathIn+"/appView?mediaType=json";
-				   data = {appname: appname, streamSize: streamSize};				
-				}else{
-				   snippetUrl = relPathIn+"/api/appView?mediaType=json&a="+userData.authorization;
-				   data = {username: userData.username, appname: appname, streamSize: streamSize};										   
-				}
-				sb.utilities.postV2(snippetUrl, data, _loadMainPage, _errorStartController);	 		
-	
+				var snippetUrl = null;
+				var data = null;
+				snippetUrl = relPathIn+"api/appView?mediaType=json&a="+userData.authorization;
+				data = {username: userData.username, appname: appname, streamSize: streamSize};			
+				sb.utilities.postV2(snippetUrl, data, _loadMainPage, _userLoginEventReceivedRetry);	
+		}catch(err){
+			alert(err);	
+		}
 	}
 	
 	function _unAuthorizedFunctionalityResponse(button){

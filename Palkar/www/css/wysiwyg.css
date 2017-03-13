@@ -371,7 +371,7 @@ em{
 	float: left;
 	color: #3299BB !important;
 }
-#containerBackButton, #showMainPageButton, .loginMenuBar, .registerMenuBar, .socialMenuBar, #submitButtonForm 	{ 
+#containerBackButton, #showMainPageButton, .loginMenuBar, .registerMenuBar, .socialMenuBar, #submitButtonForm, #palpostr-url-sec { 
 	background: rgba(0,0,0,0); 
 	border: 0px;
 	text-shadow: none;
@@ -611,8 +611,8 @@ em{
  	margin-top: 128px;
  }
  .reactionPhoto{
- 	margin-top: 5px;
-	 border-radius: 2.5em;
+ 	border-radius: 0px;
+	 border-radius: 4em;  
  }
  div.PBRTRMK, div.PRRTRMK{
  	padding: 0.25em; 

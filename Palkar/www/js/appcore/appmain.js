@@ -67,6 +67,9 @@ Core = function(_$) {
 				return userData;
 			},
 			setUserInfo: function(username, authorization, authorizationType){
+				userData.username=username;
+				userData.authorization=authorization;
+				userData.authorizationType = authorizationType;
 				createUserData(username, authorization, authorizationType);
 			},
 			deleteUserInfo: function(){
@@ -236,11 +239,11 @@ Core = function(_$) {
 		});		
 	}
 	function createUserData(username, authorization, authorizationType){
+		
 				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
 					fs.root.getFile("userInfo.txt", { create: true, exclusive: false }, function (fileEntry) {					
 					var userDataTemp = {username: username, authorization: authorization, authorizationType: authorizationType};
 					writeUserData(fileEntry, userDataTemp);
-					readUserData(fileEntry);
 					}, function(error){alert(error);});
 				
 				}, function(error){alert(error);});			

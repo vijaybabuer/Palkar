@@ -65,10 +65,7 @@
 				</div> 				
 				<div class="containers" id="containerDiv">
 						<div class="container" id="mainContainer">
-							<p id="guestWelcome">You are missing out! Login or Register today to activitate tons of exciting features on the App.</p>
-							<div id="transactionStatus">
-								
-							</div>							
+							<p id="guestWelcome">You are missing out! Login or Register today to activitate tons of exciting features on the App.</p>						
 							<a class="ui-btn ui-btn-inline noshadow nd lt" id="refreshPanel" disabled>
 									<i class="fa fa-refresh"></i> Show Latest Stories
 							</a>							
@@ -121,20 +118,21 @@
 					<div class="swipe-wrap" >
 						<div id="registrationDiv">
 								<span  style="padding: 0px; margin: 0px;"><i class="fa fa-lock"></i>&nbsp;Please create PalPostr Account</span><br /><br />
-								<form>
+								<form id="registrationForm">
 								<input type="text" class="invalidInfo" id="ruserFullName" placeholder="Your Full Name Ex: Kumar Patel" value=''/>
 								<input type="email"  class="invalidInfo" id="remailAddress" placeholder="Email Address" value=''/>								
 								<input type="text" class="invalidInfo" id="rusername" placeholder="User Name or Telephone Ex: kpatel" value=''/>
 								<input type="password" class="invalidInfo" id="rpassword"  placeholder="Password" />
 								<input type="submit" class="ui-btn cd" id="registerUser" disabled value="Register" />
+								<a id="alreadyHaveAccount" onClick="loginSlides.slide(1, 1000)" >Already Registered?</a><br><br>						
+								<a href="#termsAndConditions">Terms and Conditions</a>								
 								</form><br>
 								<div id="message">Valid Name, Email Address, Username and Password required to register.</div><br><br>
-								<a id="alreadyHaveAccount" onClick="loginSlides.slide(1, 1000)" >Already Registered?</a><br><br>						
-								<a href="#termsAndConditions">Terms and Conditions</a>
 
 						</div>					
 						<div id="loginDiv">					
 								<span  style="padding: 0px; margin: 0px;" id="message"><i class="fa fa-lock"></i>&nbsp;Please Login using PalPostr Account</span><br />
+								<form id="loginForm">
 								<input type="text" id="username"  placeholder="User Name or Telephone" value=''/>
 								<input type="password" id="password"   placeholder="Password" style=" height: 2em;"/>
 								<input type="button" class="ui-btn ui-btn-inline cd" id="authorizeUser" value="Login" />
@@ -143,7 +141,9 @@
 								</a>
 								<a class="ui-btn ui-btn-inline cd" id="register" onClick="loginSlides.slide(0, 1000)" >Register</a>
 								<a class="ui-btn ui-btn-inline cd" id="forgotUsername" >Forgot?</a><br>
-								<a href="#termsAndConditions">Terms and Conditions</a>								
+								<a href="#termsAndConditions">Terms and Conditions</a>									
+								</form>
+							
 						</div>
 						<div id="socialDiv">
 								<span  style="padding: 0px; margin: 0px;">Coming Soon!</span>
@@ -185,14 +185,14 @@
 						</a>						
 					</div>
 				</div>	
-				<div data-role="page" id="contentCreate">
+				<div data-role="page" id="contentCreate" data-add-back-btn="true">
 					<div class="appHeader noshadow">	
 						<a  id="showMainPageButton"  class="ui-btn ui-btn-inline noshadow">
 							<i class="fa fa-newspaper-o" aria-hidden="true"></i>&nbsp;Create Content
 						</a>
 					</div>				
 					<div id="storyPostContainer">	
-						<div id="createStory" class="pane" style="display: none; background-color: #ffffff; padding-top: 2px;">	
+						<div id="createStory" class="pane" style="display: none; background-color: #ffffff; padding-top: 2px;">								
 						<form class="bw" id="addPostForm"  method="POST" action=''>
 							<div data-role="collapsibleset" data-theme="a" data-content-theme="a" data-mini="true">
 									<div id="createStoryHeaderDiv">	
@@ -238,7 +238,10 @@
 									<div id="allMessagesButtonSet" class="sf" style="width: 100%;"> 
 										<button type="submit" id="submitButtonForm" title="Post Message" class="ui-btn ui-btn-inline cd nd">
 											Post
-										</button>  		    
+										</button> 
+										<a  id="palpostr-url-sec" href="#mainPage" title="Go Back" class="ui-btn ui-btn-inline cb" style="display: none;  margin: 2px; padding: 5px; border: 0px;">
+											<i class="fa fa-home">Done</i>		
+										</a> 										 		    
 										<button type="button"  id="removePictures" title="Remove Pictures from Message" class="ui-btn ui-btn-inline cb" style="display: none;  margin: 2px; padding: 5px; border: 0px;">
 											<i class="fa fa-camera"><i class="fa fa-times" style="vertical-align: sub;"></i></i>		
 										</button>            
@@ -426,7 +429,8 @@ Ex: john@example.com;sam@example.com</script>
 <script type="text/template" id="PhotoUploadController-ClickToRemove"> Click/Tap any photo to remove.</script>
 <script type="text/template" id="jstemplate-mediaActionController-confirmPhotoDelete">Do you want to delete this Photo?</script>
 <script type="text/template" id="jstemplate-login-success-label"><i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home</script>
-<script type="text/template" id="jstemplate-login-success-message">Login Success!</script>
+<script type="text/template" id="jstemplate-login-success-message">Login Success! <a  href="#mainPage" id="palpostr-url" class="ui-btn ui-btn-inline noshadow"><i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home</a><br></script>
+<script type="text/template" id="jstemplate-registration-success-message">Your Registration was Successful! <a  href="#mainPage" id="palpostr-url" class="ui-btn ui-btn-inline noshadow"><i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home</a><br></script>
 <script type="text/template" id="jstemplate-login-message"><i class="fa fa-lock"></i>&nbsp;Please Login using PalPostr Account</script>
 <script type="text/template" id="jstemplate-login-label"><i class="fa fa-lock"></i>&nbsp;Login</script>
 <script type="text/template" id="jstemplate-pageViewController-placeHolderContainer">

@@ -40,17 +40,19 @@ var clickReactionsController = function(sb, input){
 					curTarget = sb.dom.find("#button-"+pageReactionSummary.pageReactionId+"-disabled");
 				}
 			}
-			curTarget.attr("id", pgReaction+"-"+pageReactionSummary.pageReactionId+"-"+pageReactionSummary.pageReactionEnabledForUser);
-			
-			if(pageReactionSummary.pageReactionEnabledForUser == 'enabled'){								
-				curTarget.css("background-color","#ffffff");
-				curTarget.attr("title",sb.dom.find("#jstemplate-clickReactionEnabledMessage").html());	
-				curTarget.html(pageReactionSummary.pageReactionTitle);
-			}else{
-				curTarget.css("background-color","#ffcc33");				
-				curTarget.attr("title",sb.dom.find("#jstemplate-clickReactionDisabledMessage").html());
-				curTarget.html("Remove");
-			}	
+
+				curTarget.attr("id", pgReaction+"-"+pageReactionSummary.pageReactionId+"-"+pageReactionSummary.pageReactionEnabledForUser);
+				
+				if(pageReactionSummary.pageReactionEnabledForUser == 'enabled'){								
+					curTarget.css("background-color","#ffffff");
+					curTarget.attr("title",sb.dom.find("#jstemplate-clickReactionEnabledMessage").html());	
+					curTarget.html(pageReactionSummary.pageReactionTitle);
+				}else{
+					curTarget.css("background-color","#ffffff");
+					curTarget.attr("title",sb.dom.find("#jstemplate-clickReactionDisabledMessage").html());
+					curTarget.html("Remove");
+				}	
+
 			
 			sb.utilities.get(relPathIn+'pageReaction.pvt?mediaType=json',{pageReactionId: pageReactionSummary.pageReactionId, reactionCount: reactionCountPerPage, retrieveSummary: "false"},_loadReactionList);
 			Core.publish('newReactionAdded', null);
@@ -90,6 +92,7 @@ var clickReactionsController = function(sb, input){
 				}
 				
 			}
+			reactionsDiv.find(".timeago").timeago();
 			clickReactionsSummaryButton.html('<i class="fa fa-star"></i> ' + '<span class="bigScreenItem">'+pageReactionDetail.pageReactionTitle+'</span>&nbsp;(' + pageReactionDetail.pageReactionCount + ')');
 		}	
 
@@ -335,10 +338,14 @@ var clickReactionsController = function(sb, input){
 	}
 	
 	function _removeHighlightToResponseButtonClicked(e){
-		console.log('remove agree clicked');
-		var reactionID = sb.dom.find(this).attr('id').split('-')[1];
-		var pageReactionType = sb.dom.find(this).attr('id').split('-')[2];		
-		sb.utilities.serverDelete(relPathIn+'agreereaction.pvt/'+reactionID+'/'+pageReactionType+'?mediaType=json',null,_AgreeReactionDeleteReceived);		
+		if(sb.utilities.isUserLoggedIn()){
+			console.log('remove agree clicked');
+			var reactionID = sb.dom.find(this).attr('id').split('-')[1];
+			var pageReactionType = sb.dom.find(this).attr('id').split('-')[2];		
+			sb.utilities.serverDelete(relPathIn+'agreereaction.pvt/'+reactionID+'/'+pageReactionType+'?mediaType=json',null,_AgreeReactionDeleteReceived);		
+		}else{
+			Core.publish('unAuthorizedFunctionality', {module: 'Highlight'});
+		}
 	}
 		
 	function _AgreeReactionDeleteReceived(response){
@@ -484,7 +491,6 @@ var clickReactionsController = function(sb, input){
 	}
 	
 	function _startController(msg){
-		
        		sb.dom.find('.hilite').bind('click',_addReaction);  
        		sb.dom.find('.sharePageButton').each(_setSharePageTooltipV2);
        		sb.dom.find('.clickReacMessage').bind('click',_toggleReactionList);

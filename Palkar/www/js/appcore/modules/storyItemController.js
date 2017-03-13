@@ -31,10 +31,14 @@ var storyItemController = function(sb, input){
    
    
    function _unSharePageButtonClickEvent(e){
-	   var unSharePageButton = sb.dom.find(this);
-	   var unSharePageButtonId = unSharePageButton.attr('id');
-	   var storyId = unSharePageButtonId.split('-')[1];
-	   sb.utilities.serverDelete(relPathIn+"Story/"+storyId+"?mediaType=json",null,_unSharePageTransactionSuccess);
+		if(sb.utilities.isUserLoggedIn()){
+		   var unSharePageButton = sb.dom.find(this);
+		   var unSharePageButtonId = unSharePageButton.attr('id');
+		   var storyId = unSharePageButtonId.split('-')[1];
+		   sb.utilities.serverDelete(relPathIn+"Story/"+storyId+"?mediaType=json",null,_unSharePageTransactionSuccess);
+		}else{
+			Core.publish('unAuthorizedFunctionality', {module: 'Highlight'});
+		}
    }
    
    function _deleteStoryButtonClickEvent(e){
@@ -45,7 +49,11 @@ var storyItemController = function(sb, input){
    }
    
    function _deleteStoryConfirm(storyId){
-	   sb.utilities.serverDelete(relPathIn+"Story/"+storyId+"?mediaType=json",null,_deleteStoryTransactionSuccess);
+		if(sb.utilities.isUserLoggedIn()){
+		   sb.utilities.serverDelete(relPathIn+"Story/"+storyId+"?mediaType=json",null,_deleteStoryTransactionSuccess);
+		}else{
+			Core.publish('unAuthorizedFunctionality', {module: 'Highlight'});
+		}
    }
    function _editStoryButtonClickEvent(e){
 	   var editStoryButton = sb.dom.find(this);
@@ -413,24 +421,18 @@ var storyItemController = function(sb, input){
 		   sb.dom.find(this).find(".fa").removeClass("fa-chevron-down");
 		   sb.dom.find(this).find(".fa").addClass(" fa-spinner");
 		   sb.dom.find(this).find(".fa").addClass("fa-pulse");
-		   sb.utilities.postV2(relPathIn+'appView?mediaType=json', {appname: input.appname, lastUpdatedStreamDate: lastUpdatedStreamDate, streamSize: numberOfStoriesToGet, postedBeforeAfter: "BEFORE"}, _showStories);		   
+		   
+					if(sb.utilities.isUserLoggedIn()){
+						var userData = sb.utilities.getUserInfo();				
+						snippetUrl = relPathIn+"api/appView?mediaType=json&a="+userData.authorization;
+						data = {username: userData.username, appname: input.appname, lastUpdatedStreamDate: lastUpdatedStreamDate, streamSize: numberOfStoriesToGet, postedBeforeAfter: "BEFORE"};
+						sb.utilities.postV2(snippetUrl, data, _showStories);
+					}else{
+		    			sb.utilities.postV2(relPathIn+'appView?mediaType=json', {appname: input.appname, lastUpdatedStreamDate: lastUpdatedStreamDate, streamSize: numberOfStoriesToGet, postedBeforeAfter: "BEFORE"}, _showStories);
+					}
 	   }
 	   
-	   function _getNewerStories(){
-		   sb.utilities.postV2(relPathIn+'appView?mediaType=json', {appname: input.appname, lastUpdatedStreamDate: newestUpdatedStreamDate, streamSize: numberOfStoriesToGet, postedBeforeAfter: "AFTER"}, _showNewerStories);
-	   }
-	   function _palpostrUrlClicked(e){
-		   e.preventDefault();	
-		   sb.dom.find(".subContainer").each(_hideContainer);
-		   sb.dom.find("#mainContainer").show();
-		   console.log('here 569');
-		   if(!gettingNewerStories){
-			   gettingNewerStories = true;
-			   sb.dom.find(storiesDivId).prepend("<span id='busyCog' class'ca lt stdf' title='Fetching latest stories' style='text-align: center; margin-left: 50%; margin-top: 1em; margin-bottom: 1em;'><i class='fa fa-cog fa-spin' ></i>Fetching latest stories</span>");
-			   _getNewerStories();
-		   }
-		   
-	   }
+
 	   function _hideContainer(){
 		   sb.dom.find(this).slideUp();
 		   sb.dom.find(this).remove();
@@ -448,41 +450,7 @@ var storyItemController = function(sb, input){
 		   console.log('edit story set..');
 		   sb.dom.find(this).bind('click', _editStoryButtonClickEvent);
 	   }
-	   
-	   function _storiesDivScroll(e){
-		   var currentScrollTop = sb.dom.find(window).scrollTop();
-		   
-		   if(currentScrollTop > lastScrollTop){
-			   console.log('down scroll');
-			   console.log(sb.dom.find('#showMore').visible());
-			   //Get more stories only where are no sub containers.
-			   var subContainerActive = sb.dom.find('.containers').find('.subContainer');
-			   console.log('subContainerActive length ' + subContainerActive.length);
-			   if(sb.dom.find('#showMore').visible() && !sb.dom.find('#showMore').is(":disabled") && subContainerActive.length == 0){
-				   console.log('fetching stories..');
-				   sb.dom.find('#showMore').attr("disabled", true);
-				   sb.dom.find('#showMore').find(".fa").removeClass("fa-chevron-down");
-				   sb.dom.find('#showMore').find(".fa").addClass(" fa-spinner");
-				   sb.dom.find('#showMore').find(".fa").addClass("fa-pulse");
-				   sb.utilities.postV2(relPathIn+'appView?mediaType=json', {appname: input.appname, lastUpdatedStreamDate: lastUpdatedStreamDate, streamSize: numberOfStoriesToGet, postedBeforeAfter: "BEFORE"}, _showStories);				   
-			   }else{				   
-				   if(!sb.dom.find('#showMore').visible()){
-					   console.log('not getint stories because button is not visible. ');
-				   }
-				   if(sb.dom.find('#showMore').is(":disabled")){
-					   console.log('not getting stories because button is already disabled.');
-				   }				   
-				   
-			   }
-				   
-		   }else{
-			   console.log('up scroll');
-			   console.log(sb.dom.find('#showMore').visible());
-		   }
-		   
-		   lastScrollTop = currentScrollTop;
-	   }
-	   
+	   	   
 	function appendFooterMessage(msg){
 		sb.dom.find("#message1").append("<br>"+msg);
 	}
@@ -516,13 +484,6 @@ var storyItemController = function(sb, input){
 				sb.dom.find("#storiesDivTrailer").find("#showMore").off("click");
 	    		sb.dom.find("#storiesDivTrailer").find("#showMore").click(_showMoreStoriesClicked);
 	    		
-	    		
-	    		
-	    		if(overRideHomeUrl){
-	    			sb.dom.find("#palpostr-url").click(_palpostrUrlClicked);
-	    			sb.dom.find("#palPostrHome").click(_palpostrUrlClicked);
-	    		}
-	    		
 	    		if(storyPage){	 
 		    		reSizeBigPictures();
 		    		sb.dom.find(window).resize(reSizeBigPictures);
@@ -539,7 +500,14 @@ var storyItemController = function(sb, input){
 	    		Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
 	    		
 	    		if(getMoreStories && lastUpdatedStreamDate != "" && lastUpdatedStreamDate != null && lastUpdatedStreamDate != "null"){
-	    			sb.utilities.postV2(relPathIn+'appView?mediaType=json', {appname: input.appname, lastUpdatedStreamDate: lastUpdatedStreamDate, streamSize: numberOfStoriesToGet, postedBeforeAfter: "BEFORE"}, _showStories);
+					if(sb.utilities.isUserLoggedIn()){
+						var userData = sb.utilities.getUserInfo();				
+						snippetUrl = relPathIn+"api/appView?mediaType=json&a="+userData.authorization;
+						data = {username: userData.username, appname: input.appname, lastUpdatedStreamDate: lastUpdatedStreamDate, streamSize: numberOfStoriesToGet, postedBeforeAfter: "BEFORE"};
+						sb.utilities.postV2(snippetUrl, data, _showStories);
+					}else{
+		    			sb.utilities.postV2(relPathIn+'appView?mediaType=json', {appname: input.appname, lastUpdatedStreamDate: lastUpdatedStreamDate, streamSize: numberOfStoriesToGet, postedBeforeAfter: "BEFORE"}, _showStories);
+					}
 	    		}
 	    		if(lastUpdatedStreamDate != "" && lastUpdatedStreamDate != null && lastUpdatedStreamDate != "null"){
 	    			sb.dom.find("#storiesDivTrailer").find("#showMore").attr("disabled", true);
