@@ -71,6 +71,7 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
 	<allow-intent href="whatsapp:*" />
+	
     <platform name="android">
         <allow-intent href="market:*" />
 		<feature name="Vibration">
@@ -111,18 +112,6 @@
 
         <framework src="com.android.support:support-v4:24.1.1+" />	
 		
-		
-        <info>
-The Android Persistent storage location now defaults to "Internal". Please check this plugin's README to see if your application needs any changes in its config.xml.
-
-If this is a new application no changes are required.
-
-If this is an update to an existing application that did not specify an "AndroidPersistentFileLocation" you may need to add:
-
-      "&lt;preference name="AndroidPersistentFileLocation" value="Compatibility" /&gt;"
-
-to config.xml in order for the application to find previously stored files.
-        </info>
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="File" >
                 <param name="android-package" value="org.apache.cordova.file.FileUtils"/>
@@ -162,6 +151,8 @@ to config.xml in order for the application to find previously stored files.
         </js-module>
 						
     </platform>
+	
+	
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
@@ -236,9 +227,4 @@ to config.xml in order for the application to find previously stored files.
         <framework src="AssetsLibrary.framework" />
         <framework src="MobileCoreServices.framework" />		 
     </platform>
-
-	
-
-
-	
 </widget>
