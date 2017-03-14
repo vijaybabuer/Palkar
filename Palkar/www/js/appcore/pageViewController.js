@@ -360,6 +360,7 @@ var pageViewController = function(sb, input){
 			}
 	}
 	function _errorStartController(request, errorMessage, errorObj){
+		alert('There was a problem loading your profile. Please restart App to fix it.');
 		document.getElementById("message1").innerHTML = JSON.stringify(request) + " " + JSON.stringify(errorObj);
 	}
 	

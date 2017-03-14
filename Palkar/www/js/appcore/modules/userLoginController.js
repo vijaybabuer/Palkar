@@ -19,7 +19,7 @@ var userLoginController = function(sb, input){
    }
    
    function _errorLogin(request, errorMessage, errorObj){
-			navigator.notification.alert("Information you provided did not match our records. Please provide valid username and password and try again. If you do not have a username, click on the Register button.", null, input.pageHandle, "Ok"); 
+			navigator.notification.alert("There was a problem. Please restart your App.", null, input.pageHandle, "Ok"); 
 			sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
 	}
 	
@@ -37,7 +37,7 @@ var userLoginController = function(sb, input){
 	   var token = userName+":"+password;
 	   if(userName && userName != "" && password && password != "" && userName != null && password != null){
 			   sb.dom.find("#loginDiv").find("#authorizeUser").button('disable');		   
-		   	   sb.utilities.postV2(relPathIn+'api/userLogin?a='+token+'&pageHandle='+input.pageHandle+'&mediaType=json',{appname: input.pageHandle},_userLoginSuccess, _errorLogin);
+		   	   sb.utilities.postV2(relPathIn+'apipublic/userLogin?&mediaType=json',{userName: userName, password: password, communityName: input.pageHandle},_userLoginSuccess, _errorLogin);
 	   }else{
 			navigator.notification.alert("Please Enter User Name and Password.", null, input.pageHandle, "Ok");   
 		}

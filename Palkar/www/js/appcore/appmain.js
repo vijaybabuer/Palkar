@@ -109,6 +109,9 @@ Core = function(_$) {
 				return navigator.userAgent; 
 			},
 			postV2: function(url, data, successMethod, errorMethod){
+				if(!errorMethod){
+					errorMethod = defaultErrorMethod;	
+				}
 				var token = $("meta[name='_csrf']").attr("content");
 				var header = $("meta[name='_csrf_header']").attr("content");
 				_$.ajax({
@@ -198,6 +201,9 @@ Core = function(_$) {
 		alert('device accounts ' + JSON.stringify(accounts));
 	}
 	
+	function defaultErrorMethod(request, errorMessage, errorObj){
+		alert("There was a problem processing your request. You may be able to fix this by restarting your App. If the problem persists, please contact your Community Coordinator." + JSON.stringify(errorMessage) + " " + JSON.stringify(errorObj) );	
+	}
 	function _getDeviceAccountsError(error){
 		alert(error);	
 	}

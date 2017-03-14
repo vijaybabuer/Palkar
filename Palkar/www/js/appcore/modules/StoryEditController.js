@@ -434,6 +434,7 @@ var storyEditController = function(sb, input){
    
    function _addStoryToDocumentClickEvent(e){
 	   try{
+		alert('_addStoryToDocumentClickEvent');
 	   e.preventDefault();
 	   _closeOverlayPanel();
 	   var buttonID = sb.dom.find(this).attr('id');
