@@ -3,7 +3,6 @@ var userLoginController = function(sb, input){
    
    function _userLoginSuccess(txnResponse){
 	   if(txnResponse.authorizationSuccess && txnResponse.authorizationSuccess == 'SUCCESS'){
-		   	alert(txnResponse.authorizationSuccess);
 			try{
 			sb.utilities.setUserInfo(txnResponse.userName, txnResponse.authorization, "PalPostr");
 			sb.dom.find("#guestWelcome").hide();
