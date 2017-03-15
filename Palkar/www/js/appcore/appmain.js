@@ -25,7 +25,7 @@ Sandbox = Class.extend({
 */
 Core = function(_$) {
 	var moduleData = {},
-		userData = null,
+		userData = {username: 'guest', authorization: null, authorizationType: null},
 		cache = {}, 
 		deviceAccounts = null,
 		_dom = {
