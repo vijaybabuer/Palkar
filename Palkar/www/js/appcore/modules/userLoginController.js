@@ -3,6 +3,8 @@ var userLoginController = function(sb, input){
    
    function _userLoginSuccess(txnResponse){
 	   if(txnResponse.authorizationSuccess && txnResponse.authorizationSuccess == 'SUCCESS'){
+		   	alert(txnResponse.authorizationSuccess);
+			try{
 			sb.utilities.setUserInfo(txnResponse.userName, txnResponse.authorization, "PalPostr");
 			sb.dom.find("#guestWelcome").hide();
 			sb.dom.find("#loginRegisterButton").hide();
@@ -12,6 +14,9 @@ var userLoginController = function(sb, input){
 			sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
 			sb.dom.find("#loginDiv").find("#authorizeUser").unbind('click', _loginUser);
 			sb.dom.find("#loginDiv").find("#loginForm").slideUp();
+			}catch(e){
+				alert(e);	
+			}
 		}else{
 			navigator.notification.alert("Information you provided did not match our records. Please provide valid username and password. If you do not have an username and password, please click on Register Button", null, input.pageHandle, "Ok"); 
 			sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');

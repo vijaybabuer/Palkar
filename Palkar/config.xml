@@ -88,5 +88,18 @@
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
+         <preference name="CAMERA_USAGE_DESCRIPTION" default="Capture events and selfies" />
+         <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
+             <string>To capture events and selfies.</string>
+         </config-file>
+
+         <preference name="PHOTOLIBRARY_USAGE_DESCRIPTION" default="To allow upload of historical photos." />
+         <config-file target="*-Info.plist" parent="NSPhotoLibraryUsageDescription">
+             <string>To allow upload of historical photos.</string>
+         </config-file>
+
+         <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
+             <string>Photo capture location.</string>
+         </config-file>		
     </platform>
 </widget>
