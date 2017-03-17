@@ -68,6 +68,9 @@ var pageViewController = function(sb, input){
 				   Core.publish("newStoryAdded", {storyItemDivId: "#storyItem-"+storyItem.storyDocumentPageId});
 				}
 		   }
+		   if(storyItem.storyPictures && storyItem.storyPictures.length == 1){
+				sb.dom.find("#mainContainer").find("#storiesDiv").find("#storyItem-"+storyItem.storyDocumentPageId).find('.materialboxed').materialbox();
+			}
 
 	   }
 	   
@@ -262,6 +265,7 @@ var pageViewController = function(sb, input){
 					for(var i =0; i<snippetResponse.streamResponse.storyItemList.length;i++){
 						try{
 						addStoryItemToView(snippetResponse.streamResponse.storyItemList[i]);
+						
 						}catch(e){
 							updateFooterMessage('problem loading story ' + snippetResponse.streamResponse.storyItemList[i].storyDocumentPageId + " " + e);
 						}							
@@ -320,12 +324,11 @@ var pageViewController = function(sb, input){
 			updateFooterMessage("Proceeding after check login status");
 			var snippetUrl = null;
 			var data = null;
+			snippetUrl = relPathIn+"appView?mediaType=json";
 			if(userLoggedIn){
 				var userData = sb.utilities.getUserInfo();				
-				snippetUrl = relPathIn+"api/appView?mediaType=json&a="+userData.authorization;
 				data = {username: userData.username, appname: appname, streamSize: streamSize};
 			}else{
-			   snippetUrl = relPathIn+"appView?mediaType=json";
 			   data = {appname: appname, streamSize: streamSize};				
 			}
 			appendFooterMessage("Getting data stream");
@@ -567,9 +570,9 @@ var pageViewController = function(sb, input){
 		var userData = sb.utilities.getUserInfo();
 		var snippetUrl = null;
 		var data = null;
-		snippetUrl = relPathIn+"api/appView?mediaType=json&a="+userData.authorization;
+		snippetUrl = relPathIn+"appView?mediaType=json";
 		data = {username: userData.username, appname: appname, streamSize: streamSize};			
-		alert('There was a problem loggin in. Performing retry.' + JSON.stringify(data));
+		alert('There was a problem loggin in. Performing retry.' + JSON.stringify(data) + ' ' + JSON.stringify(userData));
 		sb.utilities.postV2(snippetUrl, data, _loadMainPage, _errorStartController);			
 	}
 	function _userLoginEventReceived(message){
@@ -580,7 +583,7 @@ var pageViewController = function(sb, input){
 				var userData = sb.utilities.getUserInfo();
 				var snippetUrl = null;
 				var data = null;
-				snippetUrl = relPathIn+"api/appView?mediaType=json&a="+userData.authorization;
+				snippetUrl = relPathIn+"appView?mediaType=json";
 				data = {username: userData.username, appname: appname, streamSize: streamSize};			
 				sb.utilities.postV2(snippetUrl, data, _loadMainPage, _userLoginEventReceivedRetry);	
 		}catch(err){
@@ -606,6 +609,10 @@ var pageViewController = function(sb, input){
 			alert(e);	
 		}
 	}
+	
+	function _setEffects(){
+		sb.dom.find('.ui-btn').addClass("waves-effect");					
+	}
    return{
 	   init:function() {
        	try{
@@ -622,6 +629,7 @@ var pageViewController = function(sb, input){
 			Core.subscribe('stompClientDisconnect', _stompClientDisconnectMessageReceived);
        		window.onbeforeunload = confirmExit;
 			_startControllerV2();
+			_setEffects();
        	}catch(err){
 			updateFooterMessage('Problem starting App..'+err);
        	}

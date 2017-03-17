@@ -144,7 +144,6 @@ var textReactionsController = function(sb, input){
 			var noReactionsMessage = sb.dom.find("#jstemplate-No"+pageReactionDetail.pageReactionTitle+"Label").html();
 			var reactionsListArea=reactionsDiv.find(".textReactionList");
 			_updateReactionListForDiv(allTextRactionsDiv, reactionsDiv, reactionsDivMessageArea, noReactionsMessage, reactionsListArea, pageReactionDetail, loadFlag);
-			alert(sb.dom.find('.subContainer').length + 'subcontainer list');
 			if(sb.dom.find('.subContainer').length > 0){
 				allTextRactionsDiv = sb.dom.find(".subContainer").first().find("#TxtReactionList-"+pageReactionDetail.documentPageId);	
 				reactionsDiv=allTextRactionsDiv.find("#"+pageReactionDetail.pageReactionTitle+"Div-"+pageReactionDetail.documentPageId);

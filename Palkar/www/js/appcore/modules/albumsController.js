@@ -61,13 +61,15 @@ var albumsController = function(sb, input){
 		try{
 		albumcontainer.find("#pictureLoading").remove();
 		picturecontainer.html("");
-		for(var i=0; i<data.documentPageIDList.length; i++){
-			thumnailhtml = thumnailhtmltemplate;
-			thumnailhtml=thumnailhtml.replace("albumpicid",data.documentPageIDList[i]);
-			thumnailhtml=thumnailhtml.replace("albumpicid",data.documentPageIDList[i]);
-			thumnailhtml=thumnailhtml.replace("albumpicid",data.documentPageIDList[i]);			
-			thumnailhtml=thumnailhtml.replace("pictureurl",relPathIn+"tnphoto1.pvt/"+data.documentPageIDList[i]+"?mediaType=jpeg");
-			picturecontainer.append(sb.dom.wrap(thumnailhtml));
+		if(data.documentPageIDList){
+			for(var i=0; i<data.documentPageIDList.length; i++){
+				thumnailhtml = thumnailhtmltemplate;
+				thumnailhtml=thumnailhtml.replace("albumpicid",data.documentPageIDList[i]);
+				thumnailhtml=thumnailhtml.replace("albumpicid",data.documentPageIDList[i]);
+				thumnailhtml=thumnailhtml.replace("albumpicid",data.documentPageIDList[i]);			
+				thumnailhtml=thumnailhtml.replace("pictureurl",relPathIn+"tnphoto1.pvt/"+data.documentPageIDList[i]+"?mediaType=jpeg");
+				picturecontainer.append(sb.dom.wrap(thumnailhtml));
+			}
 		}
 		albumcontainer.show();
 		

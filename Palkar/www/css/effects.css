@@ -107,7 +107,7 @@ canvas:hover{
   position: relative;
  
 }
-.fileinput-button input {
+.fileinput-button {
   position: absolute;
   top: 0px;
   left: 0px;

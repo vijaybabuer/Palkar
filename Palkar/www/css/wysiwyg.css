@@ -2,6 +2,7 @@ body, html, .appBody{
 	height: 100%;
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;	
+	padding: 0px !important;
 }
 a{
 	text-decoration: none;
@@ -360,7 +361,7 @@ em{
 	float: left;
 	color: #3299BB;
 	font-size: 1.5em;
-	font-weight: 800;
+	font-weight: normal;
 	margin: 0px;
 }
 
@@ -378,7 +379,7 @@ em{
 	float: left;
 	color: #3299BB;
 	font-size: 1.5em;
-	font-weight: 800;
+	font-weight: normal;
 	margin: 0px;
 }
 #showLeftPanel{
@@ -388,7 +389,29 @@ em{
 	text-shadow: none;
 }
 
-#showRightPanel, #refreshPanel, #loginRegisterButton, #newMessageButton{
+#loginRegisterButton{
+	float: right; 
+	background-color: rgba(0,0,0,0); 
+	border: 0px;
+	text-shadow: none;	
+	color: #CC3333 !important;
+	margin: 0px;	
+	max-height: 1000px;
+	overflow: scroll;
+}
+
+#newMessageButton{
+	float: right; 
+	background-color: rgba(0,0,0,0); 
+	border: 0px;
+	text-shadow: none;	
+	color: #009966 !important;
+	margin: 0px;	
+	max-height: 1000px;
+	overflow: scroll;
+}
+
+#showRightPanel, #refreshPanel{
 	float: right; 
 	background-color: rgba(0,0,0,0); 
 	border: 0px;
@@ -651,15 +674,11 @@ em{
 	clear: both;
 	text-align: center;
  }
- #loginDiv, #registrationDiv, #socialDiv{
- 	width: 75%;
- }
+
  .activeButton{
  	border-bottom: 2px solid #3299BB !important;
  }
- #username, #password, #rusername, #remailAddress, #rpassword, #ruserFullName{
- 	height: 3em !important;
- }
+
  #inviteFriendsDiv{
 	text-align: center;
  }

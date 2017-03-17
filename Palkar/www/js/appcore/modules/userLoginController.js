@@ -3,8 +3,8 @@ var userLoginController = function(sb, input){
    
    function _userLoginSuccess(txnResponse){
 	   if(txnResponse.authorizationSuccess && txnResponse.authorizationSuccess == 'SUCCESS'){
-			try{
-			sb.utilities.setUserInfo(txnResponse.userName, txnResponse.authorization, "PalPostr");
+			try{				
+			sb.utilities.setUserInfo(txnResponse.userName, txnResponse.authorization, "api");
 			sb.dom.find("#guestWelcome").hide();
 			sb.dom.find("#loginRegisterButton").hide();
 			Core.publish('userLoginEvent', null);
@@ -13,17 +13,22 @@ var userLoginController = function(sb, input){
 			sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
 			sb.dom.find("#loginDiv").find("#authorizeUser").unbind('click', _loginUser);
 			sb.dom.find("#loginDiv").find("#loginForm").slideUp();
+			var userPanelPromptHtml =  tmpl("template-user-logo-prompt", txnResponse);
+			sb.dom.find("#loginDiv").prepend(userPanelPromptHtml);
+			
 			}catch(e){
 				alert(e);	
 			}
-		}else{
-			navigator.notification.alert("Information you provided did not match our records. Please provide valid username and password. If you do not have an username and password, please click on Register Button", null, input.pageHandle, "Ok"); 
+		}else{		
+			Materialize.toast("Unable to login. " + txnResponse.txtStatusReason, 2000);
+			//navigator.notification.alert("Information you provided did not match our records. Please provide valid username and password. If you do not have an username and password, please click on Register Button", null, input.pageHandle, "Ok"); 
 			sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
 		}
    }
    
    function _errorLogin(request, errorMessage, errorObj){
-			navigator.notification.alert("There was a problem. Please restart your App.", null, input.pageHandle, "Ok"); 
+	   sb.dom.find("#loginDiv").prepend(JSON.stringify(request));	   
+			navigator.notification.alert("There was a problem. Please restart your App. " + JSON.stringify(errorMessage) + " : " + JSON.stringify(errorObj), null, input.pageHandle, "Ok"); 
 			sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
 	}
 	
@@ -43,7 +48,8 @@ var userLoginController = function(sb, input){
 			   sb.dom.find("#loginDiv").find("#authorizeUser").button('disable');		   
 		   	   sb.utilities.postV2(relPathIn+'apipublic/userLogin?&mediaType=json',{userName: userName, password: password, communityName: input.pageHandle},_userLoginSuccess, _errorLogin);
 	   }else{
-			navigator.notification.alert("Please Enter User Name and Password.", null, input.pageHandle, "Ok");   
+//			navigator.notification.alert("Please Enter User Name and Password.", null, input.pageHandle, "Ok");   
+			Materialize.toast("Please Enter User Name and Password.", 2000);
 		}
 	}
 	function _initializeLoginSlides(){
@@ -74,6 +80,14 @@ var userLoginController = function(sb, input){
 		}
 	}
 	
+	function _initializeLoginSlidesV2(){
+		try{
+			sb.dom.find("#loginRegisterPageSlides").find("ul.tabs").tabs();
+		}catch(e){
+			alert(e);	
+		}
+	}	
+	
 	function _invalidRegistrationPromtResponse(){
 		;
 	}
@@ -100,17 +114,18 @@ var userLoginController = function(sb, input){
 	function _userRegistrationSuccess(response){
 		if(response.authorizationSuccess == "SUCCESS"){
 			sb.dom.find('#loginDiv').find('#message').html('Registration was successful');
-			sb.utilities.setUserInfo(response.userName, response.authorization, "PalPostr");
+			sb.utilities.setUserInfo(response.userName, response.authorization, "api");
 			sb.dom.find("#guestWelcome").hide();
 			sb.dom.find("#loginRegisterButton").hide();
 			Core.publish('userLoginEvent', null);
-			sb.dom.find("#registrationDiv").find("#message").html(sb.dom.find("#jstemplate-registration-success-message").html());	
 			sb.dom.find("#registrationDiv").find("#registrationForm").slideUp();
+			var userPanelPromptHtml =  tmpl("template-user-logo-prompt", response);
+			sb.dom.find("#registrationDiv").prepend(userPanelPromptHtml);			
 		}else{
 			if(response.errorInfoList && response.errorInfoList.length == 1 && response.errorInfoList[0].code == 'UserAlreadyMember'){
 				sb.dom.find('#loginDiv').find('#message').html('Welcome back, ' + response.errorInfoList[0].reason.split(":")[1] +'!, please login.');
 				sb.dom.find('#loginDiv').find('#username').val(response.errorInfoList[0].reason.split(":")[0]);
-				loginSlides.slide(1, 1000);
+				sb.dom.find("ul.tabs").tabs("select_tab", "loginDiv");
 			}else{
 				var responseHtml = "<h3>Registration was not successful. Please correct the below and retry.</h3>"
 				if(response.errorInfoList && response.errorInfoList.length > 0){
@@ -123,14 +138,18 @@ var userLoginController = function(sb, input){
 		}
 	}
 	function _registerButtonClick(e){
-		setTimeout(_initializeLoginSlides, 1000);
+		try{
+		setTimeout(_initializeLoginSlidesV2, 1000);
 		sb.dom.find("#loginDiv").find("#authorizeUser").val(sb.dom.find("#jstemplate-login-label").html());
 		sb.dom.find("#loginDiv").find("#message").html(sb.dom.find("#jstemplate-login-message").html());
 		sb.dom.find("#loginDiv").find("#authorizeUser").unbind('click', _loginUser);
 		sb.dom.find("#loginDiv").find("#authorizeUser").on('click', _loginUser);
 		sb.dom.find("#registrationDiv").find("#registerUser").unbind('click', _registrationSubmit);
 		sb.dom.find("#registrationDiv").find("#registerUser").on('click', _registrationSubmit);	
-		sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
+		//sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
+		}catch(e){
+			alert(e);	
+		}
 	}
 	
 	function isValid(str){
@@ -171,7 +190,7 @@ var userLoginController = function(sb, input){
 		var validName = isValid(sb.dom.find("#ruserFullName").val());
 		var validUserName = isValid(sb.dom.find("#rusername").val());
 		var validPassword = isNotEmpty(sb.dom.find("#rpassword").val());
-		sb.dom.find('#registrationDiv').find('#message').html(validEmail + " " + validName + " " +  validUserName + " " + validPassword);
+		//sb.dom.find('#registrationDiv').find('#message').html(validEmail + " " + validName + " " +  validUserName + " " + validPassword);
 		if(validEmail && validName && validUserName && validPassword){
 			return true;	
 		}
@@ -198,6 +217,15 @@ var userLoginController = function(sb, input){
 			sb.dom.find("#registerUser").button('enable');
 		}
 	}
+	
+	function _alreadyHaveAccount(e){
+		e.preventDefault();
+		sb.dom.find("ul.tabs").tabs("select_tab", "loginDiv");
+	}
+	function _registerClick(e){	
+		e.preventDefault();	
+		sb.dom.find("ul.tabs").tabs("select_tab", "registrationDiv");
+	}	
    return{
 	   init:function() {
        	try{
@@ -206,8 +234,10 @@ var userLoginController = function(sb, input){
 			sb.dom.find("#remailAddress").change(_emailAddressChange);
 			sb.dom.find("#registrationDiv").find('.invalidInfo').keyup(_registrationInputChange);
 			sb.dom.find("#registerUser").click(_registrationSubmit);
+			sb.dom.find("#alreadyHaveAccount").click(_alreadyHaveAccount);
+			sb.dom.find("#register").click(_registerClick);			
 			Core.subscribe('initializeUserRegistration', _registerButtonClick);
-			setTimeout(_initializeLoginSlides, 500);
+			setTimeout(_initializeLoginSlidesV2, 500);
        	}catch(err){
        		sb.utilities.log("Error while initializing userLogoModule: " + err);
        	}

@@ -282,6 +282,7 @@ var storyEditController = function(sb, input){
 		   refreshForm(data);
 		   sb.dom.find('#palpostr-url-sec').show();
 		   sb.dom.find("#contentCreate").find("#showMainPageButton").click();
+		   Materialize.toast('Posted! Click on Done to back to main screen.', 2000);
 	   }else{
 		   //sb.dom.find(htmlBody).fadeOut();
    		   sb.dom.find("#contentCreate").find("#showMainPageButton").click();
@@ -295,6 +296,7 @@ var storyEditController = function(sb, input){
 		   refreshForm(data);
 		   sb.dom.find("#contentCreate").find("#showMainPageButton").click();
 		   sb.dom.find('#palpostr-url-sec').show();
+		   Materialize.toast('Posted! Click on Done to back to main screen.', 2000);		   
 	   }else{
 		   sb.dom.find("#contentCreate").find("#showMainPageButton").click();
 		   Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});

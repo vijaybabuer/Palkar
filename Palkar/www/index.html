@@ -25,7 +25,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">	
+		<link rel="stylesheet" href="css/materialize/materialize.css" type="text/css" />			
         <link rel="stylesheet" type="text/css" href="css/index.css" />
 		<link rel="stylesheet" href="css/yui3/3.13.0/build/cssgrids/cssgrids.css" type="text/css" />
 		<link rel="stylesheet" href="css/yui3/3.17.1/cssreset/cssreset-min.css" type="text/css" />
@@ -36,10 +37,10 @@
 		<link rel="stylesheet" href="css/effects.css" type="text/css" />
 		<link rel="stylesheet" href="css/standard.css" type="text/css" />
 		<link rel="stylesheet" href="css/storyItem.css" type="text/css" />
-		<link rel="stylesheet" href="css/fa.css" type="text/css" />
 		<link rel="stylesheet" href="css/wysiwyg.css" type="text/css" />
 		<link rel="stylesheet" href="css/swipe.css" type="text/css" />		
 		<link rel="stylesheet" href="css/scroll.css" type="text/css" />
+		
         <title>Welcome to Palkar News</title>
 		<style type="text/css" media="all">
 			@font-face{
@@ -54,8 +55,8 @@
         <div data-role="page" class="appBody" id="mainPage"> 		       
 				<div class="appHeader noshadow">
 					<a href="#rightPanel" class="ui-btn ui-btn-inline noshadow" id="showRightPanel"><i class="fa fa-bars"></i></a>	
-					<a href="#loginRegisterPage" class="ui-btn ui-btn-inline noshadow" id="loginRegisterButton">Register</a>				
-					<a href="#contentCreate" class="ui-btn ui-btn-inline noshadow" id="newMessageButton">Write To</a>	
+					<a href="#loginRegisterPage" class="ui-btn ui-btn-inline noshadow" id="loginRegisterButton"><i class="fa fa-user-plus" aria-hidden="true"></i></a>				
+					<a href="#contentCreate" class="ui-btn ui-btn-inline noshadow" id="newMessageButton"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>	
 					<a  id="containerBackButton" class="ui-btn ui-btn-inline noshadow nd">
 						<i class="fa fa-chevron-left"></i>
 					</a>					
@@ -97,59 +98,53 @@
 			   	</p>	
 			</div><!-- /panel -->								
         </div>
-		 <div data-role="page" class="login" id="loginRegisterPage" data-add-back-btn="true"> 
+		 <div data-role="page" class="row login" id="loginRegisterPage" data-add-back-btn="true"> 
 				<div class="appHeader noshadow">	
 					<a  id="showMainPageButton" href="#mainPage" class="ui-btn ui-btn-inline noshadow">
-						<i class="fa fa-chevron-left"></i>&nbsp;Palkar
+						<i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;Profile Setup
 					</a>
 				</div>
-				<div id="loginSlideScrollBar">
-						<a class="registerMenuBar ui-btn ui-btn-inline noshadow cd activeButton" onClick="loginSlides.slide(0, 1000);" id="0">
-							Register
-						</a>				
-						<a class="loginMenuBar ui-btn ui-btn-inline noshadow cd" onClick="loginSlides.slide(1, 1000);" id="1">
-							Login
-						</a>
-						<a class="socialMenuBar ui-btn ui-btn-inline noshadow cd" onClick="loginSlides.slide(2, 1000);" id="2">
-							Social
-						</a>						
+				<div class="col" id="loginSlideScrollBar">
+					  <ul class="tabs">
+						<li class="tab col"><a class="active" href="#registrationDiv">Register</a></li>
+						<li class="tab col"><a  href="#loginDiv">Login</a></li>
+						<li class="tab col"><a href="#socialDiv">Social</a></li>
+					  </ul>							
 				</div>
-				<div class="swipe" id="loginRegisterPageSlides">
-					<div class="swipe-wrap" >
-						<div id="registrationDiv">
+						<div class="col s12" id="registrationDiv">
 								<span  style="padding: 0px; margin: 0px;"><i class="fa fa-lock"></i>&nbsp;Please create PalPostr Account</span><br /><br />
-								<form id="registrationForm">
-								<input type="text" class="invalidInfo" id="ruserFullName" placeholder="Your Full Name Ex: Kumar Patel" value=''/>
-								<input type="email"  class="invalidInfo" id="remailAddress" placeholder="Email Address" value=''/>								
-								<input type="text" class="invalidInfo" id="rusername" placeholder="User Name or Telephone Ex: kpatel" value=''/>
-								<input type="password" class="invalidInfo" id="rpassword"  placeholder="Password" />
-								<input type="submit" class="ui-btn cd" id="registerUser" disabled value="Register" />
-								<a id="alreadyHaveAccount" onClick="loginSlides.slide(1, 1000)" >Already Registered?</a><br><br>						
-								<a href="#termsAndConditions">Terms and Conditions</a>								
-								</form><br>
-								<div id="message">Valid Name, Email Address, Username and Password required to register.</div><br><br>
-
+								<div class="row">
+								<form class="col s12" id="registrationForm">
+									<input class="invalidInfo" id="ruserFullName" type="text" placeholder="Full Name: Ex. Kumar Patek"/>
+									<input class="invalidInfo"  id="remailAddress" type="email" placeholder="Your Email Address"  />							
+									<input class="invalidInfo"  id="rusername" type="text"  placeholder="Choose username" />
+									<input class="invalidInfo"  id="rpassword" type="password"  placeholder="Choose Password" />						
+									<input type="submit" class="ui-btn cd" id="registerUser" disabled value="Register" />							
+									<button class="ui-btn cd" id="alreadyHaveAccount" >Already Registered?</button><br><br>
+									<a href="#termsAndConditions">Terms and Conditions</a>								
+								</form>
+								</div>
+								
+								<br>
+								<div id="message">Valid Name, Email Address, Username and Password required to register.</div>
 						</div>					
-						<div id="loginDiv">					
+						<div class="col s12" id="loginDiv">					
 								<span  style="padding: 0px; margin: 0px;" id="message"><i class="fa fa-lock"></i>&nbsp;Please Login using PalPostr Account</span><br />
 								<form id="loginForm">
 								<input type="text" id="username"  placeholder="User Name or Telephone" value=''/>
 								<input type="password" id="password"   placeholder="Password" style=" height: 2em;"/>
 								<input type="button" class="ui-btn ui-btn-inline cd" id="authorizeUser" value="Login" />
-								<a class="ui-btn ui-btn-inline cd" href="#mainPage"/>
+								<a class="ui-btn cd" href="#mainPage"/>
 									<i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home
 								</a>
-								<a class="ui-btn ui-btn-inline cd" id="register" onClick="loginSlides.slide(0, 1000)" >Register</a>
-								<a class="ui-btn ui-btn-inline cd" id="forgotUsername" >Forgot?</a><br>
+								<button class="ui-btn  cd" id="register" >Register</button>
+								<a class="ui-btn  cd" id="forgotUsername" >Forgot?</a><br>
 								<a href="#termsAndConditions">Terms and Conditions</a>									
 								</form>
-							
 						</div>
-						<div id="socialDiv">
+						<div class="col s12" id="socialDiv">
 								<span  style="padding: 0px; margin: 0px;">Coming Soon!</span>
-						</div>											
-					</div>
-				</div>
+						</div>
 		 </div>	
 		 		<div data-role="page" id="termsAndConditions" data-add-back-btn="true"> 
 					<div class="appHeader noshadow">	
@@ -188,7 +183,7 @@
 				<div data-role="page" id="contentCreate" data-add-back-btn="true">
 					<div class="appHeader noshadow">	
 						<a  id="showMainPageButton"  class="ui-btn ui-btn-inline noshadow">
-							<i class="fa fa-newspaper-o" aria-hidden="true"></i>&nbsp;Create Content
+							<i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Create Content
 						</a>
 					</div>				
 					<div id="storyPostContainer">	
@@ -215,7 +210,7 @@
 										</div>																		
 										<div class="bw PVTSTYPIC">											
 										</div>	     
-										<textarea class="al addPostTextArea" style="margin: 0px; padding: 0px;"></textarea>
+										<p class="al addPostTextArea" style="margin: 0px; padding: 0px;"></p>
 									</div>
 									<div id="storyCreateOptions" data-role="collapsible" data-mini="true">
 											<h3>Reaction Preferences (Optional)</h3>
@@ -291,6 +286,7 @@
 <script type="text/javascript" src="js/plugins/jquery-overlay/loading-overlay.min.js"></script>
 <script type="text/javascript" src="js/external/jquery.nicescroll.js"></script>
 <script type="text/javascript" src="js/external/swipe/swipe.js"></script>
+<script type="text/javascript" src="js/materialize/materialize.min.js"></script>
 <script type="text/javascript" src="js/appcore/inheritance.js"></script>
 <script type="text/javascript" src="js/appcore/appmain.js"></script>
 <script type="text/javascript" src="js/appcore/pageViewController.js"></script>	
@@ -429,7 +425,7 @@ Ex: john@example.com;sam@example.com</script>
 <script type="text/template" id="PhotoUploadController-ClickToRemove"> Click/Tap any photo to remove.</script>
 <script type="text/template" id="jstemplate-mediaActionController-confirmPhotoDelete">Do you want to delete this Photo?</script>
 <script type="text/template" id="jstemplate-login-success-label"><i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home</script>
-<script type="text/template" id="jstemplate-login-success-message">Login Success! <br> <a class="ui-btn cd" href="#inviteFrields"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;Invite Friends</a> <br> <a  href="#mainPage" id="palpostr-url" class="ui-btn ui-btn-inline noshadow"><i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home</a></script>
+<script type="text/template" id="jstemplate-login-success-message">Login Success!</script>
 <script type="text/template" id="jstemplate-registration-success-message">Your Registration was Successful! <br> <a class="ui-btn cd" href="#inviteFrields"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;Invite Friends</a> <br> <a  href="#mainPage" id="palpostr-url" class="ui-btn ui-btn-inline noshadow"><i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home</a></script>
 <script type="text/template" id="jstemplate-login-message"><i class="fa fa-lock"></i>&nbsp;Please Login using PalPostr Account</script>
 <script type="text/template" id="jstemplate-login-label"><i class="fa fa-lock"></i>&nbsp;Login</script>

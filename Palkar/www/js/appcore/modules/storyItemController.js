@@ -424,7 +424,7 @@ var storyItemController = function(sb, input){
 		   
 					if(sb.utilities.isUserLoggedIn()){
 						var userData = sb.utilities.getUserInfo();				
-						snippetUrl = relPathIn+"api/appView?mediaType=json&a="+userData.authorization;
+						snippetUrl = relPathIn+"appView?mediaType=json";
 						data = {username: userData.username, appname: input.appname, lastUpdatedStreamDate: lastUpdatedStreamDate, streamSize: numberOfStoriesToGet, postedBeforeAfter: "BEFORE"};
 						sb.utilities.postV2(snippetUrl, data, _showStories);
 					}else{
@@ -502,7 +502,7 @@ var storyItemController = function(sb, input){
 	    		if(getMoreStories && lastUpdatedStreamDate != "" && lastUpdatedStreamDate != null && lastUpdatedStreamDate != "null"){
 					if(sb.utilities.isUserLoggedIn()){
 						var userData = sb.utilities.getUserInfo();				
-						snippetUrl = relPathIn+"api/appView?mediaType=json&a="+userData.authorization;
+						snippetUrl = relPathIn+"appView?mediaType=json";
 						data = {username: userData.username, appname: input.appname, lastUpdatedStreamDate: lastUpdatedStreamDate, streamSize: numberOfStoriesToGet, postedBeforeAfter: "BEFORE"};
 						sb.utilities.postV2(snippetUrl, data, _showStories);
 					}else{

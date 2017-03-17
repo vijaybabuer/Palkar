@@ -220,7 +220,6 @@ var photoUploadController = function(sb, input){
 	   
 	function _manageStoryPictures(data){
 		appPicInput=data;
-		alert('manage pics ' + data.documentid);
 		_ControllerStart("#album-"+data.documentid+"-"+data.documenttype);
 		sb.dom.find(myComp).fadeIn();
 		sb.dom.find(webCam).fadeIn();		

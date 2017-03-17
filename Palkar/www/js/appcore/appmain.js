@@ -27,7 +27,8 @@ Core = function(_$) {
 	var moduleData = {},
 		userData = {username: 'guest', authorization: null, authorizationType: null},
 		cache = {}, 
-		deviceAccounts = null,
+		deviceAccounts = null
+		baseHost = "",
 		_dom = {
 			find: function(selector) {
 				return _$(selector);
@@ -83,9 +84,15 @@ Core = function(_$) {
 			each: _$.each,
 			trigger: _$.trigger,
 			post: _$.post,
-			postJSON: function(url, data, successMethod){
+			postJSON: function(referenceUrl, data, successMethod){
 				var token = $("meta[name='_csrf']").attr("content");
 				var header = $("meta[name='_csrf_header']").attr("content");
+				var url = baseHost;				
+				if(userData.authorizationType){
+					url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;
+				}else{
+					url = url + referenceUrl;
+				}				
 				_$.ajax({
 					url: url,
 					type: 'POST',
@@ -108,12 +115,18 @@ Core = function(_$) {
 			userAgent: function(){
 				return navigator.userAgent; 
 			},
-			postV2: function(url, data, successMethod, errorMethod){
+			postV2: function(referenceUrl, data, successMethod, errorMethod){
 				if(!errorMethod){
 					errorMethod = defaultErrorMethod;	
 				}
 				var token = $("meta[name='_csrf']").attr("content");
 				var header = $("meta[name='_csrf_header']").attr("content");
+				var url = baseHost;
+				if(userData.authorizationType){
+					url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;
+				}else{
+					url = url + referenceUrl;
+				}
 				_$.ajax({
 					url: url,
 					type: 'POST',
@@ -129,7 +142,13 @@ Core = function(_$) {
 				});				
 			},			
 			ajax: _$.ajax,
-			appGet: function(url, successMethod, failureMethod){
+			appGet: function(referenceUrl, successMethod, failureMethod){
+				var url = baseHost;
+				if(userData.authorizationType){
+					url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;
+				}else{
+					url = url + referenceUrl;
+				}				
 				_$.ajax({
 					url: url,
 					type: 'GET',
@@ -137,9 +156,15 @@ Core = function(_$) {
 					failure: failureMethod
 				});				
 			},
-			put: function(url, data, successMethod){
+			put: function(referenceUrl, data, successMethod){
 				var token = $("meta[name='_csrf']").attr("content");
-				var header = $("meta[name='_csrf_header']").attr("content");				
+				var header = $("meta[name='_csrf_header']").attr("content");	
+				var url = baseHost;
+				if(userData.authorizationType){
+					url = url + userData.authorizationType + "/" + referenceUrl  + '&a=' + userData.authorization;
+				}else{
+					url = url + referenceUrl;
+				}				
 				_$.ajax({					
 					url: url,
 					type: 'PUT',
@@ -152,9 +177,15 @@ Core = function(_$) {
 				});
 			},
 			get: _$.get,
-			serverDelete: function(url, data, successMethod){
+			serverDelete: function(referenceUrl, data, successMethod){
 				var token = $("meta[name='_csrf']").attr("content");
 				var header = $("meta[name='_csrf_header']").attr("content");
+				var url = baseHost;				
+				if(userData.authorizationType){
+					url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;
+				}else{
+					url = url + referenceUrl;
+				}				
 				_$.ajax({
 					url: url,
 					type: "DELETE",
@@ -308,7 +339,8 @@ Core = function(_$) {
 				console.log(err);
 			}
 		},
-		loadUserData: function(){
+		loadUserData: function(initBaseHost){
+			baseHost = initBaseHost;
 			loadUserData();
 		},
 		subscribe: function(message, callback) {
