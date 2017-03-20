@@ -436,7 +436,7 @@ em{
 	width: 95%;
 	font-size: 1em;
 }
-.fa-picture-o, .fa-globe{
+.storyItem .fa-picture-o, .storyItem .fa-globe{
  color: #333 !important;
 }
 @media (max-width: 1000px) {          
