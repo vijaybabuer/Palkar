@@ -1,5 +1,5 @@
 var pageViewController = function(sb, input){
-	var thisIsMobileDevice = true, storyEditorInitialized=false, albumContainerJS=null, storyEditHappening = false, documentEditHappening = false, placeHolderContainer=sb.dom.find("#jstemplate-pageViewController-placeHolderContainer").html(), relPathIn = input.relPath, appname=input.appname, streamSize = input.streamSize, newStream = null, userLoggedIn = false, storyItemControllerPublish = true;
+	var thisIsMobileDevice = true, storyEditorInitialized=false, albumContainerJS=null, storyEditHappening = false, documentEditHappening = false, placeHolderContainer=sb.dom.find("#jstemplate-pageViewController-placeHolderContainer").html(), relPathIn = input.relPath, appname=input.appname, streamSize = input.streamSize, newStream = null, storyItemControllerPublish = true;
 	
 	function _enableBigScreenFeatures(){
 		sb.dom.find(".bigScreenItem").show();
@@ -75,21 +75,28 @@ var pageViewController = function(sb, input){
 	   }
 	   
 	function processPageInformation(snippetResponse){
+		try{
 		   var pageListHtml = tmpl("template-documentItemList", snippetResponse);
 		   sb.dom.find("#rightPanel").find("#documentPageList").html(sb.utilities.htmlDecode(pageListHtml));
-		   if(userLoggedIn){
-			   var optionsHtml = "";
+		   if(sb.utilities.isUserLoggedIn()){
 			   var showWriteToButton = false;
-			   for(var i=0; i < snippetResponse.documentListResponse.documentItemList.length; i++){
+			   var firstDocToPost = true;
+			    sb.dom.wrap('<select>').attr({'name':'select-choice-1','id':'createStoryDocument','data-native-menu':'false', 'class':'browser-default'}).appendTo('#createStoryHeaderDiv');
+				var optionHtml = null;
+			   for(var i=0; i < snippetResponse.documentListResponse.documentItemList.length; i++){				   
 					  if(snippetResponse.documentListResponse.documentItemList[i].acceptPosts){
-						optionsHtml = optionsHtml + '<option value="'+snippetResponse.documentListResponse.documentItemList[i].documentId+'">'+snippetResponse.documentListResponse.documentItemList[i].documentTitle+'</option>';
+						if(firstDocToPost){
+							optionHtml = sb.dom.wrap('<option>').attr({'value':snippetResponse.documentListResponse.documentItemList[i].documentId}).attr({'selected':'selected'}).html(snippetResponse.documentListResponse.documentItemList[i].documentTitle);
+						firstDocToPost = false;
+						}else{
+							optionHtml = sb.dom.wrap('<option>').attr({'value':snippetResponse.documentListResponse.documentItemList[i].documentId}).html(snippetResponse.documentListResponse.documentItemList[i].documentTitle);
+						}
+						optionHtml.appendTo(sb.dom.find("#createStoryDocument"));
 						showWriteToButton = true;
 					  } 
 			   }
-			   optionsHtml = optionsHtml + "</select>";
 			   if(showWriteToButton){
-					sb.dom.find("#createStoryDocument").html(sb.dom.wrap(optionsHtml));
-					sb.dom.find("#createStoryDocument").selectmenu();
+				   sb.dom.find("#createStoryDocument").selectmenu();
 					sb.dom.find("#newMessageButton").fadeIn();
 					sb.dom.find("#submitButtonForm").removeClass('nd');
 					sb.dom.find("#attachPictures").removeClass('nd');
@@ -103,6 +110,9 @@ var pageViewController = function(sb, input){
 				sb.dom.find("#loginRegisterButton").fadeIn();   
 				sb.dom.find("#guestWelcome").fadeIn();   
 			}
+		}catch(e){
+			alert('process page info pvc ' + e);	
+		}
 	}
 	
 	function _setAnchorClickEvent(){
@@ -232,7 +242,7 @@ var pageViewController = function(sb, input){
 			if(snippetUrl){
 					   e.preventDefault();
 					   sb.dom.find('.container').each(_hideContainer);
-					   sb.dom.find('#containerDiv').prepend(placeHolderContainer);		
+					   //sb.dom.find('#containerDiv').prepend(placeHolderContainer);		
 					   //alert(sb.dom.find('#containerDiv').scrollTop());
 					   //alert(sb.dom.find(this).scrollTo(0, 0));
 					   //window.scrollTo(0, 0);
@@ -320,12 +330,13 @@ var pageViewController = function(sb, input){
 	}
 	
 	function _triggerMainPageRequest(){
-			_checkLoginStatus();		
+	
 			updateFooterMessage("Proceeding after check login status");
 			var snippetUrl = null;
 			var data = null;
 			snippetUrl = relPathIn+"appView?mediaType=json";
-			if(userLoggedIn){
+			if(sb.utilities.isUserLoggedIn()){
+				Core.publish('startUserLogo', null);				
 				var userData = sb.utilities.getUserInfo();				
 				data = {username: userData.username, appname: appname, streamSize: streamSize};
 			}else{
@@ -347,12 +358,12 @@ var pageViewController = function(sb, input){
 				sb.dom.find('head').prepend(tokenHtml);
 				sb.dom.find('head').prepend(headerHtml);
 			   try{
-					if(sb.utilities.getUserInfo() != null){
+					if(sb.utilities.isUserLoggedIn()){
 						_triggerMainPageRequest();
 						appendFooterMessage("User Info Not Null");						
 					}else{
 						appendFooterMessage("User Info Null");
-						setTimeout(function(){_triggerMainPageRequest()}, 500);
+						setTimeout(function(){_triggerMainPageRequest()}, 2000);
 					}
 			   }catch(error){
 					alert('error while logging in ' + error);   
@@ -375,19 +386,7 @@ var pageViewController = function(sb, input){
 			sb.dom.find('#leftPanel').panel({disabled: false});
 		}
 	}
-	
-	function _checkLoginStatus(){
-		if(sb.utilities.getUserInfo()){		
-			if(sb.utilities.getUserInfo().username == 'guest' || sb.utilities.getUserInfo().username == 'undefined' || sb.utilities.getUserInfo().username == null){
-				userLoggedIn = false;
-			}else{
-				userLoggedIn = true;	
-			}
-		}else{
-			userLoggedIn = false;	
-		}
-	}
-	
+		
 	function _startControllerV2(){
 		try{			
 			var screenHeight = sb.dom.find(window).height();
@@ -553,7 +552,7 @@ var pageViewController = function(sb, input){
 
 		if(exitApp){
 			try{
-			sb.utilities.setUserInfo("guest", null, null);
+			sb.utilities.setUserInfo(sb.utilities.getUserInfo().username, sb.utilities.getUserInfo().authorization, sb.utilities.getUserInfo().authorizationType, sb.utilities.getUserInfo().userDetails);
 			navigator.notification.confirm('Close the App?', exitAppConfirm, input.appname, 'Keep Browsing, Close');
 			}catch(err){
 				alert(err);	
@@ -562,6 +561,10 @@ var pageViewController = function(sb, input){
 		
 	}
 
+	function onPause(e){
+		sb.utilities.setUserInfo(sb.utilities.getUserInfo().username, sb.utilities.getUserInfo().authorization, sb.utilities.getUserInfo().authorizationType, sb.utilities.getUserInfo().userDetails);	
+	}
+	
 	function onResume(e) {
 		e.preventDefault();
 	}
@@ -577,7 +580,6 @@ var pageViewController = function(sb, input){
 	}
 	function _userLoginEventReceived(message){
 		try{
-				userLoggedIn=true;
 				sb.dom.find("#storiesDivTrailer").find("#showMore").hide();
 				sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").html('<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>');		   
 				var userData = sb.utilities.getUserInfo();
@@ -611,7 +613,8 @@ var pageViewController = function(sb, input){
 	}
 	
 	function _setEffects(){
-		sb.dom.find('.ui-btn').addClass("waves-effect");					
+		sb.dom.find('.ui-btn').addClass("waves-effect");	
+		sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');
 	}
    return{
 	   init:function() {
@@ -625,6 +628,7 @@ var pageViewController = function(sb, input){
 			Core.subscribe('userLoginEvent', _userLoginEventReceived);	
 			Core.subscribe('unAuthorizedFunctionality', _unAuthorizedFunctionality);
 			document.addEventListener("resume", onResume, false);
+			document.addEventListener("pause", onPause, false);			
 			document.addEventListener("backbutton", _deviceBackButtonClicked, true);
 			Core.subscribe('stompClientDisconnect', _stompClientDisconnectMessageReceived);
        		window.onbeforeunload = confirmExit;

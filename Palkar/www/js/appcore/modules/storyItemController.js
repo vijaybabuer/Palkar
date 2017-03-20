@@ -456,6 +456,8 @@ var storyItemController = function(sb, input){
 	}
 	function _startController(message){
 		try{
+			
+				sb.dom.find('#storyPostContainerTab').prop('disabled', false);
 				lastUpdatedStreamDate = message.lastUpdatedStreamDate;
 	    		_correctImageUrlForStory();
 

@@ -3,8 +3,8 @@ var userLoginController = function(sb, input){
    
    function _userLoginSuccess(txnResponse){
 	   if(txnResponse.authorizationSuccess && txnResponse.authorizationSuccess == 'SUCCESS'){
-			try{				
-			sb.utilities.setUserInfo(txnResponse.userName, txnResponse.authorization, "api");
+			try{
+			sb.utilities.setUserInfo(txnResponse.userName, txnResponse.authorization, "api", txnResponse.userDetails);
 			sb.dom.find("#guestWelcome").hide();
 			sb.dom.find("#loginRegisterButton").hide();
 			Core.publish('userLoginEvent', null);
@@ -19,7 +19,8 @@ var userLoginController = function(sb, input){
 			}catch(e){
 				alert(e);	
 			}
-		}else{		
+		}else{	
+		
 			Materialize.toast("Unable to login. " + txnResponse.txtStatusReason, 2000);
 			//navigator.notification.alert("Information you provided did not match our records. Please provide valid username and password. If you do not have an username and password, please click on Register Button", null, input.pageHandle, "Ok"); 
 			sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
@@ -46,7 +47,7 @@ var userLoginController = function(sb, input){
 	   var token = userName+":"+password;
 	   if(userName && userName != "" && password && password != "" && userName != null && password != null){
 			   sb.dom.find("#loginDiv").find("#authorizeUser").button('disable');		   
-		   	   sb.utilities.postV2(relPathIn+'apipublic/userLogin?&mediaType=json',{userName: userName, password: password, communityName: input.pageHandle},_userLoginSuccess, _errorLogin);
+		   	   sb.utilities.postPublic(relPathIn+'apipublic/userLogin?&mediaType=json',{userName: userName, password: password, communityName: input.pageHandle},_userLoginSuccess, _errorLogin);
 	   }else{
 //			navigator.notification.alert("Please Enter User Name and Password.", null, input.pageHandle, "Ok");   
 			Materialize.toast("Please Enter User Name and Password.", 2000);
@@ -104,7 +105,7 @@ var userLoginController = function(sb, input){
 				communityName: input.pageHandle,
 				acceptTermsAndConditions: true
 			};
-			sb.utilities.postV2(relPathIn+'apipublic/membership?mediaType=json',registrationInfo,_userRegistrationSuccess, _userRegistrationFailure);
+			sb.utilities.postPublic(relPathIn+'apipublic/membership?mediaType=json',registrationInfo,_userRegistrationSuccess, _userRegistrationFailure);
 		}else{			
 			var invalidRegistrationInfoText = sb.dom.find('#invalidRegistrationInfoText').html();		
 			navigator.notification.alert(invalidRegistrationInfoText, _invalidRegistrationPromtResponse, input.pageHandle, 'Ok');				
@@ -114,7 +115,7 @@ var userLoginController = function(sb, input){
 	function _userRegistrationSuccess(response){
 		if(response.authorizationSuccess == "SUCCESS"){
 			sb.dom.find('#loginDiv').find('#message').html('Registration was successful');
-			sb.utilities.setUserInfo(response.userName, response.authorization, "api");
+			sb.utilities.setUserInfo(response.userName, response.authorization, "api", response.userDetails);
 			sb.dom.find("#guestWelcome").hide();
 			sb.dom.find("#loginRegisterButton").hide();
 			Core.publish('userLoginEvent', null);

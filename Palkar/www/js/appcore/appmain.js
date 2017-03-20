@@ -25,7 +25,7 @@ Sandbox = Class.extend({
 */
 Core = function(_$) {
 	var moduleData = {},
-		userData = {username: 'guest', authorization: null, authorizationType: null},
+		userData = {username: 'guest', authorization: null, authorizationType: null, userDetails: null},
 		cache = {}, 
 		deviceAccounts = null
 		baseHost = "",
@@ -67,11 +67,14 @@ Core = function(_$) {
 			getUserInfo: function(){
 				return userData;
 			},
-			setUserInfo: function(username, authorization, authorizationType){
+			setUserInfo: function(username, authorization, authorizationType, userDetails){
 				userData.username=username;
 				userData.authorization=authorization;
 				userData.authorizationType = authorizationType;
-				createUserData(username, authorization, authorizationType);
+				if(userDetails){
+					userData.userDetails = userDetails;	
+				}				
+				createUserData(username, authorization, authorizationType, userDetails);
 			},
 			deleteUserInfo: function(){
 				alert('not supported');
@@ -140,7 +143,29 @@ Core = function(_$) {
 			            xhr.setRequestHeader(header, token);
 			        }
 				});				
-			},			
+			},	
+			postPublic: function(referenceUrl, data, successMethod, errorMethod){
+				if(!errorMethod){
+					errorMethod = defaultErrorMethod;	
+				}
+				var token = $("meta[name='_csrf']").attr("content");
+				var header = $("meta[name='_csrf_header']").attr("content");
+				var url = baseHost;
+					url = url + referenceUrl;
+				_$.ajax({
+					url: url,
+					type: 'POST',
+					data: data,
+					contentType: 'application/x-www-form-urlencoded;charset=UTF-8',
+					success: successMethod,
+					error: errorMethod,
+					dataType: 'json',
+					encoding: 'UTF-8',
+			        beforeSend: function(xhr) {
+			            xhr.setRequestHeader(header, token);
+			        }
+				});				
+			},				
 			ajax: _$.ajax,
 			appGet: function(referenceUrl, successMethod, failureMethod){
 				var url = baseHost;
@@ -176,7 +201,15 @@ Core = function(_$) {
 			        }
 				});
 			},
-			get: _$.get,
+			get: function(referenceUrl, data, successCallback){
+				var url = baseHost;
+				if(userData.authorizationType){
+					url = url + userData.authorizationType + "/" + referenceUrl  + '&a=' + userData.authorization;
+				}else{
+					url = url + referenceUrl;
+				}
+				_$.get(url, data, successCallback);
+			},
 			serverDelete: function(referenceUrl, data, successMethod){
 				var token = $("meta[name='_csrf']").attr("content");
 				var header = $("meta[name='_csrf_header']").attr("content");
@@ -242,7 +275,7 @@ Core = function(_$) {
 				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {				
 					fs.root.getFile("userInfo.txt", { create: false, exclusive: false }, function (fileEntry) {
 						readUserData(fileEntry);
-					}, function(error){createUserData('guest',null, null);});				
+					}, function(error){createUserData('guest',null, null, null);});				
 				}, function(error){console.log('Problem Accessing File System');});		
 	}
 	
@@ -275,11 +308,11 @@ Core = function(_$) {
 			fileWriter.write(dataObj);
 		});		
 	}
-	function createUserData(username, authorization, authorizationType){
+	function createUserData(username, authorization, authorizationType, userDetails){
 		
 				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
 					fs.root.getFile("userInfo.txt", { create: true, exclusive: false }, function (fileEntry) {					
-					var userDataTemp = {username: username, authorization: authorization, authorizationType: authorizationType};
+					var userDataTemp = {username: username, authorization: authorization, authorizationType: authorizationType, userDetails: userDetails};
 					writeUserData(fileEntry, userDataTemp);
 					}, function(error){alert(error);});
 				

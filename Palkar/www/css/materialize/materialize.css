@@ -4760,10 +4760,10 @@ small {
   position: relative;
   overflow-x: auto;
   overflow-y: hidden;
-  height: 48px;
+  height: 45px;
   width: 100%;
   background-color: #fff;
-  margin: 0 auto;
+  margin: 0 0;
   white-space: nowrap;
 }
 

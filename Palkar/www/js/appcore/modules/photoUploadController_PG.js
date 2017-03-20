@@ -1,5 +1,5 @@
 var photoUploadController = function(sb, input){
-	var containerPanelBody = null, uploadCancelBtn=null, fileuploaderror=null, appPicInput=null, relPathIn=input.relPath, currentAlbumDivId = null, myComp=null, webCam=null,
+	var containerPanelBody = null, uploadCancelBtn=null, fileuploaderror=null, appPicInput=null, relPathIn=input.relPath, currentAlbumDivId = null, myComp=null, webCam=null, profPicDevice = null, profPicCam = null,
 		selectFilesBtn=null, uploadStartBtn=null, photoUploadMessageDiv=null, uploadSuccessMessage='<span class="p">Upload successful.</span>', uploadFailureMessage='<span class="br p">Upload failure</span>',		
 		uplPnlBody=null, currentSelection=null, webCamStartButton=null, webCamCaptureButton=null, webCamStopButton=null, webCamImageNode=null, webCamImage=null, WebCamPicSendBtn=null, containerElement='#uploadControllerPane';   
 
@@ -57,6 +57,13 @@ var photoUploadController = function(sb, input){
 		}
 	}
 	
+	function _ControllerStartForProfPics(divId){
+		if(divId && sb.dom.find(divId)){
+			sb.dom.find(".profpicturecapturediv").show();			
+		}else{
+			Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
+		}
+	}
 	
 	function _addAlbumPictures(data){	
 		appPicInput=data;
@@ -69,9 +76,17 @@ var photoUploadController = function(sb, input){
 	function _addAlbumPicturesSuccess(data){
 		appPicInput=data;
 		_publishAdd();
-		_ControllerStart("#album-"+data.documentid+"-"+data.documenttype);
-		sb.dom.find(myComp).fadeIn();
-		sb.dom.find(webCam).fadeIn();
+		if(data.documenttype == 'PVTSTYPIC'){
+			_ControllerStart("#album-"+data.documentid+"-"+data.documenttype);			
+			sb.dom.find(myComp).fadeIn();
+			sb.dom.find(webCam).fadeIn();
+		}else if(data.documenttype == 'PROFPICS'){
+			_ControllerStartForProfPics("#album-"+data.documentid+"-"+data.documenttype);	
+			sb.dom.find("#changeProfilePicture").fadeOut();
+			sb.dom.find("#changeProfilePictureFromGallery").fadeIn();
+			sb.dom.find("#changeProfilePictureFromCamera").fadeIn();	
+			sb.utilities.getUserInfo().userDetails.profilePictureAlbumId = data.documentid;
+		}
 	}
 	function _errorInDocumentCreate(request, errorMessage, errorObj){
 		alert("Request " + JSON.stringify(request) + " " + JSON.stringify(errorMessage) + " " + JSON.stringify(errorObj));
@@ -92,15 +107,21 @@ var photoUploadController = function(sb, input){
 
 	function _saveWebCamPictureSuccess(data, success){
 		if(data.txnStatus){
-			if(data.txnStatus == "FAILED"){
-				photoUploadMessageDiv.html('<span class="br p cw">Photo upload failed. Please try again later</span>');
-			}else{
-				photoUploadMessageDiv.html('<span class="br p">Photo upload failed. Please try again later</span>');
-			}			
+			if(appPicInput.documenttype == 'PVTSTYPIC'){
+				if(data.txnStatus == "FAILED"){
+					photoUploadMessageDiv.html('<span class="br p cw">Photo upload failed. Please try again later</span>');
+				}else{
+					photoUploadMessageDiv.html('<span class="br p">Photo upload failed. Please try again later</span>');
+				}			
+			}
 		}else{
-			photoUploadMessageDiv.html('<span class="p">Picture has been saved.</span>');
-			
+			if(appPicInput.documenttype == 'PVTSTYPIC'){
+				photoUploadMessageDiv.html('<span class="p">Picture has been saved.</span>');
+			}
 			_publishUpdate();			
+			if(appPicInput.documenttype == 'PROFPICS'){
+				sb.utilities.getUserInfo().userDetails.profilePictureId = data.documentpageid;
+			}
 		}
 	}
 	
@@ -155,7 +176,7 @@ var photoUploadController = function(sb, input){
 		if(input.documentid != null && input.documentid != ""){
 			appPicInput=input;
 			navigator.camera.getPicture(uploadPhotoV2, function(message) {
-			 alert('get picture failed');
+			 alert('Get Picture Cancelled');
 			 }, {
 			 quality: 50,
 			 destinationType: navigator.camera.DestinationType.DATA_URL,
@@ -176,7 +197,7 @@ var photoUploadController = function(sb, input){
 		if(input.documentid != null && input.documentid != ""){
 			appPicInput=input;
 			navigator.camera.getPicture(uploadPhotoV2, function(message) {
-			 alert('get picture failed');
+			 alert('Get Picture Cancelled');
 			 }, {
 			 quality: 50,
 			 destinationType: navigator.camera.DestinationType.DATA_URL,
@@ -196,11 +217,16 @@ var photoUploadController = function(sb, input){
 
 	
 	function _publishUpdate(){
+		if(appPicInput){
 		Core.publish('albumUpdate',{documentid: appPicInput.documentid, documenttype: appPicInput.documenttype, actioncode: 'UPDATE'});
+		}else{	
+			Core.publish('refreshProfilePicture', null);	
+		}
 	}
 	
 	function _publishAdd(){
 		Core.publish('albumUpdate',{documentid: appPicInput.documentid, documenttype: appPicInput.documenttype, actioncode: 'ADD'});
+		
 	}
 
 	   function _photoDeleteResponseReceived(data){
@@ -210,9 +236,8 @@ var photoUploadController = function(sb, input){
 		   }else{
 			   Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
 		   }
-		   
-		   
 	   }
+	   
 	   function _deleteDownloadPhotoClicked(data){
 		   console.log("Delete Photo " + data.photoId);
 		   sb.utilities.serverDelete(relPathIn+"photo/"+data.photoId+"?mediaType=json",null,_photoDeleteResponseReceived);
@@ -220,11 +245,58 @@ var photoUploadController = function(sb, input){
 	   
 	function _manageStoryPictures(data){
 		appPicInput=data;
+		
 		_ControllerStart("#album-"+data.documentid+"-"+data.documenttype);
 		sb.dom.find(myComp).fadeIn();
 		sb.dom.find(webCam).fadeIn();		
 	}
 	   
+	 function _addProfPictureFromWebCam(input){
+		 appPicInput=input;
+		try{
+		if(input.documentid != null && input.documentid != ""){
+			appPicInput=input;
+			navigator.camera.getPicture(uploadPhotoV2, function(message) {
+			 Materialize.toast('Upload cancelled', 2000);
+			 }, {
+			 quality: 50,
+			 destinationType: navigator.camera.DestinationType.DATA_URL,
+			 sourceType: navigator.camera.PictureSourceType.CAMERA,
+ 			 mediaType: navigator.camera.PictureSourceType.PICTURE
+			 });
+			//Create Pictures for album
+		}else{
+			photoUploadMessageDiv.html('There was problem. Please try again later.');
+			alert('Album ID was not provided. ');
+		}
+		}catch(err){
+			alert('Exception during add picture from device ' + err);
+		}		 
+	 }
+	 
+	function _addProfPictureFromDevice(input){	
+			 appPicInput=input;
+		try{
+		if(input.documentid != null && input.documentid != ""){
+			appPicInput=input;
+			navigator.camera.getPicture(uploadPhotoV2, function(message) {
+			 Materialize.toast('Upload cancelled', 2000);
+			 }, {
+			 quality: 50,
+			 destinationType: navigator.camera.DestinationType.DATA_URL,
+			 sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY,
+ 			 mediaType: navigator.camera.PictureSourceType.PICTURE
+			 });
+			//Create Pictures for album
+		}else{
+			photoUploadMessageDiv.html('There was problem. Please try again later.');
+			console.log('Album ID was not provided. ');
+		}
+		}catch(err){
+			alert('Exception during add picture from device ' + err);
+		}
+	}
+	
    return{
 	   init: function() {
        	try{
@@ -235,6 +307,8 @@ var photoUploadController = function(sb, input){
        			Core.subscribe('addPictureFromDevice',_addPictureFromDevice);
 				Core.subscribe('addPictureFromWebCam',_addPictureFromWebCam);
        			Core.subscribe("deleteDownloadPhoto", _deleteDownloadPhotoClicked);
+       			Core.subscribe('addProfPictureFromDevice',_addProfPictureFromDevice);
+				Core.subscribe('addProfPictureFromWebCam',_addProfPictureFromWebCam);				
        	}catch(err){
        		console.log(err);
        	}

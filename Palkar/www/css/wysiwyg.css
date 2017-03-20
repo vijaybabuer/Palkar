@@ -347,6 +347,7 @@ em{
 	z-index: 1000;
 	height: 45px;
 }
+
 .appBody{
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
@@ -354,7 +355,7 @@ em{
 	text-align: left;
 	text-shadow: none;
 }
-#palpostr-url{ 
+#palpostr-url, #user-logo{ 
 	background: rgba(0,0,0,0); 
 	border: 0px;
 	text-shadow: none;
@@ -364,15 +365,15 @@ em{
 	font-weight: normal;
 	margin: 0px;
 }
+.txtreaction, #updateLocation, #updateDetailsText{
 
-.txtreaction{
 	background: rgba(0,0,0,0) !important; 
 	border: 0px;
 	text-shadow: none;
 	float: left;
 	color: #3299BB !important;
 }
-#containerBackButton, #showMainPageButton, .loginMenuBar, .registerMenuBar, .socialMenuBar, #submitButtonForm, #palpostr-url-sec { 
+#containerBackButton, #showMainPageButton, .loginMenuBar, .registerMenuBar, .socialMenuBar, #palpostr-url-sec { 
 	background: rgba(0,0,0,0); 
 	border: 0px;
 	text-shadow: none;
@@ -459,12 +460,6 @@ em{
 	vertical-align: middle;
  }
 
-{
-	height: 100%;
-}
-#storyPostContainer{
-	margin-top: 45px;
-}
 #containerDiv{
 	position: relative;
 }
@@ -660,7 +655,10 @@ em{
 	color: #ffffff;
 	border: 0px;
  }
- #loginSlideScrollBar, #termsAndConditions, #inviteFriendsDiv, #containerDiv{
+#containerDiv{
+	margin-top: 45px;
+}
+ #loginSlideScrollBar, #termsAndConditions, #inviteFriendsDiv{
    	margin-top: 45px;
 	background-color: #ffffff !important;
 	padding: 2px;

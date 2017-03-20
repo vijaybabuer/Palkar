@@ -23,24 +23,16 @@ var albumsController = function(sb, input){
 	function _receivePublish(input){
 		_loadTemplates();
 		try{
-			if(input.actioncode == "ADD"){
-				if(input.documenttype == 'PROFPICS'){
-					_paintProfilePictures(input);
-				}
-			}else{
 				if(input.actioncode == "UPDATE"){
 					_paintPictures(input);
 				}
-			}
 		}catch(err){
 			serverLog(err);
 		}
 	}
 	
 	function _paintProfilePictures(input){
-		albumcontainer=sb.dom.find("#album-0"+"-"+input.documenttype);
-		sb.dom.find('#button-0-PROFPICS').remove();
-		albumcontainer.attr('id','#album-'+input.documentid+'-'+input.documenttype);
+		albumcontainer=sb.dom.find('#album-'+input.documentid+'-'+input.documenttype);
 		picturecontainer = albumcontainer.find(".albumpictures");
 		picturecontainer.append(loadingHtml);
 		_getPicturesFromServer(input);
@@ -48,7 +40,11 @@ var albumsController = function(sb, input){
 	}
 	
 	function _paintPictures(input){
-		albumcontainer=sb.dom.find("#createStory").find("#storyMedia").find("#album-"+input.documentid+"-"+input.documenttype);
+		if(input.documenttype == 'PROFPICS'){
+			albumcontainer=sb.dom.find("#profileContainer").find("#userProfileCard").find("#album-"+input.documentid+"-"+input.documenttype);
+		}else{
+			albumcontainer=sb.dom.find("#createStory").find("#storyMedia").find("#album-"+input.documentid+"-"+input.documenttype);
+		}
 		picturecontainer = albumcontainer.find(".albumpictures");
 		picturecontainer.append(loadingHtml);
 		_getPicturesFromServer(input);
@@ -72,27 +68,31 @@ var albumsController = function(sb, input){
 			}
 		}
 		albumcontainer.show();
-		
+		albumcontainer.find('.materialboxed').materialbox();
 		//Update picture list in Send Message Dialog
-		var attachmentAlbumContainer = sb.dom.find("#attachments-"+data.albumDocumentId+"-"+data.albumDocumentTypeCd);
-		var attachmentPictureContainer = attachmentAlbumContainer.find(".albumpictures");
-		attachmentPictureContainer.html("");
-		for(var i=0; i<data.documentPageIDList.length; i++){
-			thumnailhtml = thumnailhtmltemplate;
-			thumnailhtml=thumnailhtml.replace("albumpicid",relPathIn+"alb/"+data.documentPageIDList[i]);
-			thumnailhtml=thumnailhtml.replace("pictureurl",relPathIn+"tnphoto1.pvt/"+data.documentPageIDList[i]+"?mediaType=jpeg");
-			attachmentPictureContainer.append(sb.dom.wrap(thumnailhtml));
-		}	
+		if(data.documentPageIDList){
+			var attachmentAlbumContainer = sb.dom.find("#attachments-"+data.albumDocumentId+"-"+data.albumDocumentTypeCd);
+			var attachmentPictureContainer = attachmentAlbumContainer.find(".albumpictures");
+			attachmentPictureContainer.html("");
+			for(var i=0; i<data.documentPageIDList.length; i++){
+				thumnailhtml = thumnailhtmltemplate;
+				thumnailhtml=thumnailhtml.replace("albumpicid",relPathIn+"alb/"+data.documentPageIDList[i]);
+				thumnailhtml=thumnailhtml.replace("pictureurl",relPathIn+"tnphoto1.pvt/"+data.documentPageIDList[i]+"?mediaType=jpeg");
+				attachmentPictureContainer.append(sb.dom.wrap(thumnailhtml));
+			}	
+		}
 		
-		//Update picture list in DocumentEdit dialog
-		var editDocumentAlbumContainer = sb.dom.find("#EditDocument").find("#album-"+data.albumDocumentId+"-"+data.albumDocumentTypeCd);
-		var editDocumentPictureContainer = editDocumentAlbumContainer.find(".albumpictures");
-		editDocumentPictureContainer.html("");
-		for(var i=0; i<data.documentPageIDList.length; i++){
-			thumnailhtml = thumnailhtmltemplate;
-			thumnailhtml=thumnailhtml.replace("albumpicid",relPathIn+"alb/"+data.documentPageIDList[i]);
-			thumnailhtml=thumnailhtml.replace("pictureurl",relPathIn+"tnphoto1.pvt/"+data.documentPageIDList[i]+"?mediaType=jpeg");
-			editDocumentPictureContainer.append(sb.dom.wrap(thumnailhtml));
+		if(data.documentPageIDList){
+			//Update picture list in DocumentEdit dialog
+			var editDocumentAlbumContainer = sb.dom.find("#EditDocument").find("#album-"+data.albumDocumentId+"-"+data.albumDocumentTypeCd);
+			var editDocumentPictureContainer = editDocumentAlbumContainer.find(".albumpictures");
+			editDocumentPictureContainer.html("");
+			for(var i=0; i<data.documentPageIDList.length; i++){
+				thumnailhtml = thumnailhtmltemplate;
+				thumnailhtml=thumnailhtml.replace("albumpicid",relPathIn+"alb/"+data.documentPageIDList[i]);
+				thumnailhtml=thumnailhtml.replace("pictureurl",relPathIn+"tnphoto1.pvt/"+data.documentPageIDList[i]+"?mediaType=jpeg");
+				editDocumentPictureContainer.append(sb.dom.wrap(thumnailhtml));
+			}
 		}
 		
 		}catch(e){alert(e);};
@@ -105,7 +105,7 @@ var albumsController = function(sb, input){
 	
 	function _getPicturesFromServer(input){
 		try{
-			sb.utilities.get(relPathIn+"galb/"+input.documentid+".100?mediaType=json",_paintAlbumPictures);
+			sb.utilities.get("galb/"+input.documentid+".100?mediaType=json",_paintAlbumPictures);
 		}catch(err){
 			serverLog(err);
 		}

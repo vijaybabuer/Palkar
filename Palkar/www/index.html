@@ -26,7 +26,7 @@
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">	
-		<link rel="stylesheet" href="css/materialize/materialize.css" type="text/css" />			
+		<link rel="stylesheet" href="css/materialize/materialize.css" type="text/css" />		
         <link rel="stylesheet" type="text/css" href="css/index.css" />
 		<link rel="stylesheet" href="css/yui3/3.13.0/build/cssgrids/cssgrids.css" type="text/css" />
 		<link rel="stylesheet" href="css/yui3/3.17.1/cssreset/cssreset-min.css" type="text/css" />
@@ -40,7 +40,8 @@
 		<link rel="stylesheet" href="css/wysiwyg.css" type="text/css" />
 		<link rel="stylesheet" href="css/swipe.css" type="text/css" />		
 		<link rel="stylesheet" href="css/scroll.css" type="text/css" />
-		
+
+				
         <title>Welcome to Palkar News</title>
 		<style type="text/css" media="all">
 			@font-face{
@@ -54,28 +55,104 @@
     <body>
         <div data-role="page" class="appBody" id="mainPage"> 		       
 				<div class="appHeader noshadow">
-					<a href="#rightPanel" class="ui-btn ui-btn-inline noshadow" id="showRightPanel"><i class="fa fa-bars"></i></a>	
-					<a href="#loginRegisterPage" class="ui-btn ui-btn-inline noshadow" id="loginRegisterButton"><i class="fa fa-user-plus" aria-hidden="true"></i></a>				
-					<a href="#contentCreate" class="ui-btn ui-btn-inline noshadow" id="newMessageButton"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>	
-					<a  id="containerBackButton" class="ui-btn ui-btn-inline noshadow nd">
-						<i class="fa fa-chevron-left"></i>
-					</a>					
-					<a  href="#leftPanel" id="palpostr-url" class="ui-btn ui-btn-inline noshadow">
-						<i class="fa fa-home" aria-hidden="true"></i>&nbsp;Palkar
-					</a>
-				</div> 				
+					<div class="topRow">				
+						<a href="#rightPanel" class="ui-btn ui-btn-inline noshadow" id="showRightPanel"><i class="fa fa-bars"></i></a>	
+						<a href="#loginRegisterPage" class="ui-btn ui-btn-inline noshadow" id="loginRegisterButton"><i class="fa fa-user-plus" aria-hidden="true"></i></a>				
+						<a  id="containerBackButton" class="ui-btn ui-btn-inline noshadow nd">
+							<i class="fa fa-chevron-left"></i>
+						</a>
+						<a  href="#leftPanel" id="palpostr-url" class="ui-btn ui-btn-inline noshadow" >
+							<i class="fa fa-home" aria-hidden="true"></i>&nbsp;Palkar
+						</a>		
+					</div>
+				</div>				 				
 				<div class="containers" id="containerDiv">
-						<div class="container" id="mainContainer">
-							<p id="guestWelcome">You are missing out! Login or Register today to activitate tons of exciting features on the App.</p>						
-							<a class="ui-btn ui-btn-inline noshadow nd lt" id="refreshPanel" disabled>
-									<i class="fa fa-refresh"></i> Show Latest Stories
-							</a>							
-							<div id="storiesDiv">																																																				
-							</div>
-							<div id="storiesDivTrailer">
-								<button class="ui-btn cd stdf al bw noeffect nd" id="showMore" style="text-align: center;"><i class="fa fa-chevron-down"></i>&nbsp;Show More Messages</button>
-							</div>							
+					<div>
+						  <ul class="tabs">
+							<li class="tab col"><a id="storyPostContainerTab" href="#storyPostContainer"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Post</a></li>
+							<li class="tab col"><a class="active" href="#mainContainer">Stream</a></li>
+							<li class="tab col"><a id="profileContainerTab" href="#profileContainer"><i class="fa fa-user" aria-hidden="true"></i> Profile</a></li>
+						  </ul>									
+					</div>					
+					<div class="container" id="mainContainer">
+						<p id="guestWelcome">You are missing out! Login or Register today to activitate tons of exciting features on the App.</p>						
+						<a class="ui-btn ui-btn-inline noshadow nd lt" id="refreshPanel" disabled>
+								<i class="fa fa-refresh"></i> Show Latest Stories
+						</a>							
+						<div id="storiesDiv">																																																				
 						</div>
+						<div id="storiesDivTrailer">
+							<button class="ui-btn cd stdf al bw noeffect nd" id="showMore" style="text-align: center;"><i class="fa fa-chevron-down"></i>&nbsp;Show More Messages</button>
+						</div>							
+					</div>
+					<div id="storyPostContainer">	
+						<div id="unAuthorizedAccessDialog">
+							<p>To protect your identity, you need to login or register to use this feature. </p>
+							<a href="#loginRegisterPage" onClick="Core.publish('initializeUserRegistration', null);" class="containerBackButton">Continue</a>
+						</div>					
+						<div id="createStory" tyle="background-color: #ffffff; padding-top: 2px; text-align: left; display: none;">								
+							<form class="bw" id="addPostForm"  method="POST" action=''>
+								<div class="card" >
+									<div class="card-content">								
+										<div id="createStoryHeaderDiv" class="input-field col s12">	
+											<label for="select-choice-1">Writing To</label>	
+										</div>
+										<div id="storyMedia" data-role="collapsible" data-mini="true" data-collapsed="false">
+											<div id="panel-hdr" class="p ar" style="margin: 1em;">
+												<a  id="attachPictures" title="Attach Pictures from your computer" class="ui-btn ui-btn-inline cd"><i class="fa fa-picture-o" aria-hidden="true"></i></a> 
+												<a  id="myComp"  class="ui-btn ui-btn-inline cd nd"><i class="fa fa-file-image-o"></i></a>&nbsp;
+												<a  id="webCam" class="ui-btn ui-btn-inline cd nd"><i class="fa fa-camera"></i></a>   			
+											</div>																		
+											<div class="bw PVTSTYPIC">											
+											</div>	     
+											<p class="al addPostTextArea" style="margin: 0px; padding: 0px;"></p>
+										</div>										
+									</div>
+									<div class="card-reveal">
+										<span class="right stdf grey-text text-darken-4 card-title"><i class="fa fa-times"></i></span>
+										<p>
+											<div id="storyCreateTitle" data-role="collapsible" data-mini="true">
+												<h6>Choose A Subject for Message(optional) </h6>
+												<textarea placeholder="Subject/URL" id="subject" type="text" rows="2" cols="50" style="resize: none;" class="sq fill p stdf box"></textarea>
+											</div>
+											<div id="storyCreateOptions" data-role="collapsible" data-mini="true">
+													<h6>Reaction Preferences (Optional)</h6>
+													<fieldset id="allReactionsButtonSet" data-role="controlgroup" class="sf" data-mini="true"> 
+																<input type="checkbox"  id="allowComments" checked >
+																	<label id="allowCommentsLabel" for="allowComments">
+																		<i class="fa fa-comments"></i>&nbsp;<span id="label">Allow Comments</span>
+																	</label>
+																<input type="checkbox" id="allowReplies"  checked >
+																	<label id="allowRepliesLabel"  for="allowReplies" >
+																		<i class="fa fa-reply"></i>&nbsp;<span id="label">Allow Replies</span>
+																	</label>
+																<input type="checkbox" id="allowHilights"  checked >
+																	<label id="allowHilightsLabel"   for="allowHilights">
+																		<i class="fa fa-star"></i>&nbsp;<span id="label">Allow Highlights</span>
+																	</label>       
+													</fieldset>	
+													<a  id="removePictures" title="Remove Pictures from Message" style="display: none;" class="ui-btn ui-btn-inline cd">
+															<i class="fa fa-camera"><i class="fa fa-times" style="vertical-align: sub;"></i></i>		
+													</a>																			
+											</div>
+										</p>							
+									</div>
+									<div class="card-action">
+										<button id="submitButtonForm" type="submit" class="ui-btn ui-btn-inline cd" title="Post Message" >
+												Post
+										</button> 
+										<i id='cancel' class="fa fa-times cg right"></i>										
+										<i class="fa fa-gear activator cg right"></i>								
+										<i id="removePictures" class="fa fa-camera cg nd right"><i class="fa fa-times cg" style="vertical-align: sub;"></i></i>																					
+									</div>
+								</div>
+							</form>						
+						</div>				
+					</div> <!-- Story Post Container Ends -->	
+					<div id="profileContainer">
+						<p>To protect your identity, you need to login or register to use this feature. </p>
+						<a href="#loginRegisterPage" onClick="Core.publish('initializeUserRegistration', null);" class="containerBackButton">Continue</a>	
+					</div>					
 				</div>	    
 				<div class="appFooter" id="mainAppFooter">
 					<div id="message1"></div>	
@@ -85,7 +162,7 @@
 			<div class="al b nd" data-position="right" data-position-fixed="true" data-role="panel" data-display="overlay" id="rightPanel">
 				<div id="documentPageList">Please wait while the section is loading..</div>
 			</div><!-- /panel -->		
-			<div class="al cd nd" data-position="left" data-position-fixed="true" data-role="panel" data-display="overlay" id="leftPanel">
+			<div class="al cd nd" style="overflow: scroll; " data-position="left" data-position-fixed="true" data-role="panel" data-display="overlay" id="leftPanel">
 				<a class="ui-btn cd" href="#inviteFrields"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;Invite Friends</a>
 			   <p class="roberto">This App brings you Palkar Community Updates</p>
 			   <p class="roberto"><strong>Logon to www.palpostr.com/palkar</strong> Share your local community stories and pictures with more than 1 Million Palkars worldwide</p>
@@ -133,7 +210,7 @@
 								<form id="loginForm">
 								<input type="text" id="username"  placeholder="User Name or Telephone" value=''/>
 								<input type="password" id="password"   placeholder="Password" style=" height: 2em;"/>
-								<input type="button" class="ui-btn ui-btn-inline cd" id="authorizeUser" value="Login" />
+								<input type="submit" class="ui-btn cd" id="authorizeUser" value="Login" /><br><br>
 								<a class="ui-btn cd" href="#mainPage"/>
 									<i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home
 								</a>
@@ -179,76 +256,6 @@
 										<i id="EmailInvite" class="fa fa-envelope-o" aria-hidden="true"></i><br>Invite My Email Contacts
 						</a>						
 					</div>
-				</div>	
-				<div data-role="page" id="contentCreate" data-add-back-btn="true">
-					<div class="appHeader noshadow">	
-						<a  id="showMainPageButton"  class="ui-btn ui-btn-inline noshadow">
-							<i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Create Content
-						</a>
-					</div>				
-					<div id="storyPostContainer">	
-						<div id="createStory" class="pane" style="display: none; background-color: #ffffff; padding-top: 2px;">								
-						<form class="bw" id="addPostForm"  method="POST" action=''>
-							<div data-role="collapsibleset" data-theme="a" data-content-theme="a" data-mini="true">
-									<div id="createStoryHeaderDiv">	
-										<h5>Writing To</h5>		
-										<select id='createStoryDocument' title='Choose the page where you want write your message' class='stdf p' style='border: 0px; margin: 0px; height: 50px;'>
-										</select>			
-									</div>								
-									<div id="storyCreateTitle" data-role="collapsible" data-mini="true">
-										<h3>Choose A Subject for Message(optional) </h3>
-										<textarea placeholder="Subject/URL" id="subject" type="text" rows="2" cols="50" style="resize: none;" class="sq fill p stdf box"></textarea>
-									</div>
-									<div id="storyMedia" data-role="collapsible" data-mini="true" data-collapsed="false">
-										<h3>Message and Photos</h3>	
-										<div id="panel-hdr" class=" p h3 ar">
-											<button type="button"  id="attachPictures" title="Attach Pictures from your computer" class="ui-btn ui-btn-inline p ePtr">
-												<i class="fa fa-camera"></i>				
-											</button> 
-											<button type="button" id="myComp" style="margin: 0px;" class="ui-btn ui-btn-inline p ePtr nd"><i class="fa fa-file-image-o"></i>&nbsp;Gallery</button>&nbsp;
-											<button type="button" style="margin: 0px;" id="webCam" class="ui-btn ui-btn-inline p ePtr nd"><i class="fa fa-camera"></i>&nbsp;Camera</button>   			
-										</div>																		
-										<div class="bw PVTSTYPIC">											
-										</div>	     
-										<p class="al addPostTextArea" style="margin: 0px; padding: 0px;"></p>
-									</div>
-									<div id="storyCreateOptions" data-role="collapsible" data-mini="true">
-											<h3>Reaction Preferences (Optional)</h3>
-											<fieldset id="allReactionsButtonSet" data-role="controlgroup" class="sf" data-mini="true"> 
-														<input type="checkbox"  id="allowComments" checked >
-															<label id="allowCommentsLabel" for="allowComments">
-																<i class="fa fa-comments"></i>&nbsp;<span id="label">Allow Comments</span>
-															</label>
-														<input type="checkbox" id="allowReplies"  checked >
-															<label id="allowRepliesLabel"  for="allowReplies" >
-																<i class="fa fa-reply"></i>&nbsp;<span id="label">Allow Replies</span>
-															</label>
-														<input type="checkbox" id="allowHilights"  checked >
-															<label id="allowHilightsLabel"   for="allowHilights">
-																<i class="fa fa-star"></i>&nbsp;<span id="label">Allow Highlights</span>
-															</label>       
-											</fieldset>							
-									</div>
-								<p class="ac p" style="margin-top: 2px; padding: 0px;">  							
-									<div id="allMessagesButtonSet" class="sf" style="width: 100%;"> 
-										<button type="submit" id="submitButtonForm" title="Post Message" class="ui-btn ui-btn-inline cd nd">
-											Post
-										</button> 
-										<a  id="palpostr-url-sec" href="#mainPage" title="Go Back" class="ui-btn ui-btn-inline cb" style="display: none;  margin: 2px; padding: 5px; border: 0px;">
-											<i class="fa fa-home">Done</i>		
-										</a> 										 		    
-										<button type="button"  id="removePictures" title="Remove Pictures from Message" class="ui-btn ui-btn-inline cb" style="display: none;  margin: 2px; padding: 5px; border: 0px;">
-											<i class="fa fa-camera"><i class="fa fa-times" style="vertical-align: sub;"></i></i>		
-										</button>            
-										<a href="#mainPage" type="button"  id="cancel" title="Don't Send this Message" class="ui-btn ui-btn-inline bw cg" style="margin: 2px; padding: 5px; float: right; border: 0px;">
-											Cancel
-										</a>       
-									</div>	  
-								</p>										
-								</div>							
-							</form>						
-						</div>				
-					</div>				
 				</div>	
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
@@ -300,6 +307,7 @@
 <script type="text/javascript" src="js/appcore/modules/storyItemController.js"></script>
 <script type="text/javascript" src="js/appcore/modules/sseController.js"></script>
 <script type="text/javascript" src="js/appcore/modules/userLoginController.js"></script>
+<script type="text/javascript" src="js/appcore/modules/userLogo.js"></script>
 
 <script type="text/template" id="jstemplate-confirmLabel">Confirm</script>
 <script type="text/template" id="jstemplate-yesLabel">Yes</script>

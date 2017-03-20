@@ -56,6 +56,7 @@ var storyEditController = function(sb, input){
 	   }
    }
    function _showNewMessageForm(){
+	   if(sb.utilities.isUserLoggedIn()){
 	       storyContent = sb.dom.find("#storyAddController-DefaultContent").html();
 		   try{
 		   _initializeWYSIWYGEditor();		   
@@ -69,6 +70,8 @@ var storyEditController = function(sb, input){
 	   messageBox.html(sb.dom.find('#template-storytemplate-Default').html());
 	   httpMethod="POST";	
 	   sb.dom.find(".mce-content-body").append(sb.dom.find("#storyAddController-MessageContent").html());
+	   sb.dom.find('#storyPostContainer').find('#unAuthorizedAccessDialog').hide();
+	   }
    }
    
    function _showEditMessageForm(storyResponse){
@@ -121,6 +124,7 @@ var storyEditController = function(sb, input){
 		   messageBox.show();
 		   httpMethod="PUT";
 		   _closeOverlayPanel();
+		   sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'storyPostContainer');
 	   }else{
 		   Core.publish("displayMessage",{message: "Operation could not be completed. Please try again later.", messageType: "failure"});
 	   }
@@ -175,11 +179,12 @@ var storyEditController = function(sb, input){
 	   editStoryDocumentPageId=null;
 	   picturecontainer.html("");
 	   enableFormSubmitting(true);
-	   htmlBody.fadeOut();
-	   htmlBody.find();
+	   //htmlBody.fadeOut();
+	   //htmlBody.find();
 	   alertBeforeNavigatingAway = false;
 	   albumcontainer.attr("id","");	   
 	   Core.publish('storyEditStatusUpdate', {storyEditHappening: alertBeforeNavigatingAway});
+	   sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');
    }
    
    function sendMessage(event){
@@ -187,18 +192,20 @@ var storyEditController = function(sb, input){
 	   event.preventDefault();
 	   disableFormSubmitting();
 	   var inputData = addPostForm.serialize();
+	   documentidBox = sb.dom.find('#createStoryDocument');
+	   
 	   var documentId = documentidBox.val();
 	   var allowPublicTextReactions = sb.dom.find('#createStory').find('#allReactionsButtonSet').find('#allowComments').is(':checked');
 	   var allowPrivateTextReactions = sb.dom.find('#createStory').find('#allReactionsButtonSet').find('#allowReplies').is(':checked');
 	   var allowClickReactions = sb.dom.find('#createStory').find('#allReactionsButtonSet').find('#allowHilights').is(':checked');
 	   sb.dom.find("#transactionStatus").html("");
 	   if(documentId == "" || documentId == null || documentId == "null" || documentId == "undefined"){
-		   Core.publish("displayMessage",{message: "Please choose the document to post the story to.", messageType: "alert"});
+		   Core.publish("displayMessage",{message: "Please choose the document to post the story to." + documentId, messageType: "alert"});
 	   }else{
 		   if(httpMethod=="POST"){
-			   sb.utilities.postV2(relPathIn+"shrmsg.pvt?mediaType=json",{title: subjectBox.val(), details: messageBox.html(), documentId: documentidBox.val(), albumId: albumForStoryID, allowPublicTextReactions: allowPublicTextReactions, allowPrivateTextReactions: allowPrivateTextReactions, allowClickReactions: allowClickReactions},sendMessageSuccess);
+			   sb.utilities.postV2("shrmsg.pvt?mediaType=json",{title: subjectBox.val(), details: messageBox.html(), documentId: documentidBox.val(), albumId: albumForStoryID, allowPublicTextReactions: allowPublicTextReactions, allowPrivateTextReactions: allowPrivateTextReactions, allowClickReactions: allowClickReactions},sendMessageSuccess);
 		   }else if(httpMethod=="PUT"){
-			   sb.utilities.put(relPathIn+"shrmsg.pvt?mediaType=json",{title: subjectBox.val(), details: messageBox.html(), documentId: "", albumId: albumForStoryID, documentpageid: editStoryDocumentPageId, allowPublicTextReactions: allowPublicTextReactions, allowPrivateTextReactions: allowPrivateTextReactions, allowClickReactions: allowClickReactions},updateMessageSuccess);
+			   sb.utilities.put("shrmsg.pvt?mediaType=json",{title: subjectBox.val(), details: messageBox.html(), documentId: "", albumId: albumForStoryID, documentpageid: editStoryDocumentPageId, allowPublicTextReactions: allowPublicTextReactions, allowPrivateTextReactions: allowPrivateTextReactions, allowClickReactions: allowClickReactions},updateMessageSuccess);
 		   }
 		   alertBeforeNavigatingAway = false;
 		   Core.publish('storyEditStatusUpdate', {storyEditHappening: alertBeforeNavigatingAway});
@@ -238,7 +245,6 @@ var storyEditController = function(sb, input){
 	   if(tinyMceInstance != null && setDefaultContent){
 		   tinyMceInstance.setContent(sb.dom.find("#storyAddController-DefaultContent").html());		   
 	   }
-	   sb.dom.find('#palpostr-url-sec').hide();
    }
    
    function refreshForm(data){
@@ -280,9 +286,9 @@ var storyEditController = function(sb, input){
    function sendMessageSuccess(data){
 	   if(data.antahRequestStatus=="SUCCESS"){
 		   refreshForm(data);
-		   sb.dom.find('#palpostr-url-sec').show();
 		   sb.dom.find("#contentCreate").find("#showMainPageButton").click();
-		   Materialize.toast('Posted! Click on Done to back to main screen.', 2000);
+		   sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');		   
+		   Materialize.toast('Posted!', 2000);
 	   }else{
 		   //sb.dom.find(htmlBody).fadeOut();
    		   sb.dom.find("#contentCreate").find("#showMainPageButton").click();
@@ -295,8 +301,8 @@ var storyEditController = function(sb, input){
 	   if(data.antahRequestStatus=="SUCCESS"){
 		   refreshForm(data);
 		   sb.dom.find("#contentCreate").find("#showMainPageButton").click();
-		   sb.dom.find('#palpostr-url-sec').show();
-		   Materialize.toast('Posted! Click on Done to back to main screen.', 2000);		   
+		   sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');
+		   Materialize.toast('Posted!', 2000);		   
 	   }else{
 		   sb.dom.find("#contentCreate").find("#showMainPageButton").click();
 		   Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
@@ -315,7 +321,7 @@ var storyEditController = function(sb, input){
    function _editStoryButtonClick(input){	
 	   var storyId = input.storyId;
 	   var storyDocumentType = input.storyDocumentType;
-	   sb.utilities.get(relPathIn+storyDocumentType+'/Story/'+storyId+'?mediaType=json',null,_showEditMessageForm);
+	   sb.utilities.get(storyDocumentType+'/Story/'+storyId+'?mediaType=json',null,_showEditMessageForm);
    }
    function _initializeWYSIWYGEditor(){
 	   try{
@@ -388,12 +394,12 @@ var storyEditController = function(sb, input){
 		   if(potentialUrlprotocol == 'http:' && hasDot){
 			   if(potentialUrl.length > 7){
 				   disableFormSubmitting();
-				   sb.utilities.postV2(relPathIn+"validateurl.pvt?mediaType=json",{url: potentialUrl},_validateUrlResponse);				   
+				   sb.utilities.postV2("validateurl.pvt?mediaType=json",{url: potentialUrl},_validateUrlResponse);				   
 			   }
 		   }else if(potentialUrlprotocol == 'https:' && hasDot){
 			   if(potentialUrl.length > 8){
 				   disableFormSubmitting();
-				   sb.utilities.postV2(relPathIn+"validateurl.pvt?mediaType=json",{url: potentialUrl},_validateUrlResponse);				   
+				   sb.utilities.postV2("validateurl.pvt?mediaType=json",{url: potentialUrl},_validateUrlResponse);				   
 			   }
 		   }
 	   }
@@ -409,13 +415,13 @@ var storyEditController = function(sb, input){
 		   if(potentialUrlprotocol == 'http:' && hasDot){
 			   if(potentialUrl.length > 7){
 				   disableFormSubmitting();
-				   sb.utilities.postV2(relPathIn+"validateurl.pvt?mediaType=json",{url: potentialUrl},_validateUrlResponse);				   
+				   sb.utilities.postV2("validateurl.pvt?mediaType=json",{url: potentialUrl},_validateUrlResponse);				   
 			   }
 		   }	
 		   if(potentialUrlprotocol == 'https:' && hasDot){
 			   if(potentialUrl.length > 8){
 				   disableFormSubmitting();
-				   sb.utilities.postV2(relPathIn+"validateurl.pvt?mediaType=json",{url: potentialUrl},_validateUrlResponse);				   
+				   sb.utilities.postV2("validateurl.pvt?mediaType=json",{url: potentialUrl},_validateUrlResponse);				   
 			   }
 		   }
 	   }
@@ -426,7 +432,7 @@ var storyEditController = function(sb, input){
 	   if(data.url && data.url != "" ){
 		   console.log('inside post ' + JSON.stringify(data));
 		   subjectBox.val("Loading content from the URL. Please wait.");
-		   sb.utilities.postV2(relPathIn+"validateurl.pvt?mediaType=json", data , _validateUrlResponse);
+		   sb.utilities.postV2("validateurl.pvt?mediaType=json", data , _validateUrlResponse);
 	   }else{
 		   console.log('inside else');
 		   subjectBox.val("Please enter the URL you want to share. Ex: http:/" + "/www.example.com");
@@ -493,6 +499,9 @@ var storyEditController = function(sb, input){
        });
    }
    
+   function _userLoggedIn(message){
+	   _showNewMessageForm();
+	}
    function _startController(){
 				try{
        			//Module Initializing
@@ -507,7 +516,7 @@ var storyEditController = function(sb, input){
        			storyEditorCloseButton=htmlBody.find("#closeStoryEditor");
        			submitButtonForm=htmlBody.find("#submitButtonForm");
        			submitButtonForm.find('.label').html(sb.dom.find("#storyAddController-PostStory").html());
-       			cancelButton.find('.label').html(sb.dom.find("#storyAddController-Cancel").html());
+       			//cancelButton.find('.label').html(sb.dom.find("#storyAddController-Cancel").html());
 	    		subjectBox=htmlBody.find('#subject');
 	    		documentidBox=htmlBody.find('#createStoryDocument');
 	    		picturesDiv=htmlBody.find('.PVTSTYPIC');
@@ -533,7 +542,8 @@ var storyEditController = function(sb, input){
        			sb.dom.find("#addPhotosButtonSmall").bind('click',_showAddPhotosForm);
        			sb.dom.find(".addStoryToDocument").bind('click',_addStoryToDocumentClickEvent);
        			sb.dom.find(".addAlbumToDocument").bind('click',_addAlbumToDocumentClickEvent);
-       			newMessageButton.bind('click',_showNewMessageForm);    
+       			newMessageButton.bind('click',_showNewMessageForm);  
+				_showNewMessageForm();
        			//newMessageButton.show();
        			addPhotosButton.bind('click',_showAddPhotosForm);
        			addPhotosButton.show();
@@ -548,6 +558,7 @@ var storyEditController = function(sb, input){
 	    		Core.subscribe('newMessageButtonClick', _newStoryMessageReceived);
 	    		Core.subscribe('addAlbumButtonClick', _newAlbumMessageReceived);
 	    		Core.subscribe('pageSnippetAdded', _pageSnippetAddedProcess);
+				Core.subscribe('userLoginEvent', _userLoggedIn);
 				}catch(e){
 					alert(e);	
 				}

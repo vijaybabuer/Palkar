@@ -96,7 +96,7 @@ var sseController = function(sb, input){
 	}	
 	
 
-	function _initSseController(message){
+	function _initSseController(message){	
        		if(input.userAuthenticated && input.userAuthenticated == 'true'){
        			sb.utilities.postV2(relPathIn+'sseParameters?mediaType=json', null, _parameterResponseReceived);	
        		}       		 
