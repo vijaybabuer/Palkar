@@ -1,6 +1,6 @@
 var photoUploadController = function(sb, input){
 	var containerPanelBody = null, uploadCancelBtn=null, fileuploaderror=null, appPicInput=null, relPathIn=input.relPath, currentAlbumDivId = null, myComp=null, webCam=null, profPicDevice = null, profPicCam = null,
-		selectFilesBtn=null, uploadStartBtn=null, photoUploadMessageDiv=null, uploadSuccessMessage='<span class="p">Upload successful.</span>', uploadFailureMessage='<span class="br p">Upload failure</span>',		
+		selectFilesBtn=null, uploadStartBtn=null, photoUploadMessageDiv=null, uploadSuccessMessage='<span class="p">Upload successful.</span>', uploadFailureMessage='<span class="br p">Upload failure</span>', uploadNumber = 0;
 		uplPnlBody=null, currentSelection=null, webCamStartButton=null, webCamCaptureButton=null, webCamStopButton=null, webCamImageNode=null, webCamImage=null, WebCamPicSendBtn=null, containerElement='#uploadControllerPane';   
 
 	function _closeUploader(){
@@ -129,7 +129,11 @@ var photoUploadController = function(sb, input){
 		alert(JSON.stringify(request) + " " + JSON.stringify(errorMsg) + " " +JSON.stringify(errorObj));
 	}
 	function uploadPhotoV2(imageData){
-		sb.utilities.postV2(relPathIn+'webcamphoto.pvt?mediaType=json',{albumId: appPicInput.documentid, albumtype: appPicInput.documenttype, timeStamp: "", photo: "", webCamPhoto: imageData}, _saveWebCamPictureSuccess, _saveWebCamPictureError);
+		uploadNumber = uploadNumber + 1;		
+		var albumDivId = 'album-'+appPicInput.documentid+'-'+appPicInput.documenttype;
+		var progressHtml = '<div class="progress" id="'+albumDivId+'-'+uploadNumber+'"><div class="determinate" style="width: 10%"></div></div>';
+		sb.dom.find('#'+albumDivId).prepend(progressHtml);
+		sb.utilities.postV2(relPathIn+'webcamphoto.pvt?mediaType=json',{photoUploadNumber: uploadNumber, albumId: appPicInput.documentid, albumtype: appPicInput.documenttype, timeStamp: "", photo: "", webCamPhoto: imageData}, _saveWebCamPictureSuccess, _saveWebCamPictureError);
 		try{
 		navigator.camera.cleanup();
 		}catch(error){
@@ -217,11 +221,7 @@ var photoUploadController = function(sb, input){
 
 	
 	function _publishUpdate(){
-		if(appPicInput){
 		Core.publish('albumUpdate',{documentid: appPicInput.documentid, documenttype: appPicInput.documenttype, actioncode: 'UPDATE'});
-		}else{	
-			Core.publish('refreshProfilePicture', null);	
-		}
 	}
 	
 	function _publishAdd(){
@@ -232,14 +232,19 @@ var photoUploadController = function(sb, input){
 	   function _photoDeleteResponseReceived(data){
 		   if(data.antahRequestStatus == "SUCCESS"){
 			   sb.dom.find("#thumbNailPreview-"+data.antahResponseMessage).remove();
-			   _publishUpdate();
+			   if(data.albumDocumentType == 'PROFPICS'){
+				   if(data.profilePictureUpdate && !data.noProfilePicture){
+						Core.publish('refreshProfilePicture', null);
+				   }else if(data.profilePictureUpdate && data.noProfilePicture){
+						Core.publish('removeProfilePicture', null);
+				   }
+			   }
 		   }else{
 			   Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
 		   }
 	   }
 	   
 	   function _deleteDownloadPhotoClicked(data){
-		   console.log("Delete Photo " + data.photoId);
 		   sb.utilities.serverDelete(relPathIn+"photo/"+data.photoId+"?mediaType=json",null,_photoDeleteResponseReceived);
 	   }
 	   

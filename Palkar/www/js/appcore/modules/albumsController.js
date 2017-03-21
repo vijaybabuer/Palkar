@@ -67,34 +67,7 @@ var albumsController = function(sb, input){
 				picturecontainer.append(sb.dom.wrap(thumnailhtml));
 			}
 		}
-		albumcontainer.show();
-		albumcontainer.find('.materialboxed').materialbox();
-		//Update picture list in Send Message Dialog
-		if(data.documentPageIDList){
-			var attachmentAlbumContainer = sb.dom.find("#attachments-"+data.albumDocumentId+"-"+data.albumDocumentTypeCd);
-			var attachmentPictureContainer = attachmentAlbumContainer.find(".albumpictures");
-			attachmentPictureContainer.html("");
-			for(var i=0; i<data.documentPageIDList.length; i++){
-				thumnailhtml = thumnailhtmltemplate;
-				thumnailhtml=thumnailhtml.replace("albumpicid",relPathIn+"alb/"+data.documentPageIDList[i]);
-				thumnailhtml=thumnailhtml.replace("pictureurl",relPathIn+"tnphoto1.pvt/"+data.documentPageIDList[i]+"?mediaType=jpeg");
-				attachmentPictureContainer.append(sb.dom.wrap(thumnailhtml));
-			}	
-		}
-		
-		if(data.documentPageIDList){
-			//Update picture list in DocumentEdit dialog
-			var editDocumentAlbumContainer = sb.dom.find("#EditDocument").find("#album-"+data.albumDocumentId+"-"+data.albumDocumentTypeCd);
-			var editDocumentPictureContainer = editDocumentAlbumContainer.find(".albumpictures");
-			editDocumentPictureContainer.html("");
-			for(var i=0; i<data.documentPageIDList.length; i++){
-				thumnailhtml = thumnailhtmltemplate;
-				thumnailhtml=thumnailhtml.replace("albumpicid",relPathIn+"alb/"+data.documentPageIDList[i]);
-				thumnailhtml=thumnailhtml.replace("pictureurl",relPathIn+"tnphoto1.pvt/"+data.documentPageIDList[i]+"?mediaType=jpeg");
-				editDocumentPictureContainer.append(sb.dom.wrap(thumnailhtml));
-			}
-		}
-		
+		albumcontainer.show();		
 		}catch(e){alert(e);};
 	}
 	

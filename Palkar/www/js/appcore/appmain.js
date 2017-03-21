@@ -140,8 +140,21 @@ Core = function(_$) {
 					dataType: 'json',
 					encoding: 'UTF-8',
 			        beforeSend: function(xhr) {
-			            xhr.setRequestHeader(header, token);
-			        }
+			            xhr.setRequestHeader(header, token);					
+			        },
+					xhrFields: {
+						onprogress: function(e){
+							if (e.lengthComputable && data.photoUploadNumber) {								
+								var progressDivId = '#album-'+data.albumId+'-'+data.albumtype+'-'+data.photoUploadNumber;
+								var percentage = (e.loaded / e.total) * 100;
+								var percentageText = percentage + '%';
+								_$(progressDivId).find('.determinate').css('width',  percentageText);
+								if(percentage > 99){
+									_$(progressDivId).remove();
+								}
+							}						
+						}
+					}					
 				});				
 			},	
 			postPublic: function(referenceUrl, data, successMethod, errorMethod){

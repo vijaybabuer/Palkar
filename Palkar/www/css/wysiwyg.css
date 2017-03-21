@@ -156,6 +156,8 @@ em{
 }
 .grid {
   background: #DDD;
+  text-align: center;  
+  
   width: 100%;
 }
 
@@ -210,16 +212,21 @@ em{
 
 .grid-sizer,
 .grid-item {
-  width: 50%;
+float: left;  
 }
 
-.grid-item {
-  float: left;
+.privateStoryPicDiv, .picturecapturediv{
+	max-width: 100%;
+	overflow-x: scroll;	
+}
+.picturecapturediv{
+	margin-top: 1em;
 }
 
 .grid-item img {
   display: block;
   max-width: 100%;
+  
 }
  
 

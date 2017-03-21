@@ -103,7 +103,7 @@
 												<a  id="myComp"  class="ui-btn ui-btn-inline cd nd"><i class="fa fa-file-image-o"></i></a>&nbsp;
 												<a  id="webCam" class="ui-btn ui-btn-inline cd nd"><i class="fa fa-camera"></i></a>   			
 											</div>																		
-											<div class="bw PVTSTYPIC">											
+											<div class="bw PVTSTYPIC privateStoryPicDiv">											
 											</div>	     
 											<p class="al addPostTextArea" style="margin: 0px; padding: 0px;"></p>
 										</div>
@@ -112,11 +112,11 @@
 									<div class="card-reveal">
 										<span class="right stdf grey-text text-darken-4 card-title"><i class="fa fa-times"></i></span>
 										<p>
-											<div id="storyCreateTitle" data-role="collapsible" data-mini="true">
+											<div id="storyCreateTitle" style="text-align: left;">
 												<h6>Choose A Subject for Message(optional) </h6>
 												<textarea placeholder="Subject/URL" id="subject" type="text" rows="2" cols="50" style="resize: none;" class="sq fill p stdf box"></textarea>
 											</div>
-											<div id="storyCreateOptions" data-role="collapsible" data-mini="true">
+											<div id="storyCreateOptions" style="text-align: left;">
 													<h6>Reaction Preferences (Optional)</h6>
 													<fieldset id="allReactionsButtonSet" data-role="controlgroup" class="sf" data-mini="true"> 
 																<input type="checkbox"  id="allowComments" checked >
@@ -148,11 +148,13 @@
 								</div>
 							</form>						
 						</div>				
-					</div> <!-- Story Post Container Ends -->	
+					</div> <!-- Story Post Container Ends -->
+					
 					<div id="profileContainer">
 						<p>To protect your identity, you need to login or register to use this feature. </p>
 						<a href="#loginRegisterPage" onClick="Core.publish('initializeUserRegistration', null);" class="containerBackButton">Continue</a>	
-					</div>					
+					</div>
+
 				</div>	    
 				<div class="appFooter" id="mainAppFooter">
 					<div id="message1"></div>	
@@ -215,7 +217,7 @@
 									<i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home
 								</a>
 								<button class="ui-btn  cd" id="register" >Register</button>
-								<a class="ui-btn  cd" id="forgotUsername" >Forgot?</a><br>
+								<a class="ui-btn  cd" href="http://www.palpostr.com/forgotpassword" id="forgotUsername" >Forgot?</a><br>
 								<a href="#termsAndConditions">Terms and Conditions</a>									
 								</form>
 						</div>

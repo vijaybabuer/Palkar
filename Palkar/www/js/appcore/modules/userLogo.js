@@ -39,6 +39,13 @@ var userLogo = function(sb, input){
 					alert(e);   
 		}		
 	}
+    function _removeProfilePicture(message){
+		try{	
+		   sb.dom.find(userToolTipCard).find('.card-image').find('img').remove();	   
+		}catch(e){
+					alert(e);   
+		}		
+	}	
    function _receiveAlbumUpdatePublish(publishData){
 	try{
 	   if(publishData.documenttype == "PROFPICS"){
@@ -53,7 +60,7 @@ var userLogo = function(sb, input){
 				tStamp = tStamp + 1;
 				profpicurl = relPathIn+'api/profpic/'+tStamp+'?a='+sb.utilities.getUserInfo().authorization;
 			   var newProfPicture = sb.dom.wrap('<img>');
-			   newProfPicture.attr({'src': profpicurl});
+			   newProfPicture.attr({'src': profpicurl, 'height' : '300px'});
 			   sb.dom.find(userToolTipCard).find('.card-image').find('img').remove();
 			   sb.dom.find(userToolTipCard).find('.card-image').prepend(newProfPicture);
 			   }catch(e){
@@ -146,7 +153,6 @@ var userLogo = function(sb, input){
 				sb.dom.find('#profileContainerTab').prop('disabled', false);
 				Core.subscribe('albumUpdate', _receiveAlbumUpdatePublish);
 				userToolTipCard = sb.dom.find('#profileContainer').find('#userProfileCard');
-				sb.dom.find(userToolTipCard).find('.materialboxed').materialbox();
 				profilepicalbumid = sb.utilities.getUserInfo().userDetails.profilePictureAlbumId;					
 				_setUserToolTip();
 	}
@@ -168,6 +174,7 @@ var userLogo = function(sb, input){
 			Core.subscribe('startUserLogo', _startUserLogoController);		
 			Core.subscribe('profilePreferencesClick', _profilePreferencesClick);		
 			Core.subscribe('refreshProfilePicture', _refreshProfilePicture);
+			Core.subscribe('removeProfilePicture', _removeProfilePicture);			
        	}catch(err){
        		alert("Error while initializing userLogoModule: " + err);
        	}

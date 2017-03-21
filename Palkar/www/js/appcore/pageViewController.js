@@ -81,8 +81,10 @@ var pageViewController = function(sb, input){
 		   if(sb.utilities.isUserLoggedIn()){
 			   var showWriteToButton = false;
 			   var firstDocToPost = true;
-			    sb.dom.wrap('<select>').attr({'name':'select-choice-1','id':'createStoryDocument','data-native-menu':'false', 'class':'browser-default'}).appendTo('#createStoryHeaderDiv');
+			    sb.dom.wrap('<select>').attr({'name':'select-choice-1','id':'createStoryDocument','data-native-menu':'false', 'class':'browser-default cd'}).appendTo('#createStoryHeaderDiv');
 				var optionHtml = null;
+				
+				
 			   for(var i=0; i < snippetResponse.documentListResponse.documentItemList.length; i++){				   
 					  if(snippetResponse.documentListResponse.documentItemList[i].acceptPosts){
 						if(firstDocToPost){
@@ -343,7 +345,7 @@ var pageViewController = function(sb, input){
 			   data = {appname: appname, streamSize: streamSize};				
 			}
 			appendFooterMessage("Getting data stream");
-			sb.utilities.postV2(snippetUrl, data, _loadMainPage, _errorStartController);
+			sb.utilities.postV2(snippetUrl, data, _loadMainPage, _reloadAppPage);
 	}
 	function _loadAppPage(appPage){
 		   if(appPage != null){	
@@ -387,6 +389,13 @@ var pageViewController = function(sb, input){
 		}
 	}
 		
+	function _reloadAppPage(request, errorMessage, errorObj){
+		document.getElementById("message1").innerHTML = "Requesting new CSRF Token";
+		sb.dom.find('meta[name=_csrf]').remove();
+		sb.dom.find('meta[name=_csrf_header]').remove();		
+		var appPageUrl = relPathIn + "appPage/"+appname+"/"+input.appmaintitle+"/"+input.appextendedtitle+"?mediaType=text";
+		sb.utilities.appGet(appPageUrl,_loadAppPage,_errorStartController);
+	}
 	function _startControllerV2(){
 		try{			
 			var screenHeight = sb.dom.find(window).height();
@@ -553,6 +562,7 @@ var pageViewController = function(sb, input){
 		if(exitApp){
 			try{
 			sb.utilities.setUserInfo(sb.utilities.getUserInfo().username, sb.utilities.getUserInfo().authorization, sb.utilities.getUserInfo().authorizationType, sb.utilities.getUserInfo().userDetails);
+			//sb.utilities.setUserInfo('guest', null, null, null);
 			navigator.notification.confirm('Close the App?', exitAppConfirm, input.appname, 'Keep Browsing, Close');
 			}catch(err){
 				alert(err);	
@@ -569,15 +579,6 @@ var pageViewController = function(sb, input){
 		e.preventDefault();
 	}
 
-	function _userLoginEventReceivedRetry(obj1, obj2, obj3){
-		var userData = sb.utilities.getUserInfo();
-		var snippetUrl = null;
-		var data = null;
-		snippetUrl = relPathIn+"appView?mediaType=json";
-		data = {username: userData.username, appname: appname, streamSize: streamSize};			
-		alert('There was a problem loggin in. Performing retry.' + JSON.stringify(data) + ' ' + JSON.stringify(userData));
-		sb.utilities.postV2(snippetUrl, data, _loadMainPage, _errorStartController);			
-	}
 	function _userLoginEventReceived(message){
 		try{
 				sb.dom.find("#storiesDivTrailer").find("#showMore").hide();
@@ -587,7 +588,7 @@ var pageViewController = function(sb, input){
 				var data = null;
 				snippetUrl = relPathIn+"appView?mediaType=json";
 				data = {username: userData.username, appname: appname, streamSize: streamSize};			
-				sb.utilities.postV2(snippetUrl, data, _loadMainPage, _userLoginEventReceivedRetry);	
+				sb.utilities.postV2(snippetUrl, data, _loadMainPage, _reloadAppPage);	
 		}catch(err){
 			alert(err);	
 		}
@@ -615,6 +616,13 @@ var pageViewController = function(sb, input){
 	function _setEffects(){
 		sb.dom.find('.ui-btn').addClass("waves-effect");	
 		sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');
+        try{
+			StatusBar.show();
+			StatusBar.overlaysWebView(false);
+			StatusBar.styleLightContent();
+		}catch(e){
+			console.log(e);	
+		}
 	}
    return{
 	   init:function() {
