@@ -1,7 +1,12 @@
+html{
+	overflow: hidden;
+}
+body{
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;		
+}
 body, html, .appBody{
 	height: 100%;
-	overflow-y: scroll;
-	-webkit-overflow-scrolling: touch;	
 	padding: 0px !important;
 }
 a{
@@ -156,8 +161,7 @@ em{
 }
 .grid {
   background: #DDD;
-  text-align: center;  
-  
+  text-align: center;    
   width: 100%;
 }
 
@@ -205,7 +209,9 @@ em{
 .grid:after {
   content: '';
   display: block;
+  
   clear: both;
+  
 }
 
 /* ---- .grid-item ---- */
@@ -213,6 +219,7 @@ em{
 .grid-sizer,
 .grid-item {
 float: left;  
+width: 50%;
 }
 
 .privateStoryPicDiv, .picturecapturediv{

@@ -619,7 +619,7 @@ var pageViewController = function(sb, input){
         try{
 			StatusBar.show();
 			StatusBar.overlaysWebView(false);
-			StatusBar.styleBlackTranslucent();
+			StatusBar.styleDefault(); 
 		}catch(e){
 			console.log(e);	
 		}
