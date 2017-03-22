@@ -477,7 +477,7 @@ width: 50%;
 #containerDiv{
 	position: relative;
 }
-#containerDiv, #mainContainer, .subContainer{
+#containerDiv, #mainContainer, .subContainer, #loginDiv, #registrationDiv, #loginRegisterPage{
  	text-align: center;
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
