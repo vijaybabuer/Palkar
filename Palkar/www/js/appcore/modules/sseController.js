@@ -5,29 +5,6 @@ var sseController = function(sb, input){
 		console.log('connected : ' + connected);
 		stompClientConnected = connected;
 	}
-	
-    function connect(sseConnectionParameters) {
-    	var host, authorization, sseUrl;
-    	host = sseConnectionParameters.parameterInfoList[0].parameterValue;
-    	authorization = sseConnectionParameters.parameterInfoList[1].parameterValue;
-    	sseUrl = host+'/sseevents?a='+authorization;
-        var socket = new SockJS(sseUrl);
-        stompClient = Stomp.over(socket); 
-        var headers  = {};
-		var token = $("meta[name='_csrf']").attr("content");
-		var headerName = $("meta[name='_csrf_header']").attr("content");
-        headers[headerName] = token;
-        stompClient.connect(headers, function(frame) {
-            setConnected(true);
-            console.log('Connected: ' + frame);
-            stompClient.subscribe('/user/story/updates', function(message){
-                _storyUpdateMessageReceived(message);
-            });
-            stompClient.subscribe('/user/pulse/updates', function(message){
-                _pulseUpdateMessageReceived(message);
-            });
-        });
-    }
     
     function disconnect() {
         if (stompClient != null) {
@@ -96,20 +73,11 @@ var sseController = function(sb, input){
 	}	
 	
 
-	function _initSseController(message){	
-       		if(input.userAuthenticated && input.userAuthenticated == 'true'){
-       			sb.utilities.postV2(relPathIn+'sseParameters?mediaType=json', null, _parameterResponseReceived);	
-       		}       		 
+	function _initSseController(message){      		 
        		if(input.pageHandle && input.pageHandle != null){
            		publicConnect(message.sseDetails.parameterInfoList[0].parameterValue);
            		appendFooterMessage('publis connect..4');
-       		}
-		  if (window.webkitNotifications.checkPermission() == 0) { // 0 is PERMISSION_ALLOWED
-			// function defined in step 2
-
-		  } else {
-			window.webkitNotifications.requestPermission();
-		  }			
+       		}		
 		}
    return{
 	   init:function() {

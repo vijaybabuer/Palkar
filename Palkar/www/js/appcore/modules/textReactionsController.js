@@ -43,6 +43,7 @@ var textReactionsController = function(sb, input){
 	
 	function _reLoadReactionList(pageReactionDetail){
 		_updateReactionList(pageReactionDetail, "RELOAD");
+		Core.publish('newReactionAdded', null);	
 	}
 	function _loadReactionList(pageReactionDetail){
 		_updateReactionList(pageReactionDetail, "LOAD");
@@ -595,6 +596,11 @@ var textReactionsController = function(sb, input){
    		);
 	}	
 	
+	function _reloadPageReactionMessageReceived(pageReactionInfo){
+		if(pageReactionInfo.pageReactionType != 'CLICK'){
+			sb.utilities.get(relPathIn+'pageReaction.pvt?mediaType=json',{pageReactionId: pageReactionInfo.pageReactionId, reactionCount: reactionCountPerPage, retrieveSummary: "false"},_reLoadReactionList);
+		}
+	}
 	function _startController(msg){
        		sb.dom.find('.txtreaction').bind('click',_addTextReaction);
        		sb.dom.find('.cmntsection').bind('click',_commentsSelectedEvent);
@@ -616,6 +622,7 @@ var textReactionsController = function(sb, input){
        		Core.subscribe('reloadReactions', _reloadReactionsMessageReceived);
        		Core.subscribe('newStoryAdded', _newStoryAddedMessageReceived);		
 			Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
+			Core.subscribe('reloadPageReaction', _reloadPageReactionMessageReceived);
 	}
    return{
 	   init:function() {

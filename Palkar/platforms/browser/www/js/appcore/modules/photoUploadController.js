@@ -5,18 +5,15 @@ var photoUploadController = function(sb, input){
 
 	function _myComputerClicked(){
 		'use strict';
-		console.log("Current Selection: " + currentSelection);
 		uplPnlBody.find('.files').html("");
-
 		try{
 
 			uplPnlBody.html(sb.dom.wrap(sb.dom.find('#template-myComp-Upload').html()));
-
 	       currentSelection = 'myComp';
-	       var autoUploadTrueFalse = false;
+	       var autoUploadTrueFalse = false;	   
 	       if(appPicInput.documenttype == 'PVTSTYPIC'){
 	    	   autoUploadTrueFalse = true;
-	       } 
+	       } 	   
 	       selectFilesBtn=uplPnlBody.find('#fileupload');
 	       uploadStartBtn=uplPnlBody.find('#uploadStartBtn');
 	       uploadCancelBtn=uplPnlBody.find('#uploadCancelBtn');
@@ -24,12 +21,12 @@ var photoUploadController = function(sb, input){
 	       sb.dom.disable(myComp);
 	       sb.dom.enable(webCam);	
 			 var url = relPathIn+'photo.'+appPicInput.documenttype+'.'+appPicInput.documentid+'.pvt?mediaType=json',
-		        uploadButton = $('<button/>')
+		        uploadButton = sb.dom.wrap('<button/>')
 		            .addClass('btn btn-primary')
 		            .prop('disabled', true)
 		            .text('Processing...')
 		            .on('click', function () {
-		                var $this = $(this),
+		                var $this = sb.dom.find(this),
 		                    data = $this.data();
 		                $this
 		                    .off('click')
@@ -42,8 +39,7 @@ var photoUploadController = function(sb, input){
 		                    $this.remove();
 		                });
 		            });
-			 
-		    $('#fileupload').fileupload({
+		    sb.dom.find('#fileupload').fileupload({
 		        url: url,
 		        dataType: 'json',
 		        autoUpload: autoUploadTrueFalse,
@@ -58,9 +54,10 @@ var photoUploadController = function(sb, input){
 		        previewMaxHeight: 100,
 		        previewCrop: true
 		    }).on('fileuploadadd', function (e, data) {
-		        data.context = $('<div/>').appendTo('#files');
-		        $.each(data.files, function (index, file) {
-		            var node = $('<p/>')
+				alert('file uplad add start');
+		        data.context = sb.dom.wrap('<div/>').appendTo('#files');
+		        sb.utilities.each(data.files, function (index, file) {
+		            var node = sb.dom.wrap('<p/>')
 		                    .append($('<span/>').text(file.name));           
 		            if (!index) {
 		                node
@@ -72,11 +69,13 @@ var photoUploadController = function(sb, input){
 		        );
 		        photoUploadMessageDiv.show();		        
 		        uploadStartBtn.show();
-		        uploadCancelBtn.show();	        
+		        uploadCancelBtn.show();	      
+				alert('file uplad add start-ed');
 		    }).on('fileuploadprocessalways', function (e, data) {
+				alert('fileuploadprocessalways ');
 		        var index = data.index,
 		            file = data.files[index],
-		            node = $(data.context.children()[index]);
+		            node = sb.dom.find(data.context.children()[index]);
 		        if (file.preview) {
 		            node
 		                .prepend('<br>')
@@ -85,36 +84,41 @@ var photoUploadController = function(sb, input){
 		        if (file.error) {
 		            node
 		                .append('<br>')
-		                .append($('<span class="text-danger"/>').text(file.error));
+		                .append(sb.dom.wrap('<span class="text-danger"/>').text(file.error));
 		        }
 		        if (index + 1 === data.files.length) {
 		            data.context.find('button')
 		                .text('Upload')
 		                .prop('disabled', !!data.files.error);
 		        }
+				alert('fileuploadprocessalways ed');
 		    }).on('fileuploadprogressall', function (e, data) {
+				alert('fileuploadprogressall ');
 		        var progress = parseInt(data.loaded / data.total * 100, 10);
-		        $('#progress .progress-bar').css(
+		        sb.dom.find('#progress .progress-bar').css(
 		            'width',
 		            progress + '%'
-		        );		        
+		        );	
+				alert('fileuploadprogressall ed');
 		    }).on('fileuploaddone', function (e, data) {
-		    	console.log("DocumentId: " + data.result.documentId);
-		        $.each(data.result.files, function (index, file) {
+				alert('fileuploaddone ');
+		    	alert("DocumentId: " + data.result.documentId);
+		        sb.utilities.each(data.result.files, function (index, file) {
 		            if (file.url) {
 		                var link = $('<a>')
 		                    .attr('target', '_blank')
 		                    .prop('href', file.url);
-		                $(data.context.children()[index])
+		                sb.dom.find(data.context.children()[index])
 		                    .wrap(link);
 		            } else if (file.error) {
 		                fileuploaderror = $('<span class="text-danger"/>').text(file.error);
-		                $(data.context.children()[index])
+		                sb.dom.find(data.context.children()[index])
 		                    .append('<br>')
 		                    .append(file.error);
 		            }
 		        });
 		        if(fileuploaderror){
+					alert('Error fileuploaderror');
 		        	photoUploadMessageDiv.html('<span class="br p cw">Photo upload failed. Please try again later</span>');
 		        }else{
 		        	photoUploadMessageDiv.html(uploadSuccessMessage);
@@ -122,34 +126,29 @@ var photoUploadController = function(sb, input){
 			        uploadCancelBtn.hide();
 			        _publishUpdate();
 		        }
+				alert('fileuploaddone ed');
 		    }).on('fileuploadfail', function (e, data) {
-		    	console.log('error');
-		        $.each(data.files, function (index, file) {
+		    	alert('fileuploadfail error');
+		        sb.utilities.each(data.files, function (index, file) {
 		            var error = $('<span class="text-danger"/>').text('File upload failed.');
-		            $(data.context.children()[index])
+		            sb.dom.find(data.context.children()[index])
 		                .append('<br>')
 		                .append(error);
 		        });
 		    }).prop('disabled', !$.support.fileInput)
-		        .parent().addClass($.support.fileInput ? undefined : 'disabled');			
-		
-
-		    console.log('showing upload panel..');
-		
-		containerPanelBody.show();
-		
-	    selectFilesBtn.click();		
+		        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+		containerPanelBody.show();		
+	    selectFilesBtn.click();					
 		}catch(err){
-			console.log(err);
+			alert('Photo Upload Controller Start ' + err.stackTrace());
 		}
 	}
-		
+	
 	function _setFileDeleteLinkClick(){
 		sb.dom.find(this).click(_fileDeleteLinkClick);
 	}
 	function _fileDeleteLinkClick(e){
 		e.preventDefault();
-		alert("Delete File " + sb.dom.find(this).attr("id"));
 	}
 	function _saveWebCamPicture(){
 		try{
@@ -260,18 +259,14 @@ var photoUploadController = function(sb, input){
 		sb.dom.find(this).fadeIn();
 	}
 	function _ControllerStart(divId){
-		console.log('Starting photo upload controller..');
 
 		if(divId && sb.dom.find(divId)){
 			sb.dom.find(divId).find("#uploadControllerPane").remove();	
 			currentAlbumDivId = divId;
 			sb.dom.find(currentAlbumDivId).prepend(sb.dom.find('#template-uploadController').html());
-			
 			if(divId.split("-")[2] == 'PROFPICS'){
 				sb.dom.find(".profpicturecapturediv").show();
 			}
-				
-
 			containerPanelBody=sb.dom.find(currentAlbumDivId).find('#uploadControllerPane');			
 				
 			uplPnlBody=containerPanelBody.find('#panel-bdy');
@@ -280,29 +275,18 @@ var photoUploadController = function(sb, input){
 			photoUploadMessageDiv.append(sb.dom.find("#PhotoUploadController-ClickToRemove").html());
 			myComp=containerPanelBody.find('#myComp');
 			webCam=containerPanelBody.find('#webCam');
-
 			uploadCancelBtn=containerPanelBody.find('#uploadCancelBtn');
 			containerPanelBody.find('.closeBtn').bind('click',_closeUploader);
 				
 			myComp.bind('click',_myComputerClicked);
-			webCam.bind('click', _webCamClicked);	
-				
-			console.log(sb.utilities.browser);
-			if(sb.utilities.browser.msie){
-				console.log('MS IE is not supported by WebCam. Hiding Webcam.');
-				webCam.hide();
-			}			
+			webCam.bind('click', _webCamClicked);					
 		}else{
 			Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
 		}
-		
-
-			console.log('uploader init complete');
 	}
 	
 	
-	function _addAlbumPictures(data, success){
-		console.log('Album has been added..' + data.documentid + data.status + success);		
+	function _addAlbumPictures(data){	
 		appPicInput=data;
 		//Publish Album Add
 		_publishAdd();
@@ -310,16 +294,20 @@ var photoUploadController = function(sb, input){
 		_addPictureFromDevice(appPicInput);
 	}
 	
+	function _errorInDocumentCreate(request, errorMessage, errorObj){
+		alert("Request " + JSON.stringify(request) + " " + JSON.stringify(errorMessage) + " " + JSON.stringify(errorObj));
+	}
+	
 	function _addAlbum(input){
 		try{
 		if(input.documenttype != null && input.documenttype != ""){
-			sb.utilities.postV2(relPathIn+"document.pvt?mediaType=json",{documenttype: input.documenttype, documentname: input.documentname}, _addAlbumPictures);		
+			sb.utilities.postV2(relPathIn+"document.pvt?mediaType=json",{documenttype: input.documenttype, documentname: input.documentname}, _addAlbumPictures,_errorInDocumentCreate);
 		}else{
 			photoUploadMessageDiv.html('There was problem creating album. Please try again later.');
 			console.log('Album type was not provided. ');
 		}
 		}catch(err){
-			console.log('Exception during Album Add : ' + err);
+			alert('Exception during Album Add : ' + err);
 		}
 	}
 	
@@ -386,8 +374,7 @@ var photoUploadController = function(sb, input){
 	   init: function() {
        	try{
 				var addPicsButtonList = sb.dom.find(".addpics");
-				addPicsButtonList.each(_showAddPicsButton);
-       			console.log('Initializing photo upload controller..');       			
+				addPicsButtonList.each(_showAddPicsButton);     			
        			Core.subscribe('addAlbum',_addAlbum);
        			Core.subscribe('addPictureFromDevice',_addPictureFromDevice);
        			Core.subscribe('addPictureFromWebCam',_addPictureFromWebCam);

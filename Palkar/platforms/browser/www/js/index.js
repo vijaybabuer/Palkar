@@ -17,7 +17,7 @@
  * under the License.
  */
 var app = {
-    // Application Constructor
+    // Application Constructor	
     initialize: function() {
         this.bindEvents();
     },
@@ -41,21 +41,36 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
 	try{
-	Core.register('clickReactionsController',clickReactionsController,{relPath: "http://www.palpostr.com/}", reactionCountPerPage: "5"});
-	Core.register('textReactionsController',textReactionsController,{relPath: "http://www.palpostr.com/", reactionCountPerPage: "5"});
-	Core.register('storyItemController',storyItemController, {relPath: "http://www.palpostr.com/", storyPage: false, authenticatedUser: "none", storyJSTemplateName: "template-storyTemplate", getMoreStories: true, storiesDivId: "#storiesDiv", appname: "palkar", numberOfStoriesToGet: 5});
-	Core.register('pageViewController', pageViewController, {relPath: "http://www.palpostr.com/", loadingText: "Welcome, <br> We are downloading your stream.", appname: "Palkar", appmaintitle: "Community Updates", appextendedtitle: "Share your local community stories and pictures with more than 1 Million Palkars worldwide", streamSize: 5});	
-	Core.register('sseController',sseController, {relPath: "http://54.186.148.79:8080/", username: "guest", userAuthenticated: "false", pageHandle: "Palkar"});
+	Core.register('clickReactionsController',clickReactionsController,{relPath: "", reactionCountPerPage: "5"});
+	Core.register('textReactionsController',textReactionsController,{relPath: "", reactionCountPerPage: "5"});
+	Core.register('storyEditController',storyEditController,{elemHandle: '#createStory', relPath: "http://192.168.0.101:8080/palpostr/", addPostTextAreaHandle: ".addPostTextArea", storiesDiv: "#storiesDiv", storyJSTemplateName: "template-storyTemplate"});		
+	Core.register('storyItemController',storyItemController, {relPath: "", storyPage: false, authenticatedUser: "none", storyJSTemplateName: "template-storyTemplate", getMoreStories: true, storiesDivId: "#storiesDiv", appname: "Palkar", numberOfStoriesToGet: 5});
+	Core.register('pageViewController', pageViewController, {relPath: "", loadingText: "Welcome, <br> We are downloading your stream.", appname: "Palkar", appmaintitle: "Community Updates", appextendedtitle: "Share your local community stories and pictures with more than 1 Million Palkars worldwide", streamSize: 5});	
+	Core.register('sseController',sseController, {relPath: "", username: "guest", userAuthenticated: "false", pageHandle: "Palkar"});
+	Core.register('userLoginController',userLoginController, {relPath: "", pageHandle: "Palkar", palpostrHost: "http://192.168.0.101:8080/palpostr/"});
+	Core.register('messageDisplayController',messageDisplayController,{appname: 'Palkar'});
+	Core.register('photoUploadController',photoUploadController, {relPath: "", containerDiv: "#photoUploadContainerDiv", palpostrHost: "http://192.168.0.101:8080/palpostr/"});
+	Core.register('albumsController',albumsController,{relPath: "http://192.168.0.101:8080/palpostr/"});
+	Core.register('userLogo',userLogo,{elemHandle: '#user-logo', relPath: "http://192.168.0.101:8080/palpostr/", appname: 'Palkar'});
+	
+	Core.loadUserData("http://192.168.0.101:8080/palpostr/");
+	Core.start('pageViewController');
+	Core.start('photoUploadController');
+	Core.start('clickReactionsController');
+	Core.start('messageDisplayController');
+	Core.start('textReactionsController');
+	Core.start('storyEditController');
+	Core.start('storyItemController');
+	Core.start('sseController');
+	Core.start('userLoginController');
+	Core.start('albumsController');
+	Core.start('userLogo');
 	
 	}catch(err){
 		alert(err);
 	}
 
-	Core.start('clickReactionsController');
-	Core.start('textReactionsController');
-	Core.start('storyItemController');
-	Core.start('pageViewController');
-	Core.start('sseController');
+
 	
     },
     // Update DOM on a Received Event

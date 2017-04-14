@@ -506,7 +506,15 @@ var clickReactionsController = function(sb, input){
        		Core.subscribe('reloadReactions', _reloadReactionsMessageReceived);
        		Core.subscribe('newStoryAdded', _newStoryAddedMessageReceived);		
 			Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
+			Core.subscribe('reloadPageReaction', _reloadPageReactionMessageReceived);
 	}
+	
+	function _reloadPageReactionMessageReceived(pageReactionInfo){
+		if(pageReactionInfo.pageReactionType == 'CLICK'){
+			sb.utilities.get(relPathIn+'pageReaction.pvt?mediaType=json',{pageReactionId: pageReactionInfo.pageReactionId, reactionCount: reactionCountPerPage, retrieveSummary: "false"},_loadReactionList);
+		}
+	}
+	
    return{
 	   init:function() {
        	try{      

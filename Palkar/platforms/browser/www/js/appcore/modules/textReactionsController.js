@@ -3,26 +3,30 @@ var textReactionsController = function(sb, input){
 	TxtReactionListDiv=null, reactionType=null, pageReactionType=null, reactionText = null, reactionsLoadedStatus = "LOADED";
 	
 	function _addTextReaction(e){
-	 try{
-		
-		reactionText = sb.dom.find('#'+e.currentTarget.id).parent().find('.txtara').val();
-		docPageId = e.currentTarget.id.split("-")[1];
-		var addPageReactionTitle=sb.dom.find("#TxtReactionList-"+docPageId).find(".textReacSelection").html();
-		var addPageReactionType = null;
-		var addReactionType = null;
-		if(addPageReactionTitle == "Comments"){
-			addPageReactionType="PBRTRMK";
-			addReactionType="PBRTRMK";
-		}else if(addPageReactionTitle == "Replies"){
-			addPageReactionType="PRRTRMK";
-			addReactionType="PRRTRMK";
+	 try{		
+		if(sb.utilities.isUserLoggedIn()){
+			reactionText = sb.dom.find('#'+e.currentTarget.id).parent().find('.txtara').val();
+			sb.dom.find('#'+e.currentTarget.id).parent().find('.txtara').val("");
+			docPageId = e.currentTarget.id.split("-")[1];
+			var addPageReactionTitle=sb.dom.find("#TxtReactionList-"+docPageId).find(".textReacSelection").html();
+			var addPageReactionType = null;
+			var addReactionType = null;
+			if(addPageReactionTitle == "Comments"){
+				addPageReactionType="PBRTRMK";
+				addReactionType="PBRTRMK";
+			}else if(addPageReactionTitle == "Replies"){
+				addPageReactionType="PRRTRMK";
+				addReactionType="PRRTRMK";
+			}else{
+				Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
+			}
+			if(reactionText != "" && reactionText != null && reactionText != sb.dom.find("#jstemplate-commentMsg").html() &&  reactionText != sb.dom.find("#jstemplate-replyMsg").html()){
+				sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{reactionId: "", pageReactionId: "", documentPageId: docPageId, pageReactionType: addPageReactionType, reactionType: addReactionType, pageReactionTitle: addPageReactionTitle, reactionRichText: sb.utilities.htmlEncode(reactionText)},_reactionAdded);
+			}else{
+				//Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-plsEntrTxt").html(), messageType: "failure"});
+			}			
 		}else{
-			Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
-		}
-		if(reactionText != "" && reactionText != null && reactionText != sb.dom.find("#jstemplate-commentMsg").html() &&  reactionText != sb.dom.find("#jstemplate-replyMsg").html()){
-			sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{reactionId: "", pageReactionId: "", documentPageId: docPageId, pageReactionType: addPageReactionType, reactionType: addReactionType, pageReactionTitle: addPageReactionTitle, reactionRichText: sb.utilities.htmlEncode(reactionText)},_reactionAdded);
-		}else{
-			//Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-plsEntrTxt").html(), messageType: "failure"});
+			Core.publish('unAuthorizedFunctionality', {module: 'Comment or Reply'});
 		}
 	 }
 	 catch(err){
@@ -43,14 +47,8 @@ var textReactionsController = function(sb, input){
 	function _loadReactionList(pageReactionDetail){
 		_updateReactionList(pageReactionDetail, "LOAD");
 	}
-	function _updateReactionList(pageReactionDetail, loadFlag){
-		var allTextRactionsDiv = sb.dom.find("#TxtReactionList-"+pageReactionDetail.documentPageId);	
-		var reactionsDiv=allTextRactionsDiv.find("#"+pageReactionDetail.pageReactionTitle+"Div-"+pageReactionDetail.documentPageId);
-		var reactionsDivMessageArea=reactionsDiv.find(".TextReactionList-message");
-		var noReactionsMessage = sb.dom.find("#jstemplate-No"+pageReactionDetail.pageReactionTitle+"Label").html();
-		var reactionsListArea=reactionsDiv.find(".textReactionList");
-		
-		if(pageReactionDetail.txnStatus == "SUCCESS"){
+	
+	function _updateReactionListForDiv(allTextRactionsDiv, reactionsDiv, reactionsDivMessageArea, noReactionsMessage, reactionsListArea, pageReactionDetail, loadFlag){
 			if(pageReactionDetail.pageReactionCount == "0" || pageReactionDetail.pageReactionCount == "" || pageReactionDetail.pageReactionCount == null){
 				reactionsDivMessageArea.html(noReactionsMessage);
 				reactionsDivMessageArea.show();
@@ -69,9 +67,10 @@ var textReactionsController = function(sb, input){
 
 				reactionsListArea.append(sb.utilities.htmlDecode(tmpl("tmpl-txtPageReactionlist", pageReactionDetail)));
 				reactionsListArea.find(".timeago").timeago();
-				if(pageReactionDetail.pageReactionType == 'PRRTRMK' || pageReactionDetail.pageReactionType == 'PBRTRMK'){
-					_showRepliesToReactions(pageReactionDetail.reactionResponseList);
-				}
+				// not needed as the txtPageReactionList includes the replies as well. 
+				//if(pageReactionDetail.pageReactionType == 'PRRTRMK' || pageReactionDetail.pageReactionType == 'PBRTRMK'){
+					//_showRepliesToReactions(pageReactionDetail.reactionResponseList);
+				//}
 				
 
 				if(pageReactionDetail.hasNewEntry){
@@ -87,54 +86,81 @@ var textReactionsController = function(sb, input){
 				}else{
 					allTextRactionsDiv.addClass(pageReactionDetail.pageReactionTitle);
 				}
+			}	
+			var reacTitleToShow = allTextRactionsDiv.find('.textReacSelection').html();
+			if(loadFlag == "LOAD"){
+				if(allTextRactionsDiv.hasClass("Comments")){
+					_commentsSelected("Comments", pageReactionDetail.documentPageId);
+				}else if(allTextRactionsDiv.hasClass("Replies")){			
+					_repliesSelected("Replies", pageReactionDetail.documentPageId);			
+				}else{
+					_commentsSelected("Comments", pageReactionDetail.documentPageId);
+				}				
+			}else{
+				if(pageReactionDetail.pageReactionTitle=="Comments"){
+					_commentsSelected("Comments", pageReactionDetail.documentPageId);
+				}else if(pageReactionDetail.pageReactionTitle=="Replies"){
+					_repliesSelected("Replies", pageReactionDetail.documentPageId);	
+				}
+			}
+	
+			reactionsListArea.find('.rpltxtreac').bind('click',_replyLinkClicked);
+			reactionsListArea.find('.cancelrpltxtreac').bind('click',_replyCancelled);
+			reactionsListArea.find('.ReplyReacSubmit').bind('click',_replySubmit);
+			reactionsListArea.find('.rplytxtara').bind('keydown', _replySubmitKeyPressed);
+			reactionsListArea.find('a.remtxtreac').bind('click', _removeReaction);
+			reactionsListArea.find('a.remtxtreacall').bind('click', _removeAllReactionsFromUser);
+			reactionsListArea.find('.hiliteResponse').each(_setHiliteResponseButtonEvents);
+			reactionsListArea.find('.unhiliteResponse').each(_setUnHiliteResponseButtonEvents);		
+	
+			allTextRactionsDiv.addClass(reactionsLoadedStatus);
+			sb.dom.find('#storyItemFooter-'+pageReactionDetail.documentPageId).addClass(reactionsLoadedStatus);
+			Core.publish('contactToolTipAdded', {divId: "#"+allTextRactionsDiv.attr('id')});
+			if(pageReactionDetail.pageReactionHasMoreReactions){
+				var showMoreButton = reactionsDiv.find('.showMore');
+				showMoreButton.data("showMoreData", {
+					documentPageId: pageReactionDetail.documentPageId,
+					pageReactionType: pageReactionDetail.pageReactionType,
+					pageReactionTitle: pageReactionDetail.pageReactionTitle,
+					latestReactionDate: pageReactionDetail.latestReactionDate
+				});
+				showMoreButton.unbind('click', _showMoreButtonClickEvent);
+				showMoreButton.unbind('click', _showMoreButtonClickEventFirst);
+				showMoreButton.click(_showMoreButtonClickEvent);
+				reactionsDiv.find('.showMore').fadeIn();
+				showMoreButton=null;
+			}else{
+				reactionsDiv.find('.showMore').hide();
+			}
+		
+	}
+	function _updateReactionList(pageReactionDetail, loadFlag){
+		try{		
+		if(pageReactionDetail.txnStatus == "SUCCESS"){
+			try{
+			var allTextRactionsDiv = sb.dom.find("#storiesDiv").find("#TxtReactionList-"+pageReactionDetail.documentPageId);	
+			var reactionsDiv=allTextRactionsDiv.find("#"+pageReactionDetail.pageReactionTitle+"Div-"+pageReactionDetail.documentPageId);
+			var reactionsDivMessageArea=reactionsDiv.find(".TextReactionList-message");
+			var noReactionsMessage = sb.dom.find("#jstemplate-No"+pageReactionDetail.pageReactionTitle+"Label").html();
+			var reactionsListArea=reactionsDiv.find(".textReactionList");
+			_updateReactionListForDiv(allTextRactionsDiv, reactionsDiv, reactionsDivMessageArea, noReactionsMessage, reactionsListArea, pageReactionDetail, loadFlag);
+			if(sb.dom.find('.subContainer').length > 0){
+				allTextRactionsDiv = sb.dom.find(".subContainer").first().find("#TxtReactionList-"+pageReactionDetail.documentPageId);	
+				reactionsDiv=allTextRactionsDiv.find("#"+pageReactionDetail.pageReactionTitle+"Div-"+pageReactionDetail.documentPageId);
+				reactionsDivMessageArea=reactionsDiv.find(".TextReactionList-message");
+				noReactionsMessage = sb.dom.find("#jstemplate-No"+pageReactionDetail.pageReactionTitle+"Label").html();
+				reactionsListArea=reactionsDiv.find(".textReactionList");
+				_updateReactionListForDiv(allTextRactionsDiv, reactionsDiv, reactionsDivMessageArea, noReactionsMessage, reactionsListArea, pageReactionDetail, loadFlag);
+			}
+			}catch(e){
+				alert('1 ' + e);	
 			}
 		}else{
 			Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-ErrorMessage").html(), messageType: "failure"});
 		}
-		var reacTitleToShow = allTextRactionsDiv.find('.textReacSelection').html();
-		if(loadFlag == "LOAD"){
-			if(allTextRactionsDiv.hasClass("Comments")){
-				_commentsSelected("Comments", pageReactionDetail.documentPageId);
-			}else if(allTextRactionsDiv.hasClass("Replies")){			
-				_repliesSelected("Replies", pageReactionDetail.documentPageId);			
-			}else{
-				_commentsSelected("Comments", pageReactionDetail.documentPageId);
-			}				
-		}else{
-			if(pageReactionDetail.pageReactionTitle=="Comments"){
-				_commentsSelected("Comments", pageReactionDetail.documentPageId);
-			}else if(pageReactionDetail.pageReactionTitle=="Replies"){
-				_repliesSelected("Replies", pageReactionDetail.documentPageId);	
-			}
-		}
 
-		reactionsListArea.find('.rpltxtreac').bind('click',_replyLinkClicked);
-		reactionsListArea.find('.cancelrpltxtreac').bind('click',_replyCancelled);
-		reactionsListArea.find('.ReplyReacSubmit').bind('click',_replySubmit);
-		reactionsListArea.find('.rplytxtara').bind('keydown', _replySubmitKeyPressed);
-		reactionsListArea.find('a.remtxtreac').bind('click', _removeReaction);
-		reactionsListArea.find('a.remtxtreacall').bind('click', _removeAllReactionsFromUser);
-		reactionsListArea.find('.hiliteResponse').each(_setHiliteResponseButtonEvents);
-		reactionsListArea.find('.unhiliteResponse').each(_setUnHiliteResponseButtonEvents);
-
-		allTextRactionsDiv.addClass(reactionsLoadedStatus);
-		sb.dom.find('#storyItemFooter-'+pageReactionDetail.documentPageId).addClass(reactionsLoadedStatus);
-		Core.publish('contactToolTipAdded', {divId: "#"+allTextRactionsDiv.attr('id')});
-		if(pageReactionDetail.pageReactionHasMoreReactions){
-			var showMoreButton = reactionsDiv.find('.showMore');
-			showMoreButton.data("showMoreData", {
-				documentPageId: pageReactionDetail.documentPageId,
-				pageReactionType: pageReactionDetail.pageReactionType,
-				pageReactionTitle: pageReactionDetail.pageReactionTitle,
-				latestReactionDate: pageReactionDetail.latestReactionDate
-			});
-			showMoreButton.unbind('click', _showMoreButtonClickEvent);
-			showMoreButton.unbind('click', _showMoreButtonClickEventFirst);
-			showMoreButton.click(_showMoreButtonClickEvent);
-			reactionsDiv.find('.showMore').fadeIn();
-			showMoreButton=null;
-		}else{
-			reactionsDiv.find('.showMore').hide();
+		}catch(err){
+			alert(err);	
 		}
 			
 	}
@@ -148,10 +174,15 @@ var textReactionsController = function(sb, input){
 	}
 	
 	function _removeHighlightToResponseButtonClicked(e){
-		console.log('remove agree clicked');
-		var reactionID = sb.dom.find(this).attr('id').split('-')[1];
-		var pageReactionType = sb.dom.find(this).attr('id').split('-')[2];		
-		sb.utilities.serverDelete(relPathIn+'agreereaction.pvt/'+reactionID+'/'+pageReactionType+'?mediaType=json',null,_AgreeReactionDeleteReceived);		
+		if(sb.utilities.isUserLoggedIn()){
+			console.log('remove agree clicked');
+			var reactionID = sb.dom.find(this).attr('id').split('-')[1];
+			var pageReactionType = sb.dom.find(this).attr('id').split('-')[2];		
+			sb.utilities.serverDelete(relPathIn+'agreereaction.pvt/'+reactionID+'/'+pageReactionType+'?mediaType=json',null,_AgreeReactionDeleteReceived);		
+		}else{
+			Core.publish('unAuthorizedFunctionality', {module: 'Highlight'});
+		}		
+
 	}
 		
 	function _AgreeReactionDeleteReceived(response){
@@ -180,13 +211,17 @@ var textReactionsController = function(sb, input){
 	}
 	
 	function _addHighlightToResponseButtonClicked(e){
-		
-		var documentPageID = sb.dom.find(this).attr('id').split('-')[1];
-		var reactionID = sb.dom.find(this).attr('id').split('-')[2];
-		var pageReactionID = sb.dom.find(this).attr('id').split('-')[3];
-		var pageReactionType = sb.dom.find(this).attr('id').split('-')[4];
-		var pageReactionTitle = sb.dom.find(this).attr('id').split('-')[5];
-		sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{toReactionId: reactionID, pageReactionId: pageReactionID, documentPageId: documentPageID, pageReactionType: pageReactionType, reactionType: "AGREE", pageReactionTitle: pageReactionTitle, reactionRichText: ""},_addHighlightToResponseReceived);
+		if(sb.utilities.isUserLoggedIn()){
+			var documentPageID = sb.dom.find(this).attr('id').split('-')[1];
+			var reactionID = sb.dom.find(this).attr('id').split('-')[2];
+			var pageReactionID = sb.dom.find(this).attr('id').split('-')[3];
+			var pageReactionType = sb.dom.find(this).attr('id').split('-')[4];
+			var pageReactionTitle = sb.dom.find(this).attr('id').split('-')[5];
+			sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{toReactionId: reactionID, pageReactionId: pageReactionID, documentPageId: documentPageID, pageReactionType: pageReactionType, reactionType: "AGREE", pageReactionTitle: pageReactionTitle, reactionRichText: ""},_addHighlightToResponseReceived);
+		}else{
+			Core.publish('unAuthorizedFunctionality', {module: 'Comment or Reply'});
+		}		
+
 	}
 	
 	function _addHighlightToResponseReceived(response){
@@ -197,7 +232,6 @@ var textReactionsController = function(sb, input){
 		var pageReactionType = response.pageReactionType;
 		var pageReactionTitle = response.pageReactionTitle;
 		var agreeCount = response.agreeCount;
-		console.log(documentPageID + " " + toReactionID + " " + pageReactionID + " " + pageReactionType + " " + pageReactionTitle + " " + agreeCount);
 		sb.dom.find("#HighlightReacSubmit-"+documentPageID+"-"+toReactionID+"-"+pageReactionID+"-"+pageReactionType+"-"+pageReactionTitle).remove();
 		var agreeCountHtml = sb.dom.find("#jstemplate-reaction-highlight-count").html() + "(" + agreeCount + ")";
 		sb.dom.find("#reactionAgreeCount-"+response.toReactionId).html(agreeCountHtml);
@@ -234,7 +268,7 @@ var textReactionsController = function(sb, input){
 		   var deleteStoryButton = sb.dom.find(this);
 		   var buttonId = deleteStoryButton.attr('id');
 		   var storyId = buttonId.split('-')[1];
-		   
+		   _deleteStoryConfirm(storyId);
 		   var deleteStoryDialog=sb.dom.find("#DeleteDocument-Confirm");
 		   deleteStoryDialog.html(sb.dom.find("#StoryItemController-StoryItemDelete-Confirm").html());
 		   deleteStoryDialog.dialog({
@@ -250,11 +284,19 @@ var textReactionsController = function(sb, input){
 	   }
 	   
 	   function _removeReactionConfirm(reactionId, pageReactionType, reactionType){
-		   sb.utilities.serverDelete(relPathIn+'textreaction.pvt/'+reactionId+'/'+pageReactionType+'/'+reactionType+'/false?mediaType=json',null,_reactionDeleted);
+			if(sb.utilities.isUserLoggedIn()){
+			   sb.utilities.serverDelete(relPathIn+'textreaction.pvt/'+reactionId+'/'+pageReactionType+'/'+reactionType+'/false?mediaType=json',null,_reactionDeleted);
+			}else{
+				Core.publish('unAuthorizedFunctionality', {module: 'Highlight'});
+			}
 	   }
 	   
 	   function _removeAllReactionsFromUserConfirm(reactionId, pageReactionType, reactionType){
-		   sb.utilities.serverDelete(relPathIn+'textreaction.pvt/'+reactionId+'/'+pageReactionType+'/'+reactionType+'/true?mediaType=json',null,_reactionDeleted);
+			if(sb.utilities.isUserLoggedIn()){
+			   sb.utilities.serverDelete(relPathIn+'textreaction.pvt/'+reactionId+'/'+pageReactionType+'/'+reactionType+'/true?mediaType=json',null,_reactionDeleted);
+			}else{
+				Core.publish('unAuthorizedFunctionality', {module: 'Highlight'});
+			}
 	   }
 	   
 	function _removeReaction(e){
@@ -262,19 +304,8 @@ var textReactionsController = function(sb, input){
 			var reactionId = e.currentTarget.id.split("-")[1];
 			var pageReactionType = e.currentTarget.id.split("-")[2];
 			var reactionType = e.currentTarget.id.split("-")[3];
+			_removeReactionConfirm(reactionId, pageReactionType, reactionType);
 
-			   var deleteReactionDialog=sb.dom.find("#DeleteDocument-Confirm");
-			   deleteReactionDialog.html(sb.dom.find("#TextReactionController-ReactionDelete-Confirm").html());
-			   deleteReactionDialog.dialog({
-				  resizable: false,
-			   	  title: sb.dom.find("#jstemplate-MessageDisplayController-GeneralNote").html(),
-			   	  dialogClass: "opaque",
-			   	  modal: true,
-			   	  buttons: [
-			   		{text: sb.dom.find("#jstemplate-confirmLabel").html(), click: function(){_removeReactionConfirm(reactionId, pageReactionType, reactionType);sb.dom.find(this).dialog("close");}, class: "ab"},
-			   		{text: sb.dom.find("#jstemplate-cancelLabel").html(), click: function(){sb.dom.find(this).dialog("close");}, class: "br"}
-			   	  ]
-			   });
 			
 		}catch(err){
 			console.log(err);
@@ -286,18 +317,7 @@ var textReactionsController = function(sb, input){
 			var reactionId = e.currentTarget.id.split("-")[1];
 			var pageReactionType = e.currentTarget.id.split("-")[2];
 			var reactionType = e.currentTarget.id.split("-")[3];
-			   var deleteReactionDialog=sb.dom.find("#DeleteDocument-Confirm");
-			   deleteReactionDialog.html(sb.dom.find("#TextReactionController-ReactionDelete-Confirm").html());
-			   deleteReactionDialog.dialog({
-				  resizable: false,
-			   	  title: sb.dom.find("#jstemplate-MessageDisplayController-GeneralNote").html(),
-			   	  dialogClass: "opaque",
-			   	  modal: true,
-			   	  buttons: [
-			   		{text: sb.dom.find("#jstemplate-confirmLabel").html(), click: function(){_removeAllReactionsFromUserConfirm(reactionId, pageReactionType, reactionType);sb.dom.find(this).dialog("close");}, class: "ab"},
-			   		{text: sb.dom.find("#jstemplate-cancelLabel").html(), click: function(){sb.dom.find(this).dialog("close");}, class: "br"}
-			   	  ]
-			   });
+			_removeAllReactionsFromUserConfirm(reactionId, pageReactionType, reactionType);
 		}catch(err){
 			console.log(err);
 		}
@@ -365,7 +385,7 @@ var textReactionsController = function(sb, input){
 		}
 		
 		
-		sb.dom.find("#submitTxtReaction-"+documentPageId).attr("value",sb.dom.find("#jstemplate-commentMsg").html());
+		//sb.dom.find("#submitTxtReaction-"+documentPageId).attr("value",sb.dom.find("#jstemplate-commentMsg").html());
 		sb.dom.find("#CommentReplyArea-"+documentPageId).html(sb.dom.find("#jstemplate-commentMsg").html());
 		
 	}
@@ -404,7 +424,7 @@ var textReactionsController = function(sb, input){
 		var reacTypeToShow = inputPgReactionTitle;
 		sb.dom.find('#'+reacTypeToShow+'Div-'+docPageId).fadeIn();
 		
-		sb.dom.find("#submitTxtReaction-"+docPageId).attr("value",sb.dom.find("#jstemplate-commentMsg").html());
+		sb.dom.find("#submitTxtCommentReaction-"+docPageId).attr("value",sb.dom.find("#jstemplate-commentMsg").html());
 		sb.dom.find("#CommentArea-"+docPageId).val(sb.dom.find("#jstemplate-commentMsg").html());
 		sb.dom.find("#Comments-"+docPageId).addClass("cmt");sb.dom.find("#Replies-"+docPageId).removeClass("cmt");
 		sb.dom.find("#Comments-"+docPageId).addClass("ca");sb.dom.find("#Replies-"+docPageId).removeClass("ca");
@@ -432,7 +452,7 @@ var textReactionsController = function(sb, input){
 		var reacTypeToShow = inputPgReactionTitle;
 		sb.dom.find('#'+reacTypeToShow+'Div-'+docPageId).fadeIn();
 		
-		sb.dom.find("#submitTxtReaction-"+docPageId).attr("value",sb.dom.find("#jstemplate-replyMsg").html());
+		sb.dom.find("#submitTxtReplyReaction-"+docPageId).attr("value",sb.dom.find("#jstemplate-replyMsg").html());
 		sb.dom.find("#ReplyArea-"+docPageId).val(sb.dom.find("#jstemplate-replyMsg").html());
 		sb.dom.find("#Replies-"+docPageId).addClass("cmt");sb.dom.find("#Comments-"+docPageId).removeClass("cmt");
 		sb.dom.find("#Replies-"+docPageId).addClass("ca");sb.dom.find("#Comments-"+docPageId).removeClass("ca");	
@@ -455,13 +475,18 @@ var textReactionsController = function(sb, input){
 	function _replySubmit(e){
 		sb.dom.find('#'+e.currentTarget.id).parent().fadeOut();
 		 try{
-			reactionText = sb.dom.find('#'+e.currentTarget.id).parent().find('.rplytxtara').val();
-			docPageId = e.currentTarget.id.split("-")[1];
-			toReactionId=e.currentTarget.id.split("-")[2];			
-			if(reactionText != "" && reactionText != null && reactionText != sb.dom.find("#jstemplate-commentMsg").html() &&  reactionText != sb.dom.find("#jstemplate-replyMsg").html()){
-				sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{reactionId: "", pageReactionId: "", documentPageId: docPageId, pageReactionType: "PRRTRMK", reactionType: "PRRTRPL", pageReactionTitle: pgReactionTitle, reactionRichText: sb.utilities.htmlEncode(reactionText), toReactionId: toReactionId},_reactionAdded);
+			if(sb.utilities.isUserLoggedIn()){
+				reactionText = sb.dom.find('#'+e.currentTarget.id).parent().find('.rplytxtara').val();
+				sb.dom.find('#'+e.currentTarget.id).parent().find('.rplytxtara').val("");
+				docPageId = e.currentTarget.id.split("-")[1];
+				toReactionId=e.currentTarget.id.split("-")[2];			
+				if(reactionText != "" && reactionText != null && reactionText != sb.dom.find("#jstemplate-commentMsg").html() &&  reactionText != sb.dom.find("#jstemplate-replyMsg").html()){
+					sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{reactionId: "", pageReactionId: "", documentPageId: docPageId, pageReactionType: "PRRTRMK", reactionType: "PRRTRPL", pageReactionTitle: pgReactionTitle, reactionRichText: sb.utilities.htmlEncode(reactionText), toReactionId: toReactionId},_reactionAdded);
+				}else{
+					Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-plsEntrTxt").html(), messageType: "failure"});
+				}
 			}else{
-				Core.publish("displayMessage",{message: sb.dom.find("#jstemplate-plsEntrTxt").html(), messageType: "failure"});
+				Core.publish('unAuthorizedFunctionality', {module: 'Comment or Reply'});
 			}
 		 }
 		 catch(err){

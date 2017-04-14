@@ -62,7 +62,9 @@ var albumsController = function(sb, input){
 				thumnailhtml = thumnailhtmltemplate;
 				thumnailhtml=thumnailhtml.replace("albumpicid",data.documentPageIDList[i]);
 				thumnailhtml=thumnailhtml.replace("albumpicid",data.documentPageIDList[i]);
-				thumnailhtml=thumnailhtml.replace("albumpicid",data.documentPageIDList[i]);			
+				thumnailhtml=thumnailhtml.replace("albumpicid",data.documentPageIDList[i]);	
+				
+				
 				thumnailhtml=thumnailhtml.replace("pictureurl",relPathIn+"tnphoto1.pvt/"+data.documentPageIDList[i]+"?mediaType=jpeg");
 				picturecontainer.append(sb.dom.wrap(thumnailhtml));
 			}
@@ -78,7 +80,7 @@ var albumsController = function(sb, input){
 	
 	function _getPicturesFromServer(input){
 		try{
-			sb.utilities.get("galb/"+input.documentid+".100?mediaType=json",_paintAlbumPictures);
+			sb.utilities.get("galb/"+input.documentid+".100?mediaType=json", null, _paintAlbumPictures);
 		}catch(err){
 			serverLog(err);
 		}

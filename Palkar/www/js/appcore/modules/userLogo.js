@@ -1,7 +1,8 @@
 var userLogo = function(sb, input){
 	var htmlBody = sb.dom.find(input.elemHandle), relPathIn=input.relPath, userToolTipCard = null,
 	    userLogoHtml = null, changePictureLinkNode=null, timeout=null, tStamp=1, profpicurl=null, profilepicalbumid = null,
-		userLogoNode=null, userLogoPanelHtml=null, userLogoPanelNode=null, userLogoNodePos=null, userLogoNameNode=null, tempUserDetail = null, tempLocation = null;
+		userLogoNode=null, userLogoPanelHtml=null, userLogoPanelNode=null, userLogoNodePos=null, userLogoNameNode=null, tempUserDetail = null, tempLocation = null,
+		stopPushNotificationButtonHtml = sb.dom.find('#jstemplate-stopPusbNotificationButtonHtml').html(), activatePushNotificationButtonHtml = sb.dom.find('#jstemplate-activatePushNotificationButtonHtml').html();
  
 
    function _userLogoClick(){
@@ -146,7 +147,61 @@ var userLogo = function(sb, input){
 	   sb.utilities.postV2("userlocation?mediaType=json",{location: tempLocation},_userLocationUpdateSuccess);
    }
    
+   function _pushNotificationRegistrationResponseReceived(registrationInfo){ 
+		if(registrationInfo.registrationId == sb.utilities.getUserInfo().userDetails.userAccount.deviceId){
+			console.log('User Already Registered.');	
+		}else{
+			var registerPushRequest = {
+				userName : sb.utilities.getUserInfo().userDetails.userAccount.userName,
+				deviceUUID : device.uuid,
+				deviceId: registrationInfo.registrationId, 
+				deviceOs: device.platform,
+				deviceOsVersion: device.version,
+				activateStreaming: true,
+				stopStreaming: false,
+				communityName: input.appname
+			};
+			sb.utilities.postV2('updatePushNotification?mediaType=json', registerPushRequest, _registerPushNotificationResponse, _notificationResponseError);			
+		}
+   }
+	
+   function _pushNotificationMessageReceived(message){
+		if(message.additionalData.storyId){
+			Core.publish('newStoryReceived', {storyId: message.additionalData.storyId, storyDocumentType: message.additionalData.storyDocumentType});	
+		}
+		if(message.additionalData.pageReactionId){
+			if(sb.dom.find('#storyItem-'+message.additionalData.reactionDocumentPageId).length > 0){
+				try{
+				Core.publish('reloadPageReaction', {pageReactionId: message.additionalData.pageReactionId, pageReactionType: message.additionalData.pageReactionType});
+				}catch(e){
+					alert(e);	
+				}
+		   }else{   
+				Core.publish('newStoryReceived', {storyId: message.additionalData.reactionDocumentPageId, storyDocumentType: message.additionalData.reactionDocumentType});				   
+		   }
+		}
+		if(message.additionalData.deleteStoryId){
+			if(sb.dom.find('#storyItem-'+message.additionalData.deleteStoryId).length > 0){
+				sb.dom.find('#storyItem-'+message.additionalData.deleteStoryId).remove();															   
+		   }
+		}		
+   }
    
+   function _setupPushNotifications(){
+		var pushNotification = PushNotification.init({
+						android: {
+						senderID: "601600954865"
+						},
+						ios: {
+						alert: "true",
+						badge: true,
+						sound: 'false'
+						},
+						windows: {}
+						});
+		pushNotification.on('registration', _pushNotificationRegistrationResponseReceived);
+		pushNotification.on('notification', _pushNotificationMessageReceived);
+   }
    function _setupProfile(message){
 				var userPreferencesCard = tmpl('template-user-panel-edit', sb.utilities.getUserInfo());
 				sb.dom.find('#profileContainer').html(userPreferencesCard);
@@ -155,6 +210,7 @@ var userLogo = function(sb, input){
 				userToolTipCard = sb.dom.find('#profileContainer').find('#userProfileCard');
 				profilepicalbumid = sb.utilities.getUserInfo().userDetails.profilePictureAlbumId;					
 				_setUserToolTip();
+				_setupPushNotifications();
 	}
    function _userLoginEvent(message){				
 		_setupProfile(message);		
@@ -167,6 +223,91 @@ var userLogo = function(sb, input){
 	function _profilePreferencesClick(message){
 		sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'profileContainer');
 	}
+	
+	function _registerPushNotification(message){
+		var registerPushRequest = {
+				userName : sb.utilities.getUserInfo().userDetails.userAccount.userName,
+				deviceUUID : device.uuid,
+				deviceId: 'test_device_id', 
+				deviceOs: device.platform,
+				deviceOsVersion: device.version,
+				activateStreaming: true,
+				stopStreaming: false,
+				communityName: input.appname
+			};
+		sb.utilities.postV2('updatePushNotification?mediaType=json', registerPushRequest, _registerPushNotificationResponse, _notificationResponseError);
+	}
+	
+	function _stopPushNotification(message){
+		var stopPushRequest = {
+				userName : sb.utilities.getUserInfo().userDetails.userAccount.userName,
+				deviceUUID : device.uuid,
+				deviceId: 'test_device_id', 
+				deviceOs: device.platform,
+				deviceOsVersion: device.version,
+				activateStreaming: false,
+				stopStreaming: true,
+				communityName: input.appname
+			};
+		sb.utilities.postV2('updatePushNotification?mediaType=json', stopPushRequest, _stopPushNotificationResponse, _notificationResponseError);			
+	}
+	
+	function _activatePushNotification(message){
+		var activatePushRequest = {
+				userName : sb.utilities.getUserInfo().userDetails.userAccount.userName,
+				deviceUUID : device.uuid,		
+				deviceId: 'test_device_id', 
+				deviceOs: device.platform,
+				deviceOsVersion: device.version,
+				activateStreaming: true,
+				stopStreaming: false,
+				deviceId: 'test_device_id', 
+				communityName: input.appname
+		};
+		sb.utilities.postV2('updatePushNotification?mediaType=json', activatePushRequest, _activatePushNotificationResponse, _notificationResponseError);		
+	}	
+	
+	function _registerPushNotificationResponse(response){
+		if(response.txnStatus == 'SUCCESS'){
+			navigator.notification.alert('Push notifications have been setup for your profile. To disable, click on Stop Push Notifications button on Profile Tab.' + response.txtStatusReason, dismissAlert, input.appname, 'Got it, Thanks');			
+			sb.dom.find('#profileContainer').find('#registerPushNotification').hide();
+			sb.dom.find('#profileContainer').find('#profileOptions').prepend(sb.dom.wrap(stopPushNotificationButtonHtml));		
+			sb.utilities.getUserInfo().userDetails.userAccount.deviceId = response.deviceId;
+			sb.utilities.getUserInfo().userDetails.userAccount.streamingActive = true;
+		}else{
+			navigator.notification.alert('There was a problem while setting up your push notification.' + response.txtStatusReason, dismissAlert, input.appname, 'Ok, Thanks');					
+		}
+	}
+	
+	function dismissAlert(){
+		;	
+	}
+	function _stopPushNotificationResponse(response){
+		if(response.txnStatus == 'SUCCESS'){
+			sb.dom.find('#profileContainer').find('#stopPushNotification').hide();
+			sb.dom.find('#profileContainer').find('#profileOptions').prepend(sb.dom.wrap(activatePushNotificationButtonHtml));	
+			sb.utilities.getUserInfo().userDetails.userAccount.deviceId = response.deviceId;
+			sb.utilities.getUserInfo().userDetails.userAccount.streamingActive = false;			
+		}else{
+			navigator.notification.alert('There was a problem while setting up your push notification.' + response.txtStatusReason, dismissAlert, input.appname, 'Ok, Thanks');			
+		}		
+	}
+	
+	function _activatePushNotificationResponse(response){
+		if(response.txnStatus == 'SUCCESS'){
+			sb.dom.find('#profileContainer').find('#activatePushNotification').hide();
+			sb.dom.find('#profileContainer').find('#profileOptions').prepend(sb.dom.wrap(stopPushNotificationButtonHtml));		
+			sb.utilities.getUserInfo().userDetails.userAccount.deviceId = response.deviceId;
+			sb.utilities.getUserInfo().userDetails.userAccount.streamingActive = true;			
+		}else{
+			navigator.notification.alert('There was a problem while setting up your push notification.' + response.txtStatusReason, dismissAlert, input.appname, 'Ok, Thanks');			
+		}			
+	}
+
+	function _notificationResponseError(response, errorMessage, errorObj){
+		alert(JSON.stringify(response) + " " + JSON.stringify(errorMessage) + " " + JSON.stringify(errorObj));
+	}
+	
    return{
 	   init:function() {
        	try{
@@ -174,7 +315,14 @@ var userLogo = function(sb, input){
 			Core.subscribe('startUserLogo', _startUserLogoController);		
 			Core.subscribe('profilePreferencesClick', _profilePreferencesClick);		
 			Core.subscribe('refreshProfilePicture', _refreshProfilePicture);
-			Core.subscribe('removeProfilePicture', _removeProfilePicture);			
+			Core.subscribe('removeProfilePicture', _removeProfilePicture);	
+
+
+
+
+			Core.subscribe('registerPushNotification', _registerPushNotification);	
+			Core.subscribe('stopPushNotification', _stopPushNotification);	
+			Core.subscribe('activatePushNotification', _activatePushNotification);				
        	}catch(err){
        		alert("Error while initializing userLogoModule: " + err);
        	}

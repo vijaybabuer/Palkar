@@ -3,7 +3,7 @@ var albumDownloadController = function(sb, input){
 	
 	function _loadPictures(docPageList){
 	 try{
-		 sb.utilities.get(relPathIn+"photoV2/3178496",_paintPicture);
+		 sb.utilities.get(relPathIn+"photoV2/3178496",null,_paintPicture);
 	 }
 	 catch(err){
 		 serverLog(err);

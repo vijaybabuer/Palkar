@@ -28,6 +28,7 @@
 
         options: {
             progress: function (e, data) {
+				alert('ui progress');				
                 if (data.context) {
                     data.context.find('.progress').progressbar(
                         'option',
@@ -37,6 +38,7 @@
                 }
             },
             progressall: function (e, data) {
+								alert('ui progressall');				
                 var $this = $(this);
                 $this.find('.fileupload-progress')
                     .find('.progress').progressbar(
@@ -55,6 +57,7 @@
         },
 
         _renderUpload: function (func, files) {
+			alert('ui _renderUpload');	
             var node = this._super(func, files),
                 showIconText = $(window).width() > 480;
             node.find('.progress').empty().progressbar();
@@ -70,6 +73,7 @@
         },
 
         _renderDownload: function (func, files) {
+			alert('ui _renderDownload');	
             var node = this._super(func, files),
                 showIconText = $(window).width() > 480;
             node.find('.delete').button({
@@ -80,6 +84,7 @@
         },
 
         _transition: function (node) {
+			alert('ui _transition');	
             var deferred = $.Deferred();
             if (node.hasClass('fade')) {
                 node.fadeToggle(
@@ -96,6 +101,7 @@
         },
 
         _create: function () {
+			alert('ui _create');
             this._super();
             this.element
                 .find('.fileupload-buttonbar')
@@ -115,6 +121,7 @@
         },
 
         _destroy: function () {
+			alert('ui _destroy');
             this.element
                 .find('.fileupload-buttonbar')
                 .find('.fileinput-button').each(function () {

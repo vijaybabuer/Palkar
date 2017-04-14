@@ -454,6 +454,24 @@ var storyItemController = function(sb, input){
 	function appendFooterMessage(msg){
 		sb.dom.find("#message1").append("<br>"+msg);
 	}
+	
+	function _addStoryToView(response){
+		if(response.txnStatus == "SUCCESS"){
+			try{
+			var storyItemNode = sb.dom.find("#storyItem-"+response.storyitem.storyDocumentPageId);
+			if(storyItemNode){
+				sb.dom.find(storyItemNode).remove();	
+			}
+			prependStoryItemToView(response.storyitem);
+			}catch(e){
+				alert(e);	
+			}
+		}
+	}
+	
+	function _newStoryReceivedFromServer(message){
+		sb.utilities.get(message.storyDocumentType+'/Story/'+message.storyId+'?mediaType=json',null,_addStoryToView);	
+	}
 	function _startController(message){
 		try{
 			
@@ -500,6 +518,7 @@ var storyItemController = function(sb, input){
 	    		Core.subscribe('newStoryAdded', _newStoryAddedMessageReceived);
 	    		Core.subscribe('getNewStories', _getNewStoriesMessageReceived);
 	    		Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
+				Core.subscribe('newStoryReceived', _newStoryReceivedFromServer);	
 	    		
 	    		if(getMoreStories && lastUpdatedStreamDate != "" && lastUpdatedStreamDate != null && lastUpdatedStreamDate != "null"){
 					if(sb.utilities.isUserLoggedIn()){

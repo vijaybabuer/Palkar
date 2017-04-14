@@ -225,6 +225,7 @@ width: 50%;
 .privateStoryPicDiv, .picturecapturediv{
 	max-width: 100%;
 	overflow-x: scroll;	
+	margin-top: 1em;
 }
 .picturecapturediv{
 	margin-top: 1em;
@@ -412,7 +413,7 @@ width: 50%;
 	color: #CC3333 !important;
 	margin: 0px;	
 	max-height: 1000px;
-	overflow: scroll;
+	overflow: hidden;
 }
 
 #newMessageButton{
@@ -423,7 +424,7 @@ width: 50%;
 	color: #009966 !important;
 	margin: 0px;	
 	max-height: 1000px;
-	overflow: scroll;
+	overflow: hidden;
 }
 
 #showRightPanel, #refreshPanel{
@@ -434,7 +435,7 @@ width: 50%;
 	color: #3299BB !important;
 	margin: 0px;	
 	max-height: 1000px;
-	overflow: scroll;
+	overflow: hidden;
 }
 #rightPanel{
 	color: #000000;
@@ -481,6 +482,7 @@ width: 50%;
  	text-align: center;
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
+	height: 100%;
  }
  .fa-spinner{
  	margin-top: 5em;
@@ -490,10 +492,10 @@ width: 50%;
  	margin-top: 25%;
  }
  .snippetAnchorWithPic{
- 	background-size: 100px auto;
+ 	background-size: 5em auto;
 	background-position: 5px center;
 	background-repeat: no-repeat;
-	height: 4em;
+	height: 5em;
 	text-align: right;
  }
 .sharePageButton{
@@ -617,6 +619,18 @@ width: 50%;
 	top: 0px;
 	padding: 0.5em;
 }
+.albumPicList{
+	background: rgba(255,255,255,0.5) !important; 
+	border: 0px; 
+	margin: 0em; 
+	clear:both; 
+	color: #333;
+	font-size: 2em;
+	position: absolute; 
+	left: 80%; 
+	top: 0px;
+	padding: 0.5em;
+}
 #documentTitleLabel{
 	color: #333;
 }
@@ -705,4 +719,10 @@ width: 50%;
 .storyCreateOptions{
 	width: 100%;
 	text-align: center;
+}
+.unShareToAllCurrentContacts, .shareToAllCurrentContacts, .read{
+	display: none;
+}
+.bar.bar-nav {
+  position: static;
 }

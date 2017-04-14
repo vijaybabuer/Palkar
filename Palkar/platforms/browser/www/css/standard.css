@@ -569,6 +569,7 @@ left: 100px;
 .inp, .eml{
 color: lightgrey;
 background-color: lightyellow;
+width: 25em;
 }
 
 
@@ -614,6 +615,7 @@ div.thumbNail .thumbNailImg{
 }
 
 .rndBrdr{
+
    border-radius:5px;
   -moz-border-radius:5px;
 }

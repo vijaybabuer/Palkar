@@ -54,7 +54,7 @@ var pulseController = function(sb, input){
 	   }
 	   function _updatePulsePage(){
 				console.log(input.notificationPageId);
-	    		sb.utilities.get(relPathIn+'notificationpage.pvt/'+input.inputUserName+'?mediaType=json', _showUpdatedPulsePage);
+	    		sb.utilities.get(relPathIn+'notificationpage.pvt/'+input.inputUserName+'?mediaType=json', null, _showUpdatedPulsePage);
 	   }
 	   function _newReactionAdded(data){
 		   console.log('received publish for new reaction added..');

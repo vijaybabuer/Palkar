@@ -1,5 +1,5 @@
 var userLoginController = function(sb, input){
-	var relPathIn=input.relPath, loginSlidesContainer=null, loginSlideScrollBar=null, currentNavBtn=null, prevNavBtn=null;
+	var relPathIn=input.relPath, loginSlidesContainer=null, loginSlideScrollBar=null, currentNavBtn=null, prevNavBtn=null, AUTH0_CLIENT_ID='Nk4uuODLP9IPdZOUXB7dugUAMHeqZxHi', AUTH0_CALLBACK_URL=location.href, AUTH0_DOMAIN='palpostr.auth0.com', lock = new Auth0Lock(AUTH0_CLIENT_ID, AUTH0_DOMAIN);
    
    function _userLoginSuccess(txnResponse){
 	   if(txnResponse.authorizationSuccess && txnResponse.authorizationSuccess == 'SUCCESS'){
@@ -28,6 +28,8 @@ var userLoginController = function(sb, input){
    }
    
    function _errorLogin(request, errorMessage, errorObj){
+		  	sb.dom.find('#socialDiv').find('#message').find('fa-cog').hide();
+			sb.dom.find('#socialDiv').find('#socialDivTNC').fadeIn();	   
 	   sb.dom.find("#loginDiv").prepend(JSON.stringify(request));	   
 			navigator.notification.alert("There was a problem. Please restart your App. " + JSON.stringify(errorMessage) + " : " + JSON.stringify(errorObj), null, input.pageHandle, "Ok"); 
 			sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
@@ -114,7 +116,7 @@ var userLoginController = function(sb, input){
 	
 	function _userRegistrationSuccess(response){
 		if(response.authorizationSuccess == "SUCCESS"){
-			sb.dom.find('#loginDiv').find('#message').html('Registration was successful');
+			sb.dom.find('#registrationDiv').find('#message').html('Registration was successful');
 			sb.utilities.setUserInfo(response.userName, response.authorization, "api", response.userDetails);
 			sb.dom.find("#guestWelcome").hide();
 			sb.dom.find("#loginRegisterButton").hide();
@@ -226,7 +228,107 @@ var userLoginController = function(sb, input){
 	function _registerClick(e){	
 		e.preventDefault();	
 		sb.dom.find("ul.tabs").tabs("select_tab", "registrationDiv");
-	}	
+	}
+	
+	function _socialRegistrationSuccess(response){
+		if(response.authorizationSuccess == "SUCCESS"){
+			sb.dom.find('#socialDiv').find('#message').html('Registration was successful');
+			sb.utilities.setUserInfo(response.userName, response.authorization, "social", response.userDetails);
+			sb.dom.find("#guestWelcome").hide();
+			sb.dom.find("#loginRegisterButton").hide();
+			Core.publish('userLoginEvent', null);
+			sb.dom.find("#socialDiv").find("#socialDivTNC").slideUp();
+			var userPanelPromptHtml =  tmpl("template-user-logo-prompt", response);
+			sb.dom.find("#socialDiv").prepend(userPanelPromptHtml);			
+		}else{
+			if(response.errorInfoList && response.errorInfoList.length == 1 && response.errorInfoList[0].code == 'UserAlreadyMember'){
+				sb.dom.find('#loginDiv').find('#message').html('Welcome back, ' + response.errorInfoList[0].reason.split(":")[1] +'!, please login.');
+				sb.dom.find('#loginDiv').find('#username').val(response.errorInfoList[0].reason.split(":")[0]);
+				sb.dom.find("ul.tabs").tabs("select_tab", "loginDiv");
+			}else{
+				var responseHtml = "<h3>Login was not successful. Retry Later.</h3>"
+				if(response.errorInfoList && response.errorInfoList.length > 0){
+					for(var i=0; i<response.errorInfoList.length; i++){
+						responseHtml = responseHtml+"<p>"+response.errorInfoList[i].reason+"</p>"
+					}
+				}
+				sb.dom.find("#socialDiv").find("#message").html(responseHtml);
+			}
+		}
+	}
+
+
+	function _socialLoginStart(e){
+      e.preventDefault();
+	  lock.show({icon: input.palpostrHost+'images/logo/logo.png'});
+      lock.show(function(err, profile, token) {
+        if (err) {
+          // Error callback
+          console.log("There was an error");
+          alert("There was an error logging in");
+        } else {
+			try{
+          // Save the profile
+		  	sb.dom.find('#socialDiv').find('#message').html("<i class='fa fa-cog fa-spin bf cd'></i>");
+			sb.dom.find('#socialDiv').find('#socialDivTNC').hide();
+		  	var registrationInfo = {
+				jwToken: token,
+				communityName: input.pageHandle,
+				acceptTermsAndConditions: true
+			};
+			  sb.utilities.postPublic(relPathIn+'apipublic/socialRegistration?mediaType=json',registrationInfo,_socialRegistrationSuccess, _errorLogin);
+			}catch(e){
+				alert(e);	
+			}
+			
+        }
+      });
+	  
+	}
+
+	function alertDismissed(){
+		;
+	}
+	function _logOffFailure(request, errorMessage, errorObj){
+		navigator.notification.alert('There was a problem. Please try agin later. ' + JSON.stringify(request), alertDismissed, input.appname, 'Ok, Thanks');		
+			if(navigator.app){
+				sb.utilities.setUserInfo('guest', null, null, null);
+				navigator.app.exitApp();
+			}else if(navigator.device){
+				sb.utilities.setUserInfo('guest', null, null, null);
+				navigator.device.exitApp();
+			}else{
+				navigator.notification.alert('Your Operating System does not support this feature. Please close the App by pressing the home button on your Device', alertDismissed, input.appname, 'Ok, Thanks');		
+			}		
+	}
+	function _logOffSuccess(response){
+		if(response.antahRequestStatus == 'SUCCESS'){
+			if(navigator.app){
+				sb.utilities.setUserInfo('guest', null, null, null);
+				navigator.app.exitApp();
+			}else if(navigator.device){
+				sb.utilities.setUserInfo('guest', null, null, null);
+				navigator.device.exitApp();
+			}else{
+				navigator.notification.alert('Your Operating System does not support this feature. Please close the App by pressing the home button on your Device', alertDismissed, input.appname, 'Ok, Thanks');		
+			}
+		}else{
+				navigator.notification.alert('There was a problem. Please try agin later. ' + response.antahResponseMessage, alertDismissed, input.appname, 'Ok, Thanks');	
+		}
+	}
+	function _logOffuser(){
+		sb.utilities.postV2('logoff?mediaType=json', null, _logOffSuccess, _logOffFailure);
+	}
+	function _exitAppConfirmLogoff(button){
+		if(button == 2){
+			_logOffuser();
+		}
+	}
+	
+
+   function _profileLogoff(data){
+		navigator.notification.confirm('Close the App?', _exitAppConfirmLogoff, input.appname, 'Keep Browsing, Close');   
+	}
    return{
 	   init:function() {
        	try{
@@ -236,8 +338,10 @@ var userLoginController = function(sb, input){
 			sb.dom.find("#registrationDiv").find('.invalidInfo').keyup(_registrationInputChange);
 			sb.dom.find("#registerUser").click(_registrationSubmit);
 			sb.dom.find("#alreadyHaveAccount").click(_alreadyHaveAccount);
-			sb.dom.find("#register").click(_registerClick);			
+			sb.dom.find("#register").click(_registerClick);		
+			sb.dom.find("#socialLoginStart").click(_socialLoginStart);
 			Core.subscribe('initializeUserRegistration', _registerButtonClick);
+			Core.subscribe('profileLogoff', _profileLogoff);
 			setTimeout(_initializeLoginSlidesV2, 500);
        	}catch(err){
        		sb.utilities.log("Error while initializing userLogoModule: " + err);

@@ -1,5 +1,5 @@
 var pageViewController = function(sb, input){
-	var thisIsMobileDevice = true, storyEditorInitialized=false, albumContainerJS=null, storyEditHappening = false, documentEditHappening = false, placeHolderContainer=sb.dom.find("#jstemplate-pageViewController-placeHolderContainer").html(), relPathIn = input.relPath, appname=input.appname, streamSize = input.streamSize, newStream = null, storyItemControllerPublish = true;
+	var thisIsMobileDevice = true, storyEditorInitialized=false, albumContainerJS=null, storyEditHappening = false, documentEditHappening = false, placeHolderContainer=sb.dom.find("#jstemplate-pageViewController-placeHolderContainer").html(), relPathIn = input.relPath, appname=input.appname, streamSize = input.streamSize, newStream = null, storyItemControllerPublish = true, logoutAttempt=0, appOnPause = false;
 	
 	function _enableBigScreenFeatures(){
 		sb.dom.find(".bigScreenItem").show();
@@ -102,11 +102,13 @@ var pageViewController = function(sb, input){
 					sb.dom.find("#newMessageButton").fadeIn();
 					sb.dom.find("#submitButtonForm").removeClass('nd');
 					sb.dom.find("#attachPictures").removeClass('nd');
-					sb.dom.find("#removePictures").removeClass('nd');	
-					sb.dom.find("#loginRegisterButton").fadeOut();   
-					sb.dom.find("#guestWelcome").fadeOut();  					
+					sb.dom.find("#removePictures").removeClass('nd'); 					
 				}else{
 					sb.dom.find("#createStoryDocument").html("Currently no sections accept user posts.");				
+				}
+				if(sb.utilities.isUserLoggedIn()){
+					sb.dom.find("#loginRegisterButton").fadeOut();   
+					sb.dom.find("#guestWelcome").fadeOut(); 					
 				}
 		   }else{
 				sb.dom.find("#loginRegisterButton").fadeIn();   
@@ -118,6 +120,7 @@ var pageViewController = function(sb, input){
 	}
 	
 	function _setAnchorClickEvent(){
+		
 		sb.dom.find(this).tap(_anchorClickEvent);		
 	}
 	    
@@ -131,7 +134,7 @@ var pageViewController = function(sb, input){
 	        });
 	    }
 		
-		function _containerBackButtonClicked(e){		   
+		function _containerBackButtonClicked(e){
 		   closeOverlay();		
 		   sb.dom.find(this).parents('.subContainer').slideUp();
 		   sb.dom.find(this).parents('.subContainer').remove();
@@ -349,17 +352,20 @@ var pageViewController = function(sb, input){
 	}
 	function _loadAppPage(appPage){
 		   if(appPage != null){	
- 			    sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").html(appPage);
+			   
+   			   try{
+ 			    sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").html(appPage + "Device ID " + device.uuid);
 				var token = sb.dom.find("meta[name='_csrf']").attr("content");
 				var header = sb.dom.find("meta[name='_csrf_header']").attr("content");
 			
 				var tokenHtml =  '<meta name="_csrf" content="'+token+'"/>';
 				var headerHtml =  '<meta name="_csrf_header" content="'+header+'"/>';
-				
+
+				sb.dom.find('#message1').html("Received App Page " + token);
 				sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").find('script').each(_loadAppTemplates);
 				sb.dom.find('head').prepend(tokenHtml);
 				sb.dom.find('head').prepend(headerHtml);
-			   try{
+
 					if(sb.utilities.isUserLoggedIn()){
 						_triggerMainPageRequest();
 						appendFooterMessage("User Info Not Null");						
@@ -389,12 +395,21 @@ var pageViewController = function(sb, input){
 		}
 	}
 		
-	function _reloadAppPage(request, errorMessage, errorObj){
-		document.getElementById("message1").innerHTML = "Requesting new CSRF Token";
-		sb.dom.find('meta[name=_csrf]').remove();
-		sb.dom.find('meta[name=_csrf_header]').remove();		
-		var appPageUrl = relPathIn + "appPage/"+appname+"/"+input.appmaintitle+"/"+input.appextendedtitle+"?mediaType=text";
-		sb.utilities.appGet(appPageUrl,_loadAppPage,_errorStartController);
+	function _reloadAppPage(request, errorObj, errorMessage){
+		if(request.status == '401'){
+			alert("Your Login has expired.");
+			document.getElementById("message1").innerHTML = "Your Login has expired.";
+			sb.utilities.setUserInfo('guest', null, null, null);
+		}
+		try{
+			document.getElementById("message1").innerHTML = "Requesting new CSRF Token " + JSON.stringify(request);
+			sb.dom.find('meta[name=_csrf]').remove();
+			sb.dom.find('meta[name=_csrf_header]').remove();		
+			var appPageUrl = relPathIn + "appPage/"+appname+"/"+input.appmaintitle+"/"+input.appextendedtitle+"?mediaType=text";
+			sb.utilities.appGet(appPageUrl,_loadAppPage,_errorStartController);
+		}catch(e){
+				alert(e);	
+		}
 	}
 	function _startControllerV2(){
 		try{			
@@ -504,10 +519,16 @@ var pageViewController = function(sb, input){
 			}
 	}
 	function _streamUpdateReceived(message){
+		if(!appOnPause){
 		 if(sb.dom.find('#refreshPanel').is(":disabled")){				
 			 sb.dom.find('#refreshPanel').prop('disabled', false);
 			 sb.dom.find('#refreshPanel').show();
 		  }
+		}else{
+			var snippetUrl = relPathIn+"appView?mediaType=json";
+			var data = {appname: appname, streamSize: streamSize};
+			sb.utilities.postV2(snippetUrl, data, _processNewStream, _errorProcessNewStream);			
+		}
 	}
 	
 	function disconnectAlertDismissed(){
@@ -515,20 +536,22 @@ var pageViewController = function(sb, input){
 	}
 	
 	function _stompClientDisconnectMessageReceived(message){
-		navigator.notification.alert('We are currently upgrading the ' + message.pageHandle + ' server. Your App may be slow or unresponsive. Please Restart the App in a few minutes to restore full set of features. See you soon!', disconnectAlertDismissed, message.pageHandle, 'Ok, Thanks');
+		//navigator.notification.alert('We are currently upgrading the ' + message.pageHandle + ' server. Your App may be slow or unresponsive. Please Restart the App in a few minutes to restore full set of features. See you soon!', disconnectAlertDismissed, message.pageHandle, 'Ok, Thanks');
 	}
 	
 	function exitAppConfirm(button){
 		if(button == 2){
-			if(navigator.app){				
+			if(navigator.app){
+				sb.utilities.setUserInfo(sb.utilities.getUserInfo().username, sb.utilities.getUserInfo().authorization, sb.utilities.getUserInfo().authorizationType, sb.utilities.getUserInfo().userDetails);	
 				navigator.app.exitApp();
 			}else if(navigator.device){
+				sb.utilities.setUserInfo(sb.utilities.getUserInfo().username, sb.utilities.getUserInfo().authorization, sb.utilities.getUserInfo().authorizationType, sb.utilities.getUserInfo().userDetails);	
 				navigator.device.exitApp();
 			}else{
 				navigator.notification.alert('Your Operating System does not support this feature. Please close the App by pressing the home button on your Device', disconnectAlertDismissed, input.appname, 'Ok, Thanks');		
 			}
 		}else{
-			;	
+			logoutAttempt = logoutAttempt + 1;	
 		}
 	}
 	
@@ -560,9 +583,7 @@ var pageViewController = function(sb, input){
 		}
 
 		if(exitApp){
-			try{
-			sb.utilities.setUserInfo(sb.utilities.getUserInfo().username, sb.utilities.getUserInfo().authorization, sb.utilities.getUserInfo().authorizationType, sb.utilities.getUserInfo().userDetails);
-			//sb.utilities.setUserInfo('guest', null, null, null);
+			try{					
 			navigator.notification.confirm('Close the App?', exitAppConfirm, input.appname, 'Keep Browsing, Close');
 			}catch(err){
 				alert(err);	
@@ -573,10 +594,13 @@ var pageViewController = function(sb, input){
 
 	function onPause(e){
 		sb.utilities.setUserInfo(sb.utilities.getUserInfo().username, sb.utilities.getUserInfo().authorization, sb.utilities.getUserInfo().authorizationType, sb.utilities.getUserInfo().userDetails);	
+		appOnPause = true;
+		
 	}
 	
 	function onResume(e) {
 		e.preventDefault();
+		appOnPause = false;
 	}
 
 	function _userLoginEventReceived(message){

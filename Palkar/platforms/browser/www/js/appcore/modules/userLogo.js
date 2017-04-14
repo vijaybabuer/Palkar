@@ -1,7 +1,8 @@
 var userLogo = function(sb, input){
-	var htmlBody = sb.dom.find(input.elemHandle), relPathIn=input.relPath, profilepictureid=input.profilepictureid, userToolTipCard = null,
-	    userLogoHtml = null, changePictureLinkNode=null, profilepicalbumid=input.profilepicalbumid,timeout=null, tStamp=1, profpicurl=null,
-		userLogoNode=null, userLogoPanelHtml=null, userLogoPanelNode=null, userLogoNodePos=null, userLogoNameNode=null;
+	var htmlBody = sb.dom.find(input.elemHandle), relPathIn=input.relPath, userToolTipCard = null,
+	    userLogoHtml = null, changePictureLinkNode=null, timeout=null, tStamp=1, profpicurl=null, profilepicalbumid = null,
+		userLogoNode=null, userLogoPanelHtml=null, userLogoPanelNode=null, userLogoNodePos=null, userLogoNameNode=null, tempUserDetail = null, tempLocation = null,
+		stopPushNotificationButtonHtml = sb.dom.find('#jstemplate-stopPusbNotificationButtonHtml').html(), activatePushNotificationButtonHtml = sb.dom.find('#jstemplate-activatePushNotificationButtonHtml').html();
  
 
    function _userLogoClick(){
@@ -27,30 +28,53 @@ var userLogo = function(sb, input){
 	   
    }
    
+    function _refreshProfilePicture(message){
+		try{
+				tStamp = tStamp + 1;
+				profpicurl = relPathIn+'api/profpic/'+tStamp+'?a='+sb.utilities.getUserInfo().authorization;
+			   var newProfPicture = sb.dom.wrap('<img>');
+			   newProfPicture.attr({'src': profpicurl});
+			   sb.dom.find(userToolTipCard).find('.card-image').find('img').remove();
+			   sb.dom.find(userToolTipCard).find('.card-image').prepend(newProfPicture);
+		}catch(e){
+					alert(e);   
+		}		
+	}
+    function _removeProfilePicture(message){
+		try{	
+		   sb.dom.find(userToolTipCard).find('.card-image').find('img').remove();	   
+		}catch(e){
+					alert(e);   
+		}		
+	}	
    function _receiveAlbumUpdatePublish(publishData){
-	   console.log('prof pic album update received..');
+	try{
 	   if(publishData.documenttype == "PROFPICS"){
 		   if(publishData.actioncode == "ADD"){
+			   profilepicalbumid = publishData.documentid;
 			   console.log('add prof pic album update received..'+"album-"+publishData.documentid+"-"+publishData.documenttype);
-			   var profpicContainer = sb.dom.find(".profpicturecapturediv");
+			   var profpicContainer = sb.dom.find(".profpicturecapturediv");			   
 			   profpicContainer.attr("id", "album-"+publishData.documentid+"-"+publishData.documenttype);	
-			   profpicContainer.fadeIn();
+			   profpicContainer.fadeIn();			   
 		   }else{
-			   var profpicContainer = sb.dom.find(".profpicturecapturediv");
-			   profpicContainer.fadeOut();
+			   try{
 				tStamp = tStamp + 1;
-				profpicurl = relPathIn+'profpic/'+tStamp;
-				
-				userLogoNode.find('#user-button').css("background-image", "url("+profpicurl+")");
-				console.log("userPicPopUp " + sb.dom.find("#userPicPopUp").length);
-				userToolTipCard.find("#userPicPopUp").css("background-image", "url("+profpicurl+")");
-				Core.publish("getNewStories", null);			   
+				profpicurl = relPathIn+'api/profpic/'+tStamp+'?a='+sb.utilities.getUserInfo().authorization;
+			   var newProfPicture = sb.dom.wrap('<img>');
+			   newProfPicture.attr({'src': profpicurl, 'height' : '300px'});
+			   sb.dom.find(userToolTipCard).find('.card-image').find('img').remove();
+			   sb.dom.find(userToolTipCard).find('.card-image').prepend(newProfPicture);
+			   }catch(e){
+					alert(e);   
+				}
 		   }
 	   }
+	}catch(e){
+		alert(e);	
+	}
    }
    
    function _changeProfilePicture(){
-	   console.log("profilepicalbumid : " + profilepicalbumid);
 	   if(profilepicalbumid && profilepicalbumid > 0){
 	   Core.publish('addPictureFromWebCam',{documentid: profilepicalbumid, documenttype: "PROFPICS"});
 	   }else{
@@ -65,37 +89,36 @@ var userLogo = function(sb, input){
    function _clearTimeoutOnPanel(){
 	   clearTimeout(timeout);
    }
-
-   function _refreshProfilePicture(data){
-	   userLogoNode.find('#user-button').css("background-image", "url("+data+")");
-   }
    
+   function _changeProfilePictureFromGallery(e){
+	   if(profilepicalbumid && profilepicalbumid > 0){
+	   Core.publish('addProfPictureFromDevice',{documentid: profilepicalbumid, documenttype: "PROFPICS"});
+	   }else{
+	   Core.publish("addAlbum",{documenttype: "PROFPICS", documentname: ''});
+	   }
+	}
+   function _changeProfilePictureFromCamera(e){
+	   if(profilepicalbumid && profilepicalbumid > 0){
+	   Core.publish('addProfPictureFromWebCam',{documentid: profilepicalbumid, documenttype: "PROFPICS"});
+	   }else{
+	   Core.publish("addAlbum",{documenttype: "PROFPICS", documentname: ''});
+	   }	   
+	}	
    function _setUserToolTip(){
 	   console.log('user tool tip setting');
-	   try{
-		   var userJsonObject = {
-				   "username": "",
-				   "userFullName": "",
-				   "userHasProfPic": ""
-		   };
-
-		   var userToolTipCardHtml = tmpl('template-userPanel', userJsonObject);
-
-		   userToolTipCard = sb.dom.wrap(userToolTipCardHtml);
-		   userToolTipCard.find("#changePictureLink").on('click', _changeProfilePicture);
-
-		   userLogoNode.find('#user-button').data('powertipjq', userToolTipCard);
-		   userLogoNode.find('#user-button').powerTip({
-			  placement: 'sw',
-			  mouseOnToPopup: true,
-			  smartPlacement: true
-		   });
-		   
-		   userToolTipCard.find(".ui-btn").bind("mouseover", _uiButtonMouseOver);
-		   userToolTipCard.find(".ui-btn").bind("mouseout", _uiButtonMouseOut);
-		   userToolTipCard.find("#userDetailsText").change(_userDetailsChanged);
-		   userToolTipCard.find("#userLocationText").change(_userLocationChanged);		   
-		   
+	   try{		   
+		   sb.dom.find(userToolTipCard).find("#updateDetailsText").click(_userDetailsChanged);
+		   sb.dom.find(userToolTipCard).find("#updateLocation").click(_userLocationChanged);
+		   sb.dom.find(userToolTipCard).find("#changeProfilePicture").click(_changeProfilePicture);		   
+		   sb.dom.find(userToolTipCard).find("#changeProfilePictureFromGallery").click(_changeProfilePictureFromGallery);
+		   sb.dom.find(userToolTipCard).find("#changeProfilePictureFromCamera").click(_changeProfilePictureFromCamera);	
+		   if(profilepicalbumid && profilepicalbumid > 0){
+			    sb.dom.find(userToolTipCard).find("#changeProfilePicture").hide();
+				Core.publish('albumUpdate', {documentid: profilepicalbumid, documenttype: 'PROFPICS', actioncode: 'UPDATE'});
+		   }else{
+			   sb.dom.find(userToolTipCard).find("#changeProfilePictureFromGallery").hide();
+			   sb.dom.find(userToolTipCard).find("#changeProfilePictureFromCamera").hide();
+			}
 	   }catch(err){
 		   console.log('error while setting user tool tip'+err);
 	   }
@@ -104,64 +127,145 @@ var userLogo = function(sb, input){
    }
    
    function _userDetailsUpdateSuccess(data){
-	   Core.publish('getNewStories', null);
+	   Materialize.toast('Saved!', 2000);
+	   sb.utilities.getUserInfo().userDetails.userAccount.detailsText = tempUserDetail;
+	   sb.utilities.getUserInfo().userDetails.userDetailsText = tempUserDetail;	
    }
    
    function _userLocationUpdateSuccess(data){
-	   Core.publish('getNewStories', null);
+	   Materialize.toast('Saved!', 2000);
+	   sb.utilities.getUserInfo().userDetails.userAccount.location = tempLocation;
    }
    
    function _userDetailsChanged(e){
-	   var userDetailsText = sb.dom.find(this).val();
-	   sb.utilities.postV2(relPathIn+"userdetailsText?mediaType=json",{detailsText: userDetailsText},_userDetailsUpdateSuccess);
+	   tempUserDetail = sb.dom.find(this).parent().find('textarea').val();
+	   sb.utilities.postV2("userdetailsText?mediaType=json",{detailsText: tempUserDetail},_userDetailsUpdateSuccess);
    }
    
    function _userLocationChanged(e){
-	   var userLocationText = sb.dom.find(this).val();
-	   sb.utilities.postV2(relPathIn+"userlocation?mediaType=json",{location: userLocationText},_userLocationUpdateSuccess);
+	   tempLocation = sb.dom.find(this).parent().find('textarea').val();
+	   sb.utilities.postV2("userlocation?mediaType=json",{location: tempLocation},_userLocationUpdateSuccess);
    }
    
    
-   function _uiButtonMouseOver(e){
-	   if(!sb.dom.find(this).hasClass('noeffect')){
-		   sb.dom.find(this).toggleClass("ui-btn-b");
-		   sb.dom.find(this).find(".label").toggleClass("cw");
-	   }
-   }
+   function _setupProfile(message){
+				var userPreferencesCard = tmpl('template-user-panel-edit', sb.utilities.getUserInfo());
+				sb.dom.find('#profileContainer').html(userPreferencesCard);
+				sb.dom.find('#profileContainerTab').prop('disabled', false);
+				Core.subscribe('albumUpdate', _receiveAlbumUpdatePublish);
+				userToolTipCard = sb.dom.find('#profileContainer').find('#userProfileCard');
+				profilepicalbumid = sb.utilities.getUserInfo().userDetails.profilePictureAlbumId;					
+				_setUserToolTip();
+	}
+   function _userLoginEvent(message){				
+		_setupProfile(message);		
+	}
    
-   function _uiButtonMouseOut(e){
-	   if(!sb.dom.find(this).hasClass('noeffect')){
-		   sb.dom.find(this).toggleClass("ui-btn-b");
-		   sb.dom.find(this).find(".label").toggleClass("cw");
-	   }
-   }
-   
-   
-   
+   function _startUserLogoController(message){				
+		_setupProfile(message);		
+	}
+	
+	function _profilePreferencesClick(message){
+		sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'profileContainer');
+	}
+	
+	function _registerPushNotification(message){
+		var registerPushRequest = {
+				userName : sb.utilities.getUserInfo().userDetails.userAccount.userName,
+				deviceUUID : device.uuid,
+				deviceId: 'test_device_id', 
+				deviceOs: device.platform,
+				deviceOsVersion: device.version,
+				activateStreaming: true,
+				stopStreaming: false,
+				communityName: input.appname
+			};
+		sb.utilities.postV2('updatePushNotification?mediaType=json', registerPushRequest, _registerPushNotificationResponse, _notificationResponseError);
+	}
+	
+	function _stopPushNotification(message){
+		var stopPushRequest = {
+				userName : sb.utilities.getUserInfo().userDetails.userAccount.userName,
+				deviceUUID : device.uuid,
+				deviceId: 'test_device_id', 
+				deviceOs: device.platform,
+				deviceOsVersion: device.version,
+				activateStreaming: false,
+				stopStreaming: true,
+				communityName: input.appname
+			};
+		sb.utilities.postV2('updatePushNotification?mediaType=json', stopPushRequest, _stopPushNotificationResponse, _notificationResponseError);			
+	}
+	
+	function _activatePushNotification(message){
+		var activatePushRequest = {
+				userName : sb.utilities.getUserInfo().userDetails.userAccount.userName,
+				deviceUUID : device.uuid,		
+				deviceId: 'test_device_id', 
+				deviceOs: device.platform,
+				deviceOsVersion: device.version,
+				activateStreaming: true,
+				stopStreaming: false,
+				deviceId: 'test_device_id', 
+				communityName: input.appname
+		};
+		sb.utilities.postV2('updatePushNotification?mediaType=json', activatePushRequest, _activatePushNotificationResponse, _notificationResponseError);		
+	}	
+	
+	function _registerPushNotificationResponse(response){
+		if(response.txnStatus == 'SUCCESS'){
+			sb.dom.find('#profileContainer').find('#registerPushNotification').hide();
+			sb.dom.find('#profileContainer').find('#profileOptions').prepend(sb.dom.wrap(stopPushNotificationButtonHtml));		
+			sb.utilities.getUserInfo().userDetails.userAccount.deviceId = response.deviceId;
+			sb.utilities.getUserInfo().userDetails.userAccount.streamingActive = true;
+		}else{
+			navigator.notification.alert('There was a problem while setting up your push notification.' + response.txtStatusReason, dismissAlert, input.appname, 'Ok, Thanks');					
+		}
+	}
+	
+	function dismissAlert(){
+		;	
+	}
+	function _stopPushNotificationResponse(response){
+		if(response.txnStatus == 'SUCCESS'){
+			sb.dom.find('#profileContainer').find('#stopPushNotification').hide();
+			sb.dom.find('#profileContainer').find('#profileOptions').prepend(sb.dom.wrap(activatePushNotificationButtonHtml));	
+			sb.utilities.getUserInfo().userDetails.userAccount.deviceId = response.deviceId;
+			sb.utilities.getUserInfo().userDetails.userAccount.streamingActive = false;			
+		}else{
+			navigator.notification.alert('There was a problem while setting up your push notification.' + response.txtStatusReason, dismissAlert, input.appname, 'Ok, Thanks');			
+		}		
+	}
+	
+	function _activatePushNotificationResponse(response){
+		if(response.txnStatus == 'SUCCESS'){
+			sb.dom.find('#profileContainer').find('#activatePushNotification').hide();
+			sb.dom.find('#profileContainer').find('#profileOptions').prepend(sb.dom.wrap(stopPushNotificationButtonHtml));		
+			sb.utilities.getUserInfo().userDetails.userAccount.deviceId = response.deviceId;
+			sb.utilities.getUserInfo().userDetails.userAccount.streamingActive = true;			
+		}else{
+			navigator.notification.alert('There was a problem while setting up your push notification.' + response.txtStatusReason, dismissAlert, input.appname, 'Ok, Thanks');			
+		}			
+	}
+
+	function _notificationResponseError(response, errorMessage, errorObj){
+		alert(JSON.stringify(response) + " " + JSON.stringify(errorMessage) + " " + JSON.stringify(errorObj));
+	}
+	
    return{
 	   init:function() {
        	try{
-       			userLogoHtml=sb.dom.find('#template-user-logo').html();	
-       			htmlBody.find("#tempUserLogoPanel").remove();
-				htmlBody.append(userLogoHtml);
-				userLogoNode=sb.dom.find('#user-logo');
-				console.log("Prof Pic Album : " + profilepicalbumid);
-				if(profilepictureid){
-					profpicurl = relPathIn+'profpic/'+tStamp;			
-				}else{
-					profpicurl = relPathIn+'images/User.gif';
-				}
+			Core.subscribe('userLoginEvent', _userLoginEvent);		
+			Core.subscribe('startUserLogo', _startUserLogoController);		
+			Core.subscribe('profilePreferencesClick', _profilePreferencesClick);		
+			Core.subscribe('refreshProfilePicture', _refreshProfilePicture);
+			Core.subscribe('removeProfilePicture', _removeProfilePicture);	
 
-				userLogoNode.find('#user-button').css("background-image", "url("+profpicurl+")");
-				userLogoNode.find('#user-button').css("background-repeat","no-repeat"); 
-				userLogoNode.find('#user-button').css("background-size","5em auto");
-				userLogoNode.find('#user-button').css("background-position","center center");	
-				
-				Core.subscribe('albumUpdate', _receiveAlbumUpdatePublish);
-				_setUserToolTip();
-
+			Core.subscribe('registerPushNotification', _registerPushNotification);	
+			Core.subscribe('stopPushNotification', _stopPushNotification);	
+			Core.subscribe('activatePushNotification', _activatePushNotification);				
        	}catch(err){
-       		sb.utilities.log("Error while initializing userLogoModule: " + err.stack);
+       		alert("Error while initializing userLogoModule: " + err);
        	}
    		
        },

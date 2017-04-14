@@ -43,17 +43,17 @@ var app = {
 	try{
 	Core.register('clickReactionsController',clickReactionsController,{relPath: "", reactionCountPerPage: "5"});
 	Core.register('textReactionsController',textReactionsController,{relPath: "", reactionCountPerPage: "5"});
-	Core.register('storyEditController',storyEditController,{elemHandle: '#createStory', relPath: "http://www.palpostr.com/", addPostTextAreaHandle: ".addPostTextArea", storiesDiv: "#storiesDiv", storyJSTemplateName: "template-storyTemplate"});		
+	Core.register('storyEditController',storyEditController,{elemHandle: '#createStory', relPath: "http://192.168.0.101:8080/palpostr/", addPostTextAreaHandle: ".addPostTextArea", storiesDiv: "#storiesDiv", storyJSTemplateName: "template-storyTemplate"});		
 	Core.register('storyItemController',storyItemController, {relPath: "", storyPage: false, authenticatedUser: "none", storyJSTemplateName: "template-storyTemplate", getMoreStories: true, storiesDivId: "#storiesDiv", appname: "Palkar", numberOfStoriesToGet: 5});
 	Core.register('pageViewController', pageViewController, {relPath: "", loadingText: "Welcome, <br> We are downloading your stream.", appname: "Palkar", appmaintitle: "Community Updates", appextendedtitle: "Share your local community stories and pictures with more than 1 Million Palkars worldwide", streamSize: 5});	
 	Core.register('sseController',sseController, {relPath: "", username: "guest", userAuthenticated: "false", pageHandle: "Palkar"});
-	Core.register('userLoginController',userLoginController, {relPath: "", pageHandle: "Palkar"});
+	Core.register('userLoginController',userLoginController, {relPath: "", pageHandle: "Palkar", palpostrHost: "http://192.168.0.101:8080/palpostr/"});
 	Core.register('messageDisplayController',messageDisplayController,{appname: 'Palkar'});
-	Core.register('photoUploadController',photoUploadController, {relPath: "", containerDiv: "#photoUploadContainerDiv"});
-	Core.register('albumsController',albumsController,{relPath: "http://www.palpostr.com/"});
-	Core.register('userLogo',userLogo,{elemHandle: '#user-logo', relPath: "http://www.palpostr.com/"});
+	Core.register('photoUploadController',photoUploadController, {relPath: "", containerDiv: "#photoUploadContainerDiv", palpostrHost: "http://192.168.0.101:8080/palpostr/"});
+	Core.register('albumsController',albumsController,{relPath: "http://192.168.0.101:8080/palpostr/"});
+	Core.register('userLogo',userLogo,{elemHandle: '#user-logo', relPath: "http://192.168.0.101:8080/palpostr/", appname: 'Palkar'});
 	
-	Core.loadUserData("http://www.palpostr.com/");
+	Core.loadUserData("http://192.168.0.101:8080/palpostr/");
 	Core.start('pageViewController');
 	Core.start('photoUploadController');
 	Core.start('clickReactionsController');

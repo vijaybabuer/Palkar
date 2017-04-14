@@ -38,13 +38,9 @@ Core = function(_$) {
 			},
 			disable: function(element){
 				element.attr('disabled','disabled');
-				element.removeClass('ab');
-				element.addClass('ba');
 			},
 			enable: function(element){
 				element.removeAttr('disabled');
-				element.removeClass('ba');
-				element.addClass('ab');
 			},
 			shake: function(){
 				return _$.effect('shake');
@@ -73,8 +69,12 @@ Core = function(_$) {
 				userData.authorizationType = authorizationType;
 				if(userDetails){
 					userData.userDetails = userDetails;	
-				}				
-				createUserData(username, authorization, authorizationType, userDetails);
+				}		
+				try{
+					createUserData(username, authorization, authorizationType, userDetails);
+				}catch(e){
+					alert('Problem create user data ' + e);	
+				}
 			},
 			deleteUserInfo: function(){
 				alert('not supported');
@@ -92,7 +92,11 @@ Core = function(_$) {
 				var header = $("meta[name='_csrf_header']").attr("content");
 				var url = baseHost;				
 				if(userData.authorizationType){
-					url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;
+					if(userData.authorizationType == 'social'){
+						url = url + userData.authorizationType + "/" + referenceUrl;
+					}else{
+						url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;	
+					}
 				}else{
 					url = url + referenceUrl;
 				}				
@@ -105,6 +109,9 @@ Core = function(_$) {
 					dataType: 'json',
 			        beforeSend: function(xhr) {
 			            xhr.setRequestHeader(header, token);
+						if(userData.authorizationType && userData.authorizationType == 'social'){
+							xhr.setRequestHeader('Authorization', 'Bearer ' + userData.authorization);	
+						}						
 			        }
 				});				
 			},
@@ -126,7 +133,11 @@ Core = function(_$) {
 				var header = $("meta[name='_csrf_header']").attr("content");
 				var url = baseHost;
 				if(userData.authorizationType){
-					url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;
+					if(userData.authorizationType == 'social'){
+						url = url + userData.authorizationType + "/" + referenceUrl;
+					}else{
+						url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;	
+					}
 				}else{
 					url = url + referenceUrl;
 				}
@@ -140,7 +151,10 @@ Core = function(_$) {
 					dataType: 'json',
 					encoding: 'UTF-8',
 			        beforeSend: function(xhr) {
-			            xhr.setRequestHeader(header, token);					
+			            xhr.setRequestHeader(header, token);
+						if(userData.authorizationType && userData.authorizationType == 'social'){
+							xhr.setRequestHeader('Authorization', 'Bearer ' + userData.authorization);	
+						}
 			        },
 					xhrFields: {
 						onprogress: function(e){
@@ -155,7 +169,7 @@ Core = function(_$) {
 							}						
 						}
 					}					
-				});				
+				});	
 			},	
 			postPublic: function(referenceUrl, data, successMethod, errorMethod){
 				if(!errorMethod){
@@ -183,7 +197,11 @@ Core = function(_$) {
 			appGet: function(referenceUrl, successMethod, failureMethod){
 				var url = baseHost;
 				if(userData.authorizationType){
-					url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;
+					if(userData.authorizationType == 'social'){
+						url = url + userData.authorizationType + "/" + referenceUrl;
+					}else{
+						url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;	
+					}
 				}else{
 					url = url + referenceUrl;
 				}				
@@ -191,7 +209,12 @@ Core = function(_$) {
 					url: url,
 					type: 'GET',
 					success: successMethod,
-					failure: failureMethod
+					failure: failureMethod,
+			        beforeSend: function(xhr) {
+						if(userData.authorizationType && userData.authorizationType == 'social'){
+							xhr.setRequestHeader('Authorization', 'Bearer ' + userData.authorization);	
+						}
+			        }					
 				});				
 			},
 			put: function(referenceUrl, data, successMethod){
@@ -199,7 +222,11 @@ Core = function(_$) {
 				var header = $("meta[name='_csrf_header']").attr("content");	
 				var url = baseHost;
 				if(userData.authorizationType){
-					url = url + userData.authorizationType + "/" + referenceUrl  + '&a=' + userData.authorization;
+					if(userData.authorizationType == 'social'){
+						url = url + userData.authorizationType + "/" + referenceUrl;
+					}else{
+						url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;	
+					}
 				}else{
 					url = url + referenceUrl;
 				}				
@@ -211,24 +238,45 @@ Core = function(_$) {
 					success: successMethod,
 			        beforeSend: function(xhr) {
 			            xhr.setRequestHeader(header, token);
+						if(userData.authorizationType && userData.authorizationType == 'social'){
+							xhr.setRequestHeader('Authorization', 'Bearer ' + userData.authorization);	
+						}						
 			        }
 				});
 			},
 			get: function(referenceUrl, data, successCallback){
 				var url = baseHost;
 				if(userData.authorizationType){
-					url = url + userData.authorizationType + "/" + referenceUrl  + '&a=' + userData.authorization;
+					if(userData.authorizationType == 'social'){
+						url = url + userData.authorizationType + "/" + referenceUrl;
+					}else{
+						url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;	
+					}
 				}else{
 					url = url + referenceUrl;
 				}
-				_$.get(url, data, successCallback);
+				_$.ajax({					
+					url: url,
+					type: 'GET',
+					data: data,
+					success: successCallback,
+			        beforeSend: function(xhr) {
+						if(userData.authorizationType && userData.authorizationType == 'social'){
+							xhr.setRequestHeader('Authorization', 'Bearer ' + userData.authorization);	
+						}						
+			        }
+				});				
 			},
 			serverDelete: function(referenceUrl, data, successMethod){
 				var token = $("meta[name='_csrf']").attr("content");
 				var header = $("meta[name='_csrf_header']").attr("content");
 				var url = baseHost;				
 				if(userData.authorizationType){
-					url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;
+					if(userData.authorizationType == 'social'){
+						url = url + userData.authorizationType + "/" + referenceUrl;
+					}else{
+						url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;	
+					}
 				}else{
 					url = url + referenceUrl;
 				}				
@@ -239,6 +287,9 @@ Core = function(_$) {
 					success: successMethod,
 			        beforeSend: function(xhr) {
 			            xhr.setRequestHeader(header, token);
+						if(userData.authorizationType && userData.authorizationType == 'social'){
+							xhr.setRequestHeader('Authorization', 'Bearer ' + userData.authorization);	
+						}						
 			        }
 				});
 			},
@@ -279,17 +330,29 @@ Core = function(_$) {
 	}
 	
 	function defaultErrorMethod(request, errorMessage, errorObj){
-		alert("There was a problem processing your request. You may be able to fix this by restarting your App. If the problem persists, please contact your Community Coordinator." + JSON.stringify(errorMessage) + " " + JSON.stringify(errorObj) );	
+		alert('Default error' + JSON.stringify(request));
+			if(navigator.app){
+				navigator.app.exitApp();
+			}else if(navigator.device){
+				navigator.device.exitApp();
+			}else{
+				navigator.notification.alert('There was a problem processing your request. You may be able to fix this by restarting your App. If the problem persists, please contact your Community Coordinator.', disconnectAlertDismissed, input.appname, 'Ok, Thanks');		
+			}		
+		//alert("There was a problem processing your request. You may be able to fix this by restarting your App. If the problem persists, please contact your Community Coordinator." + JSON.stringify(errorMessage) + " " + JSON.stringify(errorObj) );	
 	}
 	function _getDeviceAccountsError(error){
 		alert(error);	
 	}
 	function loadUserData(){
+		try{
 				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {				
 					fs.root.getFile("userInfo.txt", { create: false, exclusive: false }, function (fileEntry) {
 						readUserData(fileEntry);
 					}, function(error){createUserData('guest',null, null, null);});				
 				}, function(error){console.log('Problem Accessing File System');});		
+		}catch(e){
+			alert('Problem create user data ' + e);	
+		}
 	}
 	
 	function onErrorReadFile(){

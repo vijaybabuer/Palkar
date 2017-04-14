@@ -5,7 +5,7 @@
  }
 }
 @media (max-height: 2000px) {          
-  #containerDiv, #mainContainer, .subContainer{
+ #containerDiv, #mainContainer, .subContainer{
 	height: 2300px !important;
  }
 }
@@ -42,6 +42,7 @@
 }
 @media (max-height: 500px) {          
  #containerDiv, #mainContainer, .subContainer{
+ 
 	height: 800px !important;
  }
 }

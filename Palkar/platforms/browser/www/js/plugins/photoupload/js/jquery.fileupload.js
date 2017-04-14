@@ -154,8 +154,8 @@
             // object (for XHR file uploads), or a simple object.
             // The form of the first fileInput is given as parameter to the function:
             formData: function (form) {
-            	console.log('form data');
-            	console.log(form.serializeArray());
+            	alert('form data');
+            	alert(form.serializeArray());
                 return form.serializeArray();
             },
 
@@ -176,7 +176,7 @@
             // handlers using jQuery's Deferred callbacks:
             // data.submit().done(func).fail(func).always(func);
             add: function (e, data) {
-            	console.log("Event : " + e + "Data : " + data);
+            	alert("Event : " + e + "Data : " + data);
                 if (data.autoUpload || (data.autoUpload !== false &&
                         $(this).fileupload('option', 'autoUpload'))) {
                     data.process().done(function () {
@@ -282,7 +282,7 @@
         },
 
         _getFormData: function (options) {
-        	console.log("_getFormData  : " + options);
+        	alert("_getFormData  : " + options);
             var formData;
             if (typeof options.formData === 'function') {
                 return options.formData(options.form);
@@ -301,7 +301,7 @@
         },
 
         _getTotal: function (files) {
-        	console.log('gettotal');
+        	alert('gettotal');
             var total = 0;
             $.each(files, function (index, file) {
                 total += file.size || 1;
@@ -310,7 +310,7 @@
         },
 
         _initProgressObject: function (obj) {
-        	console.log('_initProgressObject ' + obj);
+        	alert('_initProgressObject ' + obj);
             var progress = {
                 loaded: 0,
                 total: 0,
@@ -324,7 +324,7 @@
         },
 
         _initResponseObject: function (obj) {
-        	console.log('_initResponseObject');
+        	alert('_initResponseObject');
             var prop;
             if (obj._response) {
                 for (prop in obj._response) {
@@ -338,9 +338,9 @@
         },
 
         _onProgress: function (e, data) {
-        	console.log('_onProgress' + e.lengthComputable);
+        	alert('_onProgress' + e.lengthComputable);
             if (e.lengthComputable) {
-            	console.log('length computable in progress..');
+            	alert('length computable in progress..');
                 var now = ((Date.now) ? Date.now() : (new Date()).getTime()),
                     loaded;
                 if (data._time && data.progressInterval &&
@@ -377,7 +377,7 @@
         },
 
         _initProgressListener: function (options) {
-        	console.log('_initProgressListener');
+        	alert('_initProgressListener');
             var that = this,
                 xhr = options.xhr ? options.xhr() : $.ajaxSettings.xhr();
             // Accesss to the native XHR object is required to add event listeners
@@ -622,7 +622,7 @@
                 return this._processQueue || getPromise(this);
             };
             data.submit = function () {
-            	console.log('data submit');
+            	alert('data submit');
                 if (this.state() !== 'pending') {
                     data.jqXHR = this.jqXHR =
                         (that._trigger('submit', e, this) !== false) &&
@@ -768,7 +768,7 @@
         },
 
         _beforeSend: function (e, data) {
-        	console.log('_before send');
+        	alert('_before send');
             if (this._active === 0) {
                 // the start callback is triggered when an upload starts
                 // and no other uploads are currently running,
@@ -795,7 +795,7 @@
         },
 
         _onDone: function (result, textStatus, jqXHR, options) {
-        	console.log('_onDone');
+        	alert('_onDone');
             var total = options._progress.total,
                 response = options._response;
             if (options._progress.loaded < total) {
@@ -814,7 +814,7 @@
         },
 
         _onFail: function (jqXHR, textStatus, errorThrown, options) {
-        	console.log('_onFail');
+        	alert('_onFail');
             var response = options._response;
             if (options.recalculateProgress) {
                 // Remove the failed (error or abort) file upload from
@@ -829,14 +829,14 @@
         },
 
         _onAlways: function (jqXHRorResult, textStatus, jqXHRorError, options) {
-        	console.log('_onAlways');
+        	alert('_onAlways');
             // jqXHRorResult, textStatus and jqXHRorError are added to the
             // options object via done and fail callbacks
             this._trigger('always', null, options);
         },
 
         _onSend: function (e, data) {
-        	console.log('_onSend');
+        	alert('_onSend');
             if (!data.submit) {
                 this._addConvenienceMethods(e, data);
             }
@@ -857,7 +857,7 @@
                     ).done(function (result, textStatus, jqXHR) {
                         that._onDone(result, textStatus, jqXHR, options);
                     }).fail(function (jqXHR, textStatus, errorThrown) {                    	
-                    	console.log(jqXHR, textStatus + errorThrown);
+                    	alert(jqXHR, textStatus + errorThrown);
                         that._onFail(jqXHR, textStatus, errorThrown, options);
                     }).always(function (jqXHRorResult, textStatus, jqXHRorError) {
                         that._onAlways(
@@ -920,7 +920,7 @@
         },
 
         _onAdd: function (e, data) {
-        	console.log('_onAdd');
+        	alert('_onAdd');
             var that = this,
                 result = true,
                 options = $.extend({}, this.options, data),
@@ -963,7 +963,7 @@
         },
 
         _replaceFileInput: function (input) {
-        	console.log('_replaceFileInput');
+        	alert('_replaceFileInput');
             var inputClone = input.clone(true);
             $('<form></form>').append(inputClone)[0].reset();
             // Detaching allows to insert the fileInput on another form
@@ -1072,7 +1072,7 @@
         },
 
         _getSingleFileInputFiles: function (fileInput) {
-        	console.log('_getSingleFileInputFiles');
+        	alert('_getSingleFileInputFiles');
             fileInput = $(fileInput);
             var entries = fileInput.prop('webkitEntries') ||
                     fileInput.prop('entries'),
@@ -1102,7 +1102,7 @@
         },
 
         _getFileInputFiles: function (fileInput) {
-        	console.log('_getFileInputFiles');
+        	alert('_getFileInputFiles');
             if (!(fileInput instanceof $) || fileInput.length === 1) {
                 return this._getSingleFileInputFiles(fileInput);
             }
@@ -1184,9 +1184,9 @@
         },
 
         _initEventHandlers: function () {
-        	console.log('_initEventHandlers');
+        	alert('_initEventHandlers');
             if (this._isXHRUpload(this.options)) {
-            	console.log('_isXHRUpload');
+            	alert('_isXHRUpload');
                 this._on(this.options.dropZone, {
                     dragover: this._onDragOver,
                     drop: this._onDrop
@@ -1196,7 +1196,7 @@
                 });
             }
             if ($.support.fileInput) {
-            	console.log('support input file');
+            	alert('support input file');
                 this._on(this.options.fileInput, {
                     change: this._onChange
                 });
@@ -1265,7 +1265,7 @@
         },
 
         _create: function () {
-        	console.log('_create');
+        	alert('_create');
             this._initDataAttributes();
             this._initSpecialOptions();
             this._slots = [];
@@ -1294,7 +1294,7 @@
         // must have a files property and can contain additional options:
         // .fileupload('add', {files: filesList});
         add: function (data) {
-        	console.log('Jquery Fileupload js add: ' + data.files);
+        	alert('Jquery Fileupload js add: ' + data.files);
             var that = this;
             if (!data || this.options.disabled) {
                 return;
@@ -1316,7 +1316,7 @@
         // .fileupload('send', {files: filesList});
         // The method returns a Promise object for the file upload call.
         send: function (data) {
-        	console.log('Jquery Fileupload js send: ' + data.files);
+        	alert('Jquery Fileupload js send: ' + data.files);
             if (data && !this.options.disabled) {
                 if (data.fileInput && !data.files) {
                     var that = this,

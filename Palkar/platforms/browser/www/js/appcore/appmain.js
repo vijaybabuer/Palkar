@@ -25,7 +25,10 @@ Sandbox = Class.extend({
 */
 Core = function(_$) {
 	var moduleData = {},
+		userData = {username: 'guest', authorization: null, authorizationType: null, userDetails: null},
 		cache = {}, 
+		deviceAccounts = null
+		baseHost = "",
 		_dom = {
 			find: function(selector) {
 				return _$(selector);
@@ -35,19 +38,47 @@ Core = function(_$) {
 			},
 			disable: function(element){
 				element.attr('disabled','disabled');
-				element.removeClass('ab');
-				element.addClass('ba');
 			},
 			enable: function(element){
 				element.removeAttr('disabled');
-				element.removeClass('ba');
-				element.addClass('ab');
 			},
 			shake: function(){
 				return _$.effect('shake');
 			}
 		},
 		_utilities = {
+			showDialog: _$.mobile.changePage,
+			isUserLoggedIn: function(){
+				if(userData){		
+					if(userData.username == 'guest' || userData.username == 'undefined' || userData.username == null){
+						userLoggedIn = false;
+					}else{
+						userLoggedIn = true;	
+					}
+				}else{
+					userLoggedIn = false;	
+				}	
+				return userLoggedIn;
+			},
+			getUserInfo: function(){
+				return userData;
+			},
+			setUserInfo: function(username, authorization, authorizationType, userDetails){
+				userData.username=username;
+				userData.authorization=authorization;
+				userData.authorizationType = authorizationType;
+				if(userDetails){
+					userData.userDetails = userDetails;	
+				}		
+				try{
+					createUserData(username, authorization, authorizationType, userDetails);
+				}catch(e){
+					alert('Problem create user data ' + e);	
+				}
+			},
+			deleteUserInfo: function(){
+				alert('not supported');
+			},			
 			merge: _$.extend,
 			map: _$.map,
 			data: _$.data,
@@ -56,9 +87,19 @@ Core = function(_$) {
 			each: _$.each,
 			trigger: _$.trigger,
 			post: _$.post,
-			postJSON: function(url, data, successMethod){
+			postJSON: function(referenceUrl, data, successMethod){
 				var token = $("meta[name='_csrf']").attr("content");
 				var header = $("meta[name='_csrf_header']").attr("content");
+				var url = baseHost;				
+				if(userData.authorizationType){
+					if(userData.authorizationType == 'social'){
+						url = url + userData.authorizationType + "/" + referenceUrl;
+					}else{
+						url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;	
+					}
+				}else{
+					url = url + referenceUrl;
+				}				
 				_$.ajax({
 					url: url,
 					type: 'POST',
@@ -68,6 +109,9 @@ Core = function(_$) {
 					dataType: 'json',
 			        beforeSend: function(xhr) {
 			            xhr.setRequestHeader(header, token);
+						if(userData.authorizationType && userData.authorizationType == 'social'){
+							xhr.setRequestHeader('Authorization', 'Bearer ' + userData.authorization);	
+						}						
 			        }
 				});				
 			},
@@ -81,9 +125,60 @@ Core = function(_$) {
 			userAgent: function(){
 				return navigator.userAgent; 
 			},
-			postV2: function(url, data, successMethod, errorMethod){
+			postV2: function(referenceUrl, data, successMethod, errorMethod){
+				if(!errorMethod){
+					errorMethod = defaultErrorMethod;	
+				}
 				var token = $("meta[name='_csrf']").attr("content");
 				var header = $("meta[name='_csrf_header']").attr("content");
+				var url = baseHost;
+				if(userData.authorizationType){
+					if(userData.authorizationType == 'social'){
+						url = url + userData.authorizationType + "/" + referenceUrl;
+					}else{
+						url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;	
+					}
+				}else{
+					url = url + referenceUrl;
+				}
+				_$.ajax({
+					url: url,
+					type: 'POST',
+					data: data,
+					contentType: 'application/x-www-form-urlencoded;charset=UTF-8',
+					success: successMethod,
+					error: errorMethod,
+					dataType: 'json',
+					encoding: 'UTF-8',
+			        beforeSend: function(xhr) {
+			            xhr.setRequestHeader(header, token);
+						if(userData.authorizationType && userData.authorizationType == 'social'){
+							xhr.setRequestHeader('Authorization', 'Bearer ' + userData.authorization);	
+						}
+			        },
+					xhrFields: {
+						onprogress: function(e){
+							if (e.lengthComputable && data.photoUploadNumber) {								
+								var progressDivId = '#album-'+data.albumId+'-'+data.albumtype+'-'+data.photoUploadNumber;
+								var percentage = (e.loaded / e.total) * 100;
+								var percentageText = percentage + '%';
+								_$(progressDivId).find('.determinate').css('width',  percentageText);
+								if(percentage > 99){
+									_$(progressDivId).remove();
+								}
+							}						
+						}
+					}					
+				});	
+			},	
+			postPublic: function(referenceUrl, data, successMethod, errorMethod){
+				if(!errorMethod){
+					errorMethod = defaultErrorMethod;	
+				}
+				var token = $("meta[name='_csrf']").attr("content");
+				var header = $("meta[name='_csrf_header']").attr("content");
+				var url = baseHost;
+					url = url + referenceUrl;
 				_$.ajax({
 					url: url,
 					type: 'POST',
@@ -97,19 +192,44 @@ Core = function(_$) {
 			            xhr.setRequestHeader(header, token);
 			        }
 				});				
-			},			
+			},				
 			ajax: _$.ajax,
-			appGet: function(url, successMethod, failureMethod){
+			appGet: function(referenceUrl, successMethod, failureMethod){
+				var url = baseHost;
+				if(userData.authorizationType){
+					if(userData.authorizationType == 'social'){
+						url = url + userData.authorizationType + "/" + referenceUrl;
+					}else{
+						url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;	
+					}
+				}else{
+					url = url + referenceUrl;
+				}				
 				_$.ajax({
 					url: url,
 					type: 'GET',
 					success: successMethod,
-					failure: failureMethod
+					failure: failureMethod,
+			        beforeSend: function(xhr) {
+						if(userData.authorizationType && userData.authorizationType == 'social'){
+							xhr.setRequestHeader('Authorization', 'Bearer ' + userData.authorization);	
+						}
+			        }					
 				});				
 			},
-			put: function(url, data, successMethod){
+			put: function(referenceUrl, data, successMethod){
 				var token = $("meta[name='_csrf']").attr("content");
-				var header = $("meta[name='_csrf_header']").attr("content");				
+				var header = $("meta[name='_csrf_header']").attr("content");	
+				var url = baseHost;
+				if(userData.authorizationType){
+					if(userData.authorizationType == 'social'){
+						url = url + userData.authorizationType + "/" + referenceUrl;
+					}else{
+						url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;	
+					}
+				}else{
+					url = url + referenceUrl;
+				}				
 				_$.ajax({					
 					url: url,
 					type: 'PUT',
@@ -118,13 +238,48 @@ Core = function(_$) {
 					success: successMethod,
 			        beforeSend: function(xhr) {
 			            xhr.setRequestHeader(header, token);
+						if(userData.authorizationType && userData.authorizationType == 'social'){
+							xhr.setRequestHeader('Authorization', 'Bearer ' + userData.authorization);	
+						}						
 			        }
 				});
 			},
-			get: _$.get,
-			serverDelete: function(url, data, successMethod){
+			get: function(referenceUrl, data, successCallback){
+				var url = baseHost;
+				if(userData.authorizationType){
+					if(userData.authorizationType == 'social'){
+						url = url + userData.authorizationType + "/" + referenceUrl;
+					}else{
+						url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;	
+					}
+				}else{
+					url = url + referenceUrl;
+				}
+				_$.ajax({					
+					url: url,
+					type: 'GET',
+					data: data,
+					success: successCallback,
+			        beforeSend: function(xhr) {
+						if(userData.authorizationType && userData.authorizationType == 'social'){
+							xhr.setRequestHeader('Authorization', 'Bearer ' + userData.authorization);	
+						}						
+			        }
+				});				
+			},
+			serverDelete: function(referenceUrl, data, successMethod){
 				var token = $("meta[name='_csrf']").attr("content");
 				var header = $("meta[name='_csrf_header']").attr("content");
+				var url = baseHost;				
+				if(userData.authorizationType){
+					if(userData.authorizationType == 'social'){
+						url = url + userData.authorizationType + "/" + referenceUrl;
+					}else{
+						url = url + userData.authorizationType + "/" + referenceUrl + '&a=' + userData.authorization;	
+					}
+				}else{
+					url = url + referenceUrl;
+				}				
 				_$.ajax({
 					url: url,
 					type: "DELETE",
@@ -132,6 +287,9 @@ Core = function(_$) {
 					success: successMethod,
 			        beforeSend: function(xhr) {
 			            xhr.setRequestHeader(header, token);
+						if(userData.authorizationType && userData.authorizationType == 'social'){
+							xhr.setRequestHeader('Authorization', 'Bearer ' + userData.authorization);	
+						}						
 			        }
 				});
 			},
@@ -164,6 +322,77 @@ Core = function(_$) {
 			parse: _$.parseJSON
 		};
 
+
+	function _showDeviceAccounts(accounts){
+		deviceAccounts = accounts;
+		alert('device accounts ' + accounts);
+		alert('device accounts ' + JSON.stringify(accounts));
+	}
+	
+	function defaultErrorMethod(request, errorMessage, errorObj){
+			if(navigator.app){
+				navigator.app.exitApp();
+			}else if(navigator.device){
+				navigator.device.exitApp();
+			}else{
+				navigator.notification.alert('There was a problem processing your request. You may be able to fix this by restarting your App. If the problem persists, please contact your Community Coordinator.', disconnectAlertDismissed, input.appname, 'Ok, Thanks');		
+			}		
+		//alert("There was a problem processing your request. You may be able to fix this by restarting your App. If the problem persists, please contact your Community Coordinator." + JSON.stringify(errorMessage) + " " + JSON.stringify(errorObj) );	
+	}
+	function _getDeviceAccountsError(error){
+		alert(error);	
+	}
+	function loadUserData(){
+		try{
+				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {				
+					fs.root.getFile("userInfo.txt", { create: false, exclusive: false }, function (fileEntry) {
+						readUserData(fileEntry);
+					}, function(error){createUserData('guest',null, null, null);});				
+				}, function(error){console.log('Problem Accessing File System');});		
+		}catch(e){
+			alert('Problem create user data ' + e);	
+		}
+	}
+	
+	function onErrorReadFile(){
+		alert('error on file read');	
+	}
+	function readUserData(fileEntry){
+		fileEntry.file(function (file) {
+			var reader = new FileReader();	
+			reader.onloadend = function() {
+				console.log("Successful file read: " + this.result);
+				var userDataText = this.result;
+				userData = JSON.parse(userDataText.toString());
+			};
+			reader.readAsText(file);
+		}, onErrorReadFile);			
+	}
+	function writeUserData(fileEntry, dataObj){
+    // Create a FileWriter object for our FileEntry (log.txt).
+		fileEntry.createWriter(function (fileWriter) {
+	
+			fileWriter.onwriteend = function() {
+				console.log('Success Write');
+			};
+	
+			fileWriter.onerror = function (e) {
+				console.log('Failure Write');
+			};
+	
+			fileWriter.write(dataObj);
+		});		
+	}
+	function createUserData(username, authorization, authorizationType, userDetails){
+		
+				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+					fs.root.getFile("userInfo.txt", { create: true, exclusive: false }, function (fileEntry) {					
+					var userDataTemp = {username: username, authorization: authorization, authorizationType: authorizationType, userDetails: userDetails};
+					writeUserData(fileEntry, userDataTemp);
+					}, function(error){alert(error);});
+				
+				}, function(error){alert(error);});			
+	}
 	return {
 		dom: _dom,
 		utilities: _utilities,
@@ -217,6 +446,10 @@ Core = function(_$) {
 			} catch (err) {
 				console.log(err);
 			}
+		},
+		loadUserData: function(initBaseHost){
+			baseHost = initBaseHost;
+			loadUserData();
 		},
 		subscribe: function(message, callback) {
 			if (!cache[message]) {

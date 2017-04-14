@@ -244,7 +244,7 @@ var invitationsController = function(sb, input){
 
    }
 	function _makeGoogleApiCall(){	
-		sb.utilities.get(contactApiUrl+"&access_token=" + googleAuthResult.access_token + "&max-results=700&v=3.0", _googleApiResponseReceived);
+		sb.utilities.get(contactApiUrl+"&access_token=" + googleAuthResult.access_token + "&max-results=700&v=3.0", null, _googleApiResponseReceived);
 	}
 	
 	function addContactToModel(entry, authResult){
