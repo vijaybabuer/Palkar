@@ -599,7 +599,7 @@ var pageViewController = function(sb, input){
 	}
 	
 	function onResume(e) {
-		e.preventDefault();
+		//e.preventDefault();
 		appOnPause = false;
 	}
 
