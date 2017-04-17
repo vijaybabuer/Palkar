@@ -148,6 +148,7 @@ var userLogo = function(sb, input){
    }
    
    function _pushNotificationRegistrationResponseReceived(registrationInfo){ 
+   		try{
 		if(registrationInfo.registrationId == sb.utilities.getUserInfo().userDetails.userAccount.deviceId){
 			console.log('User Already Registered.');	
 		}else{
@@ -162,6 +163,9 @@ var userLogo = function(sb, input){
 				communityName: input.appname
 			};
 			sb.utilities.postV2('updatePushNotification?mediaType=json', registerPushRequest, _registerPushNotificationResponse, _notificationResponseError);			
+		}
+		}catch(e){
+			alert('_pushNotificationRegistrationResponseReceived '	 + e);
 		}
    }
 	
@@ -199,8 +203,12 @@ var userLogo = function(sb, input){
 						},
 						windows: {}
 						});
+		try{
 		pushNotification.on('registration', _pushNotificationRegistrationResponseReceived);
 		pushNotification.on('notification', _pushNotificationMessageReceived);
+		}catch(e){
+			alert(' problem setting events : ' + e);	
+		}
    }
    function _setupProfile(message){
 				var userPreferencesCard = tmpl('template-user-panel-edit', sb.utilities.getUserInfo());
@@ -210,7 +218,11 @@ var userLogo = function(sb, input){
 				userToolTipCard = sb.dom.find('#profileContainer').find('#userProfileCard');
 				profilepicalbumid = sb.utilities.getUserInfo().userDetails.profilePictureAlbumId;					
 				_setUserToolTip();
+				try{
 				_setupPushNotifications();
+				}catch(e){
+					alert(' setup push notifications ' + e);	
+				}
 	}
    function _userLoginEvent(message){				
 		_setupProfile(message);		
