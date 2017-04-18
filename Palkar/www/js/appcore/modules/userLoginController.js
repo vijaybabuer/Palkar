@@ -310,7 +310,8 @@ var userLoginController = function(sb, input){
 				sb.utilities.setUserInfo('guest', null, null, null);
 				navigator.device.exitApp();
 			}else{
-				navigator.notification.alert('Your Operating System does not support this feature. Please close the App by pressing the home button on your Device', alertDismissed, input.appname, 'Ok, Thanks');		
+				sb.utilities.setUserInfo('guest', null, null, null);
+				navigator.notification.alert('Successfully logged off. Please close the App by pressing the home button on your Device', alertDismissed, input.appname, 'Ok, Thanks');		
 			}
 		}else{
 				navigator.notification.alert('There was a problem. Please try agin later. ' + response.antahResponseMessage, alertDismissed, input.appname, 'Ok, Thanks');	

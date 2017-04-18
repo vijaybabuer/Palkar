@@ -548,7 +548,8 @@ var pageViewController = function(sb, input){
 				sb.utilities.setUserInfo(sb.utilities.getUserInfo().username, sb.utilities.getUserInfo().authorization, sb.utilities.getUserInfo().authorizationType, sb.utilities.getUserInfo().userDetails);	
 				navigator.device.exitApp();
 			}else{
-				navigator.notification.alert('Your Operating System does not support this feature. Please close the App by pressing the home button on your Device', disconnectAlertDismissed, input.appname, 'Ok, Thanks');		
+				sb.utilities.setUserInfo(sb.utilities.getUserInfo().username, sb.utilities.getUserInfo().authorization, sb.utilities.getUserInfo().authorizationType, sb.utilities.getUserInfo().userDetails);	
+				navigator.notification.alert('Please close the App by pressing the home button on your Device', disconnectAlertDismissed, input.appname, 'Ok, Thanks');		
 			}
 		}else{
 			logoutAttempt = logoutAttempt + 1;	

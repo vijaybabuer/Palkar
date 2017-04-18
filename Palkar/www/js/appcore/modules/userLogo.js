@@ -149,9 +149,6 @@ var userLogo = function(sb, input){
    
    function _pushNotificationRegistrationResponseReceived(registrationInfo){ 
    		try{
-		if(registrationInfo.registrationId == sb.utilities.getUserInfo().userDetails.userAccount.deviceId){
-			console.log('User Already Registered.');	
-		}else{
 			var registerPushRequest = {
 				userName : sb.utilities.getUserInfo().userDetails.userAccount.userName,
 				deviceUUID : device.uuid,
@@ -162,8 +159,7 @@ var userLogo = function(sb, input){
 				stopStreaming: false,
 				communityName: input.appname
 			};
-			sb.utilities.postV2('updatePushNotification?mediaType=json', registerPushRequest, _registerPushNotificationResponse, _notificationResponseError);			
-		}
+			sb.utilities.postV2('updatePushNotification?mediaType=json', registerPushRequest, _registerPushNotificationResponse, _notificationResponseError);
 		}catch(e){
 			alert('_pushNotificationRegistrationResponseReceived '	 + e);
 		}
@@ -203,12 +199,8 @@ var userLogo = function(sb, input){
 						},
 						windows: {}
 						});
-		try{
 		pushNotification.on('registration', _pushNotificationRegistrationResponseReceived);
 		pushNotification.on('notification', _pushNotificationMessageReceived);
-		}catch(e){
-			alert(' problem setting events : ' + e);	
-		}
    }
    function _setupProfile(message){
 				var userPreferencesCard = tmpl('template-user-panel-edit', sb.utilities.getUserInfo());
@@ -218,10 +210,8 @@ var userLogo = function(sb, input){
 				userToolTipCard = sb.dom.find('#profileContainer').find('#userProfileCard');
 				profilepicalbumid = sb.utilities.getUserInfo().userDetails.profilePictureAlbumId;					
 				_setUserToolTip();
-				try{
-				_setupPushNotifications();
-				}catch(e){
-					alert(' setup push notifications ' + e);	
+				if(device.platform == 'Android' || device.platform == 'android'){
+					_setupPushNotifications();
 				}
 	}
    function _userLoginEvent(message){				
@@ -237,17 +227,7 @@ var userLogo = function(sb, input){
 	}
 	
 	function _registerPushNotification(message){
-		var registerPushRequest = {
-				userName : sb.utilities.getUserInfo().userDetails.userAccount.userName,
-				deviceUUID : device.uuid,
-				deviceId: 'test_device_id', 
-				deviceOs: device.platform,
-				deviceOsVersion: device.version,
-				activateStreaming: true,
-				stopStreaming: false,
-				communityName: input.appname
-			};
-		sb.utilities.postV2('updatePushNotification?mediaType=json', registerPushRequest, _registerPushNotificationResponse, _notificationResponseError);
+		_setupPushNotifications();
 	}
 	
 	function _stopPushNotification(message){
@@ -265,25 +245,26 @@ var userLogo = function(sb, input){
 	}
 	
 	function _activatePushNotification(message){
-		var activatePushRequest = {
-				userName : sb.utilities.getUserInfo().userDetails.userAccount.userName,
-				deviceUUID : device.uuid,		
-				deviceId: 'test_device_id', 
-				deviceOs: device.platform,
-				deviceOsVersion: device.version,
-				activateStreaming: true,
-				stopStreaming: false,
-				deviceId: 'test_device_id', 
-				communityName: input.appname
-		};
-		sb.utilities.postV2('updatePushNotification?mediaType=json', activatePushRequest, _activatePushNotificationResponse, _notificationResponseError);		
+		if(device.platform == 'Android' || device.platform == 'android'){
+			_setupPushNotifications();		
+		}else{
+			navigator.notification.alert('Currently only supported only for Android. Stay tuned! Push notifications are coming soon to ' + device.platform, dismissAlert, input.appname, 'Ok, Thanks');						
+		}
 	}	
 	
 	function _registerPushNotificationResponse(response){
 		if(response.txnStatus == 'SUCCESS'){
+			if(sb.utilities.getUserInfo().userDetails.userAccount.deviceId != response.deviceId){
 			navigator.notification.alert('Push notifications have been setup for your profile. To disable, click on Stop Push Notifications button on Profile Tab.' + response.txtStatusReason, dismissAlert, input.appname, 'Got it, Thanks');			
+			}
 			sb.dom.find('#profileContainer').find('#registerPushNotification').hide();
-			sb.dom.find('#profileContainer').find('#profileOptions').prepend(sb.dom.wrap(stopPushNotificationButtonHtml));		
+			sb.dom.find('#profileContainer').find('#activatePushNotification').hide();
+			if(sb.dom.find('#profileContainer').find('#profileOptions').find('#stopPushNotification').length == 0){
+				sb.dom.find('#profileContainer').find('#profileOptions').prepend(sb.dom.wrap(stopPushNotificationButtonHtml));		
+			}
+			if(sb.dom.find('#profileContainer').find('#profileOptions').find('#stopPushNotification').length == 1){
+				sb.dom.find('#profileContainer').find('#profileOptions').find('#stopPushNotification').show();		
+			}			
 			sb.utilities.getUserInfo().userDetails.userAccount.deviceId = response.deviceId;
 			sb.utilities.getUserInfo().userDetails.userAccount.streamingActive = true;
 		}else{
