@@ -148,6 +148,7 @@ var userLogo = function(sb, input){
    }
    
    function _pushNotificationRegistrationResponseReceived(registrationInfo){ 
+   		alert('Push Notification Response :- ' + JSON.stringify(registrationInfo));
    		try{
 			var registerPushRequest = {
 				userName : sb.utilities.getUserInfo().userDetails.userAccount.userName,
@@ -210,9 +211,7 @@ var userLogo = function(sb, input){
 				userToolTipCard = sb.dom.find('#profileContainer').find('#userProfileCard');
 				profilepicalbumid = sb.utilities.getUserInfo().userDetails.profilePictureAlbumId;					
 				_setUserToolTip();
-				if(device.platform == 'Android' || device.platform == 'android'){
-					_setupPushNotifications();
-				}
+				_setupPushNotifications();
 	}
    function _userLoginEvent(message){				
 		_setupProfile(message);		
@@ -245,11 +244,7 @@ var userLogo = function(sb, input){
 	}
 	
 	function _activatePushNotification(message){
-		if(device.platform == 'Android' || device.platform == 'android'){
-			_setupPushNotifications();		
-		}else{
-			navigator.notification.alert('Currently only supported only for Android. Stay tuned! Push notifications are coming soon to ' + device.platform, dismissAlert, input.appname, 'Ok, Thanks');						
-		}
+			_setupPushNotifications();
 	}	
 	
 	function _registerPushNotificationResponse(response){
