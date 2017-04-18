@@ -211,7 +211,9 @@ var userLogo = function(sb, input){
 				userToolTipCard = sb.dom.find('#profileContainer').find('#userProfileCard');
 				profilepicalbumid = sb.utilities.getUserInfo().userDetails.profilePictureAlbumId;					
 				_setUserToolTip();
+				alert('Setting up push notofications..');
 				_setupPushNotifications();
+				alert('Setting up push notofications..done');
 	}
    function _userLoginEvent(message){				
 		_setupProfile(message);		
