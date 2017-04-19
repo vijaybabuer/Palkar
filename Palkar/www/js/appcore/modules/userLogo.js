@@ -167,6 +167,7 @@ var userLogo = function(sb, input){
    }
 	
    function _pushNotificationMessageReceived(message){
+	   alert(JSON.stringify(message));
 		if(message.additionalData.storyId){
 			Core.publish('newStoryReceived', {storyId: message.additionalData.storyId, storyDocumentType: message.additionalData.storyDocumentType});	
 		}
