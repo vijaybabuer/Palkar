@@ -148,7 +148,6 @@ var userLogo = function(sb, input){
    }
    
    function _pushNotificationRegistrationResponseReceived(registrationInfo){ 
-   		alert('Push Notification Response :- ' + JSON.stringify(registrationInfo));
    		try{
 			var registerPushRequest = {
 				userName : sb.utilities.getUserInfo().userDetails.userAccount.userName,
@@ -167,7 +166,7 @@ var userLogo = function(sb, input){
    }
 	
    function _pushNotificationMessageReceived(message){
-	   alert(JSON.stringify(message));
+	   //alert(JSON.stringify(message));
 		if(message.additionalData.storyId){
 			Core.publish('newStoryReceived', {storyId: message.additionalData.storyId, storyDocumentType: message.additionalData.storyDocumentType});	
 		}
@@ -212,9 +211,7 @@ var userLogo = function(sb, input){
 				userToolTipCard = sb.dom.find('#profileContainer').find('#userProfileCard');
 				profilepicalbumid = sb.utilities.getUserInfo().userDetails.profilePictureAlbumId;					
 				_setUserToolTip();
-				alert('Setting up push notofications..');
 				_setupPushNotifications();
-				alert('Setting up push notofications..done');
 	}
    function _userLoginEvent(message){				
 		_setupProfile(message);		
