@@ -5,10 +5,6 @@ body{
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;		
 }
-div{
-	overflow-y: scroll;
-	-webkit-overflow-scrolling: touch;		
-}
 body, html, .appBody{
 	height: 100%;
 	padding: 0px !important;
@@ -152,6 +148,8 @@ em{
 	
 	.subContainer {
 	    width: 100%;
+		overflow-y: scroll;
+		-webkit-overflow-scrolling: touch;			
 	}
 
 
