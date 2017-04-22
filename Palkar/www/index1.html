@@ -25,21 +25,24 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="format-detection" content="telephone=no" />
         <meta name="msapplication-tap-highlight" content="no" />
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">	
+		<link rel="stylesheet" href="css/materialize/materialize.css" type="text/css" />		
         <link rel="stylesheet" type="text/css" href="css/index.css" />
 		<link rel="stylesheet" href="css/yui3/3.13.0/build/cssgrids/cssgrids.css" type="text/css" />
 		<link rel="stylesheet" href="css/yui3/3.17.1/cssreset/cssreset-min.css" type="text/css" />
 		<link rel="stylesheet" href="css/yui3/3.12.0/build/cssbutton/cssbutton.css" type="text/css" />
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />	
 		<link rel="stylesheet" href="css/font-awesome/4.4.0/css/font-awesome.min.css" type="text/css" />
 		<link rel="stylesheet" href="js/plugins/jquery.powertip-1.2.0/css/jquery.powertip.css" type="text/css" />
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">		
+		<link rel="stylesheet" href="css/effects.css" type="text/css" />
 		<link rel="stylesheet" href="css/standard.css" type="text/css" />
 		<link rel="stylesheet" href="css/storyItem.css" type="text/css" />
-		<link rel="stylesheet" href="css/fa.css" type="text/css" />
 		<link rel="stylesheet" href="css/wysiwyg.css" type="text/css" />
 		<link rel="stylesheet" href="css/swipe.css" type="text/css" />		
 		<link rel="stylesheet" href="css/scroll.css" type="text/css" />
-        <title>Welcome to Palkar News</title>
+		<link rel="apple-touch-icon" href="icon.png">
+        <title>Welcome to Palkar News!</title>
 		<style type="text/css" media="all">
 			@font-face{
 				font-family: AsperGit;
@@ -50,29 +53,104 @@
     </head>
 
     <body>
-        <div data-role="page" class="appBody" id="mainPage"> 		       
+        <div data-role="page" class="appBody" id="mainPage" > 		       
 				<div class="appHeader noshadow">
-					<a href="#rightPanel" class="ui-btn ui-btn-inline noshadow" id="showRightPanel"><i class="fa fa-bars"></i></a>	
-					<a href="#loginRegisterPage" class="ui-btn ui-btn-inline noshadow" id="loginRegisterButton">Register</a>	
-					<a  id="containerBackButton" class="ui-btn ui-btn-inline noshadow nd">
-						<i class="fa fa-chevron-left"></i>
-					</a>					
-					<a  href="#leftPanel" id="palpostr-url" class="ui-btn ui-btn-inline noshadow">
-						<i class="fa fa-home" aria-hidden="true"></i>&nbsp;Palkar
-					</a>
-				</div>	        
-				<div class="containers" id="containerDiv">
-						<div class="container" id="mainContainer">
-							<p id="guestWelcome">You have been logged in as Guest. You can only browse Palkar App. Please Login or Register to activate full set of features.</p>
-							<a class="ui-btn ui-btn-inline noshadow nd lt" id="refreshPanel" disabled>
-									<i class="fa fa-refresh"></i> Show Latest Stories
-							</a>							
-							<div id="storiesDiv">																																																				
-							</div>
-							<div id="storiesDivTrailer">
-								<button class="ui-btn cd stdf al bw noeffect nd" id="showMore" style="text-align: center;"><i class="fa fa-chevron-down"></i>&nbsp;Show More Messages</button>
-							</div>							
+					<div class="topRow">
+						<a href="#rightPanel" class="ui-btn ui-btn-inline noshadow" id="showRightPanel"><i class="fa fa-bars"></i></a>
+						<a class="ui-btn ui-btn-inline noshadow" id="newMessageButton"><i class="material-icons">message</i></a>						
+						<a href="#loginRegisterPage" class="ui-btn ui-btn-inline noshadow" id="loginRegisterButton"><i class="fa fa-user-plus" aria-hidden="true"></i></a>				
+						
+						<a  id="containerBackButton" class="ui-btn ui-btn-inline noshadow nd">
+							<i class="fa fa-chevron-left"></i>
+						</a>
+						<a  href="#leftPanel" id="palpostr-url" class="ui-btn ui-btn-inline noshadow" >
+							<i class="fa fa-home" aria-hidden="true"></i>&nbsp;Palkar
+						</a>		
+					</div>
+				</div>
+														 				
+				<div class="containers" id="containerDiv">				
+					<div>
+						  <ul class="tabs">
+							<!-- <li class="tab col"><a id="storyPostContainerTab" href="#storyPostContainer"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Post</a></li> -->
+							<li class="tab col"><a class="active" href="#mainContainer">Stream</a></li>
+							<li class="tab col"><a id="profileContainerTab" href="#profileContainer"><i class="fa fa-user" aria-hidden="true"></i> Profile</a></li>
+						  </ul>									
+					</div>					
+					<div class="container" id="mainContainer">
+						<p id="guestWelcome">You are missing out! Login or Register today to activitate tons of exciting features on the App.</p>						
+						<a class="ui-btn ui-btn-inline noshadow nd lt" id="refreshPanel" disabled>
+								<i class="fa fa-refresh"></i> Show Latest Stories
+						</a>
+						<div id="createStory" style="background-color: #ffffff; padding-top: 2px; text-align: left; margin-top: 45px; display: none; width: 100%;">								
+							<form class="bw" id="addPostForm"  method="POST" action=''>
+								<div class="card" style="margin: 0px; padding: 0px; border: 1px solid #ffffff;">
+									<div class="card-content" style="margin: 0px; padding: 0px; border: 1px solid #ffffff;">
+										<div id="storyMedia">
+											<div id="panel-hdr">											
+												<a class="ui-btn  ui-btn-inline lt activator bw stdf" style="margin: 5px; padding: 5px; border: 0px;"><i class="fa fa-gear"  aria-hidden="true"></i></a>	
+												<a class="ui-btn  ui-btn-inline lt stdf" id="initializeRichTextEditor" style="margin: 5px; padding: 5px; border: 0px;"><i class="fa fa-paragraph" aria-hidden="true"></i></a>
+												<a  id="attachPictures" title="Attach Pictures from your computer" class="ui-btn ui-btn-inline mf right cd" style="margin: 5px; padding: 5px; border: 0px;"><i class="fa fa-paperclip" aria-hidden="true"></i></a> 
+												<a  id="myComp"  class="ui-btn ui-btn-inline mf nd right cd" style="margin: 5px; padding: 5px; border: 0px;"><i class="fa fa-file-image-o"></i></a>&nbsp;
+												<a  id="webCam" class="ui-btn ui-btn-inline mf nd right cd" style="margin: 5px; padding: 5px; border: 0px;"><i class="fa fa-camera"></i></a>   			
+											</div>																		
+											<div class="bw PVTSTYPIC privateStoryPicDiv">											
+											</div>	     
+											<div class="al addPostTextArea roberto mf bnc rnc" style="margin: 0px; padding: 2px; height: 15em; max-height: 15em; overflow-y: scroll; -webkit-user-select: text; user-select: text;" contenteditable="true" placeholder="Message"></div>
+										</div>
+									</div>
+									<div class="card-reveal">										
+											<div id="createStoryHeaderDiv" class="input-field col s12">
+											</div>										
+											<div id="storyCreateTitle" style="text-align: left;">
+												<h6>Choose A Subject for Message(optional) </h6>
+												<textarea placeholder="Subject/URL" id="subject" type="text" rows="2" cols="50" style="resize: none;" class="sq fill p stdf box"></textarea>
+											</div>
+											<div id="storyCreateOptions" style="text-align: left;">
+													<h6>Reaction Preferences (Optional)</h6>
+													<fieldset id="allReactionsButtonSet" data-role="controlgroup" class="sf" data-mini="true"> 
+																<input type="checkbox"  id="allowComments" checked >
+																	<label id="allowCommentsLabel" for="allowComments">
+																		<i class="fa fa-comments"></i>&nbsp;<span id="label">Allow Comments</span>
+																	</label>
+																<input type="checkbox" id="allowReplies"  checked >
+																	<label id="allowRepliesLabel"  for="allowReplies" >
+																		<i class="fa fa-reply"></i>&nbsp;<span id="label">Allow Replies</span>
+																	</label>
+																<input type="checkbox" id="allowHilights"  checked >
+																	<label id="allowHilightsLabel"   for="allowHilights">
+																		<i class="fa fa-star"></i>&nbsp;<span id="label">Allow Highlights</span>
+																	</label>       
+													</fieldset>	
+													<a  id="removePictures" title="Remove Pictures from Message" style="display: none;" class="ui-btn ui-btn-inline cd">
+															<i class="fa fa-camera"><i class="fa fa-times" style="vertical-align: sub;"></i></i>		
+													</a>																			
+											</div>	
+											<div>
+											<span class="right stdf grey-text text-darken-4 card-title"><i class="fa fa-times"></i></span>																
+											</div>
+									</div>
+									<div class="card-action" style="margin: 0px; padding-top: 0px; padding-bottom: 0px; text-align: center;">
+										<button id="submitButtonForm" type="submit" class="ui-btn ui-btn-inline cd" style="margin: 0px;" title="Post Message" >
+												Post
+										</button> 
+										<i id='cancel' class="fa fa-times cg right mf"></i>																		
+									</div>
+								</div>
+							</form>						
+						</div>											
+						<div id="storiesDiv">																																																				
 						</div>
+						<div id="storiesDivTrailer">
+							<button class="ui-btn cd stdf al bw noeffect nd" id="showMore" style="text-align: center;"><i class="fa fa-chevron-down"></i>&nbsp;Show More Messages</button>
+						</div>							
+					</div>					
+					<div id="profileContainer">
+						<p>You can receive realtime notifications by registering with your Facebook or Gmail Accounts.</p>
+						<p>To protect your identity, you need to login or register to use this feature. </p>
+						<a href="#loginRegisterPage" onClick="Core.publish('initializeUserRegistration', null);" class="containerBackButton">Continue</a>	
+					</div>
+
 				</div>	    
 				<div class="appFooter" id="mainAppFooter">
 					<div id="message1"></div>	
@@ -82,62 +160,117 @@
 			<div class="al b nd" data-position="right" data-position-fixed="true" data-role="panel" data-display="overlay" id="rightPanel">
 				<div id="documentPageList">Please wait while the section is loading..</div>
 			</div><!-- /panel -->		
-			<div class="al cd nd" data-position="left" data-position-fixed="true" data-role="panel" data-display="overlay" id="leftPanel">
+			<div class="al cd nd" style="overflow: scroll; " data-position="left" data-position-fixed="true" data-role="panel" data-display="overlay" id="leftPanel">
+				<a class="ui-btn cd" href="#inviteFrields"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;Invite Friends</a>
 			   <p class="roberto">This App brings you Palkar Community Updates</p>
-			   <p class="roberto"><strong>Logon to www.palpostr.com/palkar</strong> Share your local community stories and pictures with more than 1 Million Palkars worldwide</p>
+			   <p class="roberto">Share your local community stories and pictures with more than 1 Million Palkars worldwide</p>
 			   <p class="roberto">There are an estimated 10 lac Sourashtrians world wide. Lets rediscover our culture and connect with our community world wide in this digital age.</p>
 			   <p class="roberto">We have a team of volunteers who will share news from our community on this App. We will add more features as we grow. Your feedback and ideas are most welcome.</p>			   
 			   	<p class="roberto">
 			   	Sincerely<br>
-			   	Vasanth(Founder) veervasanth@gmail.com <br>
+			    PalPostr.COM <br>
+				Facebook: Palkar Mobile App
 			   	</p>	
 			</div><!-- /panel -->								
         </div>
-		 <div data-role="page" class="login" id="loginRegisterPage"> 
+		 <div data-role="page" class="row login" id="loginRegisterPage" data-add-back-btn="true"> 
 				<div class="appHeader noshadow">	
 					<a  id="showMainPageButton" href="#mainPage" class="ui-btn ui-btn-inline noshadow">
-						<i class="fa fa-chevron-left"></i>
+						<i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;Profile Setup
 					</a>
-				</div>	        
-				<div class="containers yui3-g" id="loginDiv">
-					<div class="yui3-u-1">					
-					<form class="p"  style="" name="f"   method="post">		
-						<p class="" style="padding: 0px; margin: 0px;">
-							<span  style="padding: 0px; margin: 0px;"><i class="fa fa-lock"></i>&nbsp;Login</span><br /><br />
-						</p>  
-						<p class="" style="padding: 0px; margin: 0px;">
-						<div class="input-group margin-bottom-sm">
-						  <span class="input-group-addon ab na"><i class="fa fa-user fa-fw"></i></span>
-						 <input type="text" id="username" maxlength="" class="form-control inp na" style="height: 2em;"  placeholder="User Name or Telephone" name='j_username' value=''/>
-						</div>	
-						<div class="input-group margin-bottom-sm">
-						  <span class="input-group-addon ab na bigScreenItem"><i class="fa fa-key fa-fw"></i></span>
-						  <input type="password" id="password" maxlength="75" class="form-control inp na"  name='j_password' placeholder="Password" style=" height: 2em;"/>
+				</div>
+				<div id="loginRegistrationContainerDiv">
+						<div class="col" id="loginSlideScrollBar">
+							  <ul class="tabs">
+								<li class="tab col"><a class="active" href="#registrationDiv">Register</a></li>
+								<li class="tab col"><a  href="#loginDiv">Login</a></li>
+								<li class="tab col"><a href="#socialDiv">Social</a></li>
+							  </ul>							
 						</div>
-						</p>								
-						<p class="" style="padding: 0px; margin: 5px;">
-						<input type="checkbox" class="na"/><span class="p lt">Remember me on this device.</span></p>
-			
-						<div class="input-group margin-bottom-sm">
-						  <span class="input-group-addon ab na bigScreenItem"><i class="fa fa-sign-in fa-fw"></i></span>
-						  <input class="form-control ab p cw" id="authorizeUser" style="height: 3em; border: 0px;" type="submit" value="Login">
-						</div>			
-						</p>      
-					</form>	
-					</div>
-				</div>	    
-				<div class="appFooter" id="mainAppFooter">
-					<div id="message1"></div>	
-					<div id="deviceready"></div>
+						<div class="col s12" id="registrationDiv">
+								<span  style="padding: 0px; margin: 0px;"><i class="fa fa-lock"></i>&nbsp;Please create PalPostr Account</span><br /><br />
+								<div class="row">
+								<form class="col s12" id="registrationForm">
+									<input class="invalidInfo" id="ruserFullName" type="text" placeholder="Full Name: Ex. Kumar Patek"/>
+									<input class="invalidInfo"  id="remailAddress" type="email" placeholder="Your Email Address"  />							
+									<input class="invalidInfo"  id="rusername" type="text"  placeholder="Choose username" />
+									<input class="invalidInfo"  id="rpassword" type="password"  placeholder="Choose Password" />						
+									<input type="submit" class="ui-btn cd" id="registerUser" disabled value="Register" />							
+									<button class="ui-btn cd" id="alreadyHaveAccount" >Already Registered?</button><br><br>
+									<a href="#termsAndConditions">Terms and Conditions</a>								
+								</form>
+								</div>
+								
+								<br>
+								<div id="message">Valid Name, Email Address, Username and Password required to register.</div>
+						</div>					
+						<div class="col s12" id="loginDiv">					
+								<span  style="padding: 0px; margin: 0px;" id="message"><i class="fa fa-lock"></i>&nbsp;Please Login using PalPostr Account</span><br />
+								<form id="loginForm">
+								<input type="text" id="username"  placeholder="User Name or Telephone" value=''/>
+								<input type="password" id="password"   placeholder="Password" style=" height: 2em;"/>
+								<input type="submit" class="ui-btn cd" id="authorizeUser" value="Login" /><br><br>
+								<a class="ui-btn cd" href="#mainPage"/>
+									<i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home
+								</a>
+								<button class="ui-btn  cd" id="register" >Register</button>
+								<a class="ui-btn  cd" href="http://www.palpostr.com/forgotpassword" id="forgotUsername" >Forgot?</a><br>
+								<a href="#termsAndConditions">Terms and Conditions</a>									
+								</form>
+						</div>
+						<div class="col s12" id="socialDiv">
+							<span id="message"></span>
+							<div id="socialDivTNC" style="padding-top: 1em;">
+								<h3>Please review below information </h3><br>
+									<p>Your Name, Email ID, Profile Picture from your Social Networking Provider will be shared with PalPostr.COM</p><br>
+									<p>You will need to login everytime you use Palkar App.</p>
+									<a class="ui-btn cd" id="socialLoginStart">Agree, Continue</a>
+								</ul>
+							</div>
+						</div>
 				</div>
 		 </div>	
-		
+		 		<div data-role="page" id="termsAndConditions" data-add-back-btn="true"> 
+					<div class="appHeader noshadow">	
+						<a  id="showMainPageButton" href="#mainPage" class="ui-btn ui-btn-inline noshadow">
+							<i class="fa fa-chevron-left"></i>&nbsp;Palkar
+						</a>
+					</div>
+					<div id="termsAndConditions">
+						<p>Palkar App is a free service, run by PalPostr.COM</p>
+						<p>PalPostr.COM can delete or modify your content with or without your permission.</p>
+						<p>No Pornographic, profane, personally provoking content is allowed in any sections of the App</p>
+						<p>No Pronograpic, profane, personally provoking content is allowed in any sections of the App</p>
+						<p>For more information, please visit the terms and conditions page of PalPostr.COM</p>					
+					</div>				
+					<div class="appFooter" id="mainAppFooter">
+						<div id="message1"></div>	
+						<div id="deviceready"></div>
+						Copyright PalPostr.COM, All Rights Reserved.					
+					</div>
+				</div>	
+		 		<div data-role="page" id="inviteFrields"> 
+					<div class="appHeader noshadow">	
+						<a  id="showMainPageButton" href="#mainPage" class="ui-btn ui-btn-inline noshadow">
+							<i class="fa fa-chevron-left"></i>&nbsp;Palkar
+						</a>
+					</div>
+					<div id="inviteFriendsDiv">				
+						<a href="whatsapp://send?text=Join Palkar App and connect with over 1 million Sourashtrians world wide. iPhone App: https://itunes.apple.com/US/app/Palkar/id1207494642?mt=8 Android Smart Phone App: https://play.google.com/store/apps/details?id=com.palpostr.palkar">
+										<i id="WhatsAppInvite" class="fa fa-whatsapp" aria-hidden="true"></i><br>Invite My WhatsApp Contacts
+						</a><br>
+						<a  href="mailto:YourEmailFriend@email.com?subject=Join Palkar App&body=Connect with over 1million Sourashtrians world wide. iPhone App: https://itunes.apple.com/US/app/Palkar/id1207494642?mt=8 Android Smart Phone App: https://play.google.com/store/apps/details?id=com.palpostr.palkar">
+										<i id="EmailInvite" class="fa fa-envelope-o" aria-hidden="true"></i><br>Invite My Email Contacts
+						</a>						
+					</div>
+				</div>	
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
-            //app.initialize();
+            app.initialize();
         </script>
     </body>
+
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <script type="text/javascript" src="js/plugins/jquery-timeago/jquery.timeago.js" ></script>
@@ -153,7 +286,6 @@
 <script type="text/javascript" src="js/plugins/photoupload/js/jquery.fileupload-video.js"></script>
 <script type="text/javascript" src="js/plugins/photoupload/js/jquery.fileupload-validate.js"></script>
 <script type="text/javascript" src="js/plugins/photoupload/js/jquery.fileupload-ui.js"></script>
-<script type="text/javascript" src="js/plugins/photoupload/ojs/main.js"></script>
 <script type="text/javascript" src="js/plugins/jquery.photobooth/jquery.photobooth.min.js"></script>
 <script type="text/javascript" src="js/plugins/tinymce/js/tinymce/jquery.tinymce.min.js"></script>
 <script type="text/javascript" src="js/plugins/jquery-visible/jquery.visible.min.js"></script>
@@ -168,15 +300,22 @@
 <script type="text/javascript" src="js/plugins/jquery-overlay/loading-overlay.min.js"></script>
 <script type="text/javascript" src="js/external/jquery.nicescroll.js"></script>
 <script type="text/javascript" src="js/external/swipe/swipe.js"></script>
+<script type="text/javascript" src="js/external/auth0/lock-9.0.js"></script>
+<script type="text/javascript" src="js/materialize/materialize.min.js"></script>
 <script type="text/javascript" src="js/appcore/inheritance.js"></script>
 <script type="text/javascript" src="js/appcore/appmain.js"></script>
 <script type="text/javascript" src="js/appcore/pageViewController.js"></script>	
 
+<script type="text/javascript" src="js/appcore/modules/photoUploadController_PG.js"></script>	 
+<script type="text/javascript" src="js/appcore/modules/albumsController.js"></script>	
+<script type="text/javascript" src="js/appcore/modules/MessageDisplayController.js"></script>	
 <script type="text/javascript" src="js/appcore/modules/textReactionsController.js"></script>	
 <script type="text/javascript" src="js/appcore/modules/clickReactionsController.js"></script>	
+<script type="text/javascript" src="js/appcore/modules/StoryEditController.js"></script>
 <script type="text/javascript" src="js/appcore/modules/storyItemController.js"></script>
 <script type="text/javascript" src="js/appcore/modules/sseController.js"></script>
 <script type="text/javascript" src="js/appcore/modules/userLoginController.js"></script>
+<script type="text/javascript" src="js/appcore/modules/userLogo.js"></script>
 
 <script type="text/template" id="jstemplate-confirmLabel">Confirm</script>
 <script type="text/template" id="jstemplate-yesLabel">Yes</script>
@@ -201,14 +340,19 @@
 <script type="text/template" id="jstemplate-NoCommentsLabel">No comments yet from your contacts. You can comment on the message by typing a message in the text area and clicking the comment button.</script>
 <script type="text/template" id="jstemplate-NoRepliesLabel">No replies yet from your contacts. You can send a reply by typing your reply message in the text area and clicking the reply button.</script>
 <script type="text/template" id="jstemplate-SearchUserLabel">Search members by providing their full name e.g., John Smith</script>
-<script type="text/template" id="jstemplate-ErrorMessage">There was a problem processing your request. Please try again later.</script>
+<script type="text/template" id="jstemplate-SuccessMessage">
+		Success!	
+</script>
+<script type="text/template" id="jstemplate-ErrorMessage">
+		There was a problem processing your request. Please try again later.	
+</script>
 <script type="text/template" id="jstemplate-ProcessingMessage">Processing..</script>
 <script type="text/template" id="jstemplate-ProcessingSuccessMessage">Complete</script>
 <script type="text/template" id="jstemplate-ProcessingTryAgainMessage">Try again</script>
 <script type="text/template" id="jstemplate-MessageDisplayController-GeneralNote">Note</script>
 <!-- Story Add Controller Labels -->
 <script type="text/template" id="storyAddController-StoryTitle">Subject/URL</script>
-<script type="text/template" id="storyAddController-DefaultContent"><p style="color: grey; font-size: 1em;"><br></p></script>
+<script type="text/template" id="storyAddController-DefaultContent"><p style="color: #000000; font-size: 1em;">  <br></p></script>
 <script type="text/template" id="storyAddController-AlbumTitle">Album</script>
 <script type="text/template" id="storyAddController-MessageContent">your story/message..</script>
 <script type="text/template" id="storyAddController-AttachAlbumTitle">Attach Album</script>
@@ -267,12 +411,18 @@
 <script  type="text/template" id="jstmpl-Invitations-invitationmessage">Hi, visit my pages on PalPostr!</script>
 <script  type="text/template" id="jstmpl-Invitations-Processing">Processing</script>
 <script  type="text/template" id="jstmpl-Invitations-Invited">Invited</script>
+
+<script  type="text/template" id="jstemplate-stopPusbNotificationButtonHtml"><button class="cd bw ui-btn" onclick="Core.publish('stopPushNotification', null);"  id="stopPushNotification"><i class="fa fa-bell" aria-hidden="true"></i>  Stop Push Notification</button></script>
+<script  type="text/template" id="jstemplate-activatePushNotificationButtonHtml"><button class="cd bw ui-btn" onclick="Core.publish('activatePushNotification', null);"  id="activatePushNotification"><i class="fa fa-bell-o" aria-hidden="true"></i> Activate Push Notification</button></script>
+
 <script  type="text/template" id="jstmpl-Invitations-inviteeEmailList-placehoder">Ex: john@example.com;joe@example.com
 
 Enter email address of your friends. An email invitation from PalPostr, on your behalf will be sent your friends' email.
 
 If you want to invite multiple friends, please enter their addresses one after the other with a ';' separating them. 
 Ex: john@example.com;sam@example.com</script>
+
+<script  type="text/template" id="invalidRegistrationInfoText">Please review and correct the Registration Information.</script>
 <script  type="text/template" id="jstmpl-Invitations-invitationConfirmButton">Invite Friends</script>
 <script  type="text/template" id="jstmpl-Invitations-invitationCancelButton">Cancel</script>
 <script  type="text/template" id="jstmpl-Invitations-invitationDoneButton">Done</script>
@@ -294,599 +444,51 @@ Ex: john@example.com;sam@example.com</script>
 <script type="text/template" id="ContactListController-BlockDelete-Confirm">Please Confirm: All the Pages, Photos, Messages will be un shared. You will have to Un Block before you can network again.</script>
 <script type="text/template" id="PhotoUploadController-ClickToRemove"> Click/Tap any photo to remove.</script>
 <script type="text/template" id="jstemplate-mediaActionController-confirmPhotoDelete">Do you want to delete this Photo?</script>
-<script type="text/x-tmpl" id="template-storyTemplate">	
-{% if (!o.storyAuthorContact.userIsBlockedByLoggedInUser) { %}
-{% if (o.storyPictures || o.story || o.storyTitle) { %}
-<div class="yui3-g-r storyItem bnc {%=o.documentItem.documentType%}STORY" style="clear:both; margin: 5px; padding: 0px; overflow: hidden;" id="storyItem-{%=o.storyDocumentPageId%}">
-
-{% if (o.storyItemPictureCount && o.storyItemPictureCount > 1) { %}
-	<div class="yui3-u storyItemHeader" style="width: 100%;">
-		<div  style="height: 100%;  padding-left: 5px; text-align: left;">					
-			<a id="storyItemTitle-small" class="roberto" data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">				
-				{% if (o.storyType != 'COVERPAGE') { %}
-					<i class="fa fa-picture-o" aria-hidden="true"></i>	
-					{%=o.storyTitle%}
-				{% } %}							
-				{% if (o.storyType == 'COVERPAGE') { %}
-					<i class="fa fa-globe" aria-hidden="true"></i>	
-					{%=o.storyDocumentTitle%}
-				{% } %}											
-			</a>
-			<br>
-
-			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;" class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>
-			{% if (o.storyType != 'COVERPAGE') { %}
-			&raquo;			
-	    	<span class="{% if (o.documentItem.pageCategories && o.documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=o.documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}" href="http://www.palpostr.com/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cg" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</span>
-			{% } %}
-    		<span class="stdf cg" style="font-style: italic; margin-left: 0.1em;"><i class="fa fa-clock-o"></i></span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>
-		</div>		
-	</div>
-
-	<div class="yui3-u" style="font-size: 1em; width: 100%; padding-left: 5px; float: left; text-align: left;">			
-					{% if (o.storyPictures && o.storyPictures.length > 0) { %}				
-						<div class="yui3-g" style="text-align: center;  margin: 0px; padding: 0px;" id="album-{%=o.storyPictureAlbumId%}-{%=o.storyPictureAlbumTypeCd%}">
-							<div class="yui3-u albumpictures storyItemMedia" title="" style="position: relative; border: 0px; clear:both; text-align: center; width: 100%; max-width: 500px;">
-									{% for (var i=0, file; file=o.storyPictures[i]; i++) { %}
-									<div class="" style="">
-									<a data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text" href="http://www.palpostr.com/alb/{%=o.storyPictures[i].documentPageId%}">
-										{% if (file.mediaIsLandscape) { %}
-										<div class="ba yui3-u-1" style="background: url(http://www.palpostr.com/publicphoto/{%=o.storyDocumentId%}/{%=o.storyDocumentPageId%}/{%=o.storyPictureAlbumId%}/{%=file.documentPageId%}?mediaType=jpeg); height: 250px; width:  100%; background-size: contain; background-position: center center; background-repeat: no-repeat;">
-									 
-										</div>
-										{% } %}
-										{% if (file.mediaIsPortrait) { %}
-										<div class="ba yui3-u-1" style="background: url(http://www.palpostr.com/publicphoto/{%=o.storyDocumentId%}/{%=o.storyDocumentPageId%}/{%=o.storyPictureAlbumId%}/{%=file.documentPageId%}?mediaType=jpeg); height: 250px; width:  100%; background-size: contain; background-position: center center; background-repeat: no-repeat;">
-									 
-										</div>
-										{% } %}
-									</a>
-									</div>
-								{% } %}						
-								{% if (o.storyItemPictureCount && o.storyItemPictureCount > 4) { %}
-								<div title="Add more pictures to this album">
-									<a class="ui-btn albumPicDecriptions" data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text" href="http://www.palpostr.com/alb/{%=o.storyPictures[0].documentPageId%}" id="button-{%=o.storyPictureAlbumId%}-{%=o.storyPictureAlbumTypeCd%}">
-										<i class="fa fa-camera"></i>&nbsp;&nbsp;({%=o.storyItemPictureCount%}) 
-									</a>	
-								</div>								
-								{% } %}							
-							</div>
-						</div>
-					{% } %}
-					{% if (o.storyType != 'COVERPAGE' && o.story) { %}
-						<a data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text" id="story" class="roberto">
-							{%=o.story%}
-						</a>	
-						{% } %}	
-						{% if (o.storyType == 'COVERPAGE' && o.story) { %}
-						<a data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text"  id="story" class="roberto">
-							{%=o.story%}
-						</a>	
-					{% } %}															
-	</div>
-			
-{% } %}
-
-
-{% if (!o.storyItemPictureCount || (o.storyItemPictureCount && (o.storyItemPictureCount == 0 ||  o.storyItemPictureCount == 1))) { %}
-	<div class="yui3-u storyItemHeader" style="width: 100%; text-align: left; padding: 5px;">
-		{% if (o.storyType == 'COVERPAGE') { %}
-			<a id="storyItemTitle-small" class="roberto" data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">
-					<i class="fa fa-globe" aria-hidden="true"></i>	
-					{%=o.storyDocumentTitle%}
-			</a><br>
-			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;"  class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>
-			<span class="stdf cg" style="font-style: italic; margin-left: 0.1em;"><i class="fa fa-clock-o"></i></span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>	
-		{% } %}
-		<div  style="text-align: left; width: 100%;">		
-				<a id="storyItemTitle-small" class="roberto" data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text">
-				{% if (o.storyPictures && o.storyPictures.length > 0) { %}
-							<div style="float: left; overflow: hidden; margin-right: 5px;">							
-							<img src='http://www.palpostr.com/tnphoto1.pvt/{%=o.storyPictures[0].documentPageId%}?mediaType=jpeg' width=100px; />
-							</div>
-				{% } %}	
-				{% if (!o.storyPictures || (o.storyPictures && o.storyPictures.length == 0)) { %}
-					{% if (o.documentItem.documentCoverMediaItem) { %}
-						<div style="float: left;  overflow: hidden; margin-right: 5px;">
-							<img src='http://www.palpostr.com/tnphoto1.pvt/{%=o.documentItem.documentCoverMediaItem.documentPageId%}?mediaType=jpeg' width=100px />
-						</div>
-					{% } %}
-				{% } %}					
-				{% if (o.storyType != 'COVERPAGE') { %}
-					{%=o.storyTitle%}
-				{% } %}
-				</a>				
-		</div>	
-		{% if (o.storyType != 'COVERPAGE' && o.story) { %}				
-			<a data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text" id="story" class="roberto">
-				{%=o.story%}
-			</a><br>
-			<span style="border: 0px; margin: 0px 0px 0px 0.5em; padding: 0px;"  class="stdf cg"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;{%=o.storyAuthor%}</span>&raquo;			
-			<span class="{% if (o.documentItem.pageCategories && o.documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=o.documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}" href="http://www.palpostr.com/{%=o.storyDocumentType%}/page/{%=o.storyDocumentId%}?viewAllStories=false" class="stdf cg" style="border: 0px; margin: 0px; padding: 0px;">{%=o.storyDocumentTitle%}</span>
-			<span class="stdf cg" style="font-style: italic; margin-left: 0.1em;"><i class="fa fa-clock-o"></i></span><span class="stdf cg timeago" style="font-style: italic; margin-left: 5px;" title="{%=o.storyTimeStampStringFormat%}" ></span>			
-		{% } %}	
-		{% if (o.storyType == 'COVERPAGE' && o.story) { %}
-			<a data-snippet-url="http://www.palpostr.com/{%=o.storyDocumentType%}/snippet/Story/{%=o.storyDocumentPageId%}-true?mediaType=text"  id="story" class="roberto">
-				{%=o.story%}
-			</a>	
-		{% } %}					
-	</div> 
-{% } %}
-
-	<div class="yui3-u storyItemBody ">	
-		<div class="lnc tnc stdf allReactionList" style="height: 100%; width: 100%; padding-left: 5px;float: left;">		
-			<div class="yui3-g bw">
-	<div class="yui3-u-1 TxtReactionList {%=o.hasComments%} {%=o.hasReplies%}" id="TxtReactionList-{%=o.storyDocumentPageId%}" style="">
-	   	<button class="sf b u ePtr lt p ui-btn bw nd">Show all</button>
-		<div class="textReacSelection nd">Comments</div>
-	   	<div class="textReactionList-{%=o.hasComments%}" id="CommentsDiv-{%=o.storyDocumentPageId%}">
-	   		<div class="textReactionList" style="max-height:1000px; overflow-y: auto; overflow-x: hidden;" >
-	<!-- Public Reactions Start-->
-	{% if (o.publicTextResponse) { %}
-	<div id="TxtReactionList-{%=o.publicTextResponse.documentPageId%}-{%=o.publicTextResponse.pageReactionType%}" class="cd">
-	{% if (!o.publicTextResponse.reactionResponseList || (o.publicTextResponse.reactionResponseList && o.publicTextResponse.reactionResponseList.length == 0)) { %}
-		<a href="http://www.palpostr.com/Palkar"><span class="roberto cg">To Comment on this Story, log on to www.palpostr.com/Palkar</span></a>
-	{% } %}
-	{% if (o.publicTextResponse.reactionResponseList && o.publicTextResponse.reactionResponseList.length > 0) { %}
-	<ul style="list-style: none; margin: 0px; padding: 0px;">
-	{% for (var i=0, reactionResponse; reactionResponse=o.publicTextResponse.reactionResponseList[i]; i++) { %}
-	{% if (reactionResponse.reactionType != 'AGREE') { %}
-	<li  style="list-style: none;" class="{%=reactionResponse.reactionType%} {%=reactionResponse.reactionNewOld%}">
-		{% if (reactionResponse.reactionRemoveableByUser) { %}
-		<div class="al" style="padding-left: 5px; " >
-			<a class="stdf remtxtreac lt ePtr u"  id="RemoveReac-{%=reactionResponse.reactionId%}-{%=reactionResponse.pageReactionType%}-{%=reactionResponse.reactionType%}">Remove</a>&nbsp;<a class="stdf remtxtreacall lt ePtr u"  id="RemoveReac-{%=reactionResponse.reactionId%}-{%=reactionResponse.pageReactionType%}-{%=reactionResponse.reactionType%}">Remove All From {%=reactionResponse.userSummary.userFullName%}</a>                
-        </div>	
-		{% } %}					
-		<div class="yui3-g-r {%=reactionResponse.reactionType%}" >
-		<div  class="yui3-u contactToolTip" style="text-align: left; width: 95%; padding-left: 2.5em;">
-		<span style="display:none;" id="#memberTooltipDetails">
-			<span class="memberTooltipUsername">{%=reactionResponse.userSummary.username%}</span>
-			<span class="memberTooltipPhotoYesNo">{%=reactionResponse.userSummary.userHasProfPic%}</span>
-			<span class="memberTooltipFullName">{%=reactionResponse.userSummary.userFullName%}</span>
-			<span class="memberTooltipOrientation">e</span>
-			<span class="memberAdd">false</span>
-		</span>
-
-		{% if (reactionResponse.userSummary.userHasProfPic) { %}
-		<div class="reactionPhoto photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
-		</div>
-		{% } %}
-		{% if (!reactionResponse.userSummary.userHasProfPic) { %}
-		<div class="reactionPhoto photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
-		</div>
-		{% } %}
-		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
-		  <div class="" style="margin-left: 5px; ">
-			<a>{%=reactionResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=reactionResponse.reactionRichText%}</span><br>	
-			<span class="lt sf timeago" title="{%=reactionResponse.reactionTimeStamp%}">{%=reactionResponse.reactionTimeStamp%}</span>
-			{% if (reactionResponse.allowAgree || reactionResponse.allowRemoveAgree) { %}
-      		  <span id="reactionHighlightArea-{%=reactionResponse.reactionId%}">			
-		   		  {% if (reactionResponse.allowAgree) { %}
-					<span  title="Highlight" id="HighlightReacSubmit-{%=reactionResponse.documentPageId%}-{%=reactionResponse.reactionId%}-{%=reactionResponse.pageReactionId%}-{%=reactionResponse.pageReactionType%}-{%=reactionResponse.pageReactionTitle%}" class="ePtr sf cb hiliteResponse"><i class="fa fa-star" style="color: #3299BB;"></i> Highlight
-					</span>	 									
-				  {% } %}	     		  
-	     		  <span id="reactionAgreeCount-{%=reactionResponse.reactionId%}" class="sf cg ReactionAgreeCount">{% if (reactionResponse.agreeCount > 0) { %}<i class="fa fa-star"></i> ({%=reactionResponse.agreeCount%}){% } %}</span>
-		   		  {% if (reactionResponse.allowRemoveAgree) { %}
-					<span  title="Un Highlight" id="UnHighlightReacSubmit-{%=reactionResponse.reactionId%}-{%=reactionResponse.pageReactionType%}" class="ePtr sf cg unhiliteResponse"><i class="fa fa-star" style="color: grey;"></i> Remove
-					</span>										
-				  {% } %}          
-         	  </span>
-			{% } %}
-			{% if (reactionResponse.allowReply && o.allowPrivateTextReactions) { %}<span class="rpltxtreac  ePtr sf cb"  id="ReplyReac-{%=o.publicTextResponse.documentPageId%}-{%=reactionResponse.reactionId%}">Reply</span><br>
-			<span class="nd replyarea p" ><textarea class="rplytxtara sq fill box tnc lnc" id="TextArea-{%=o.publicTextResponse.documentPageId%}-{%=reactionResponse.reactionId%}" style="padding-top: 2px; padding-left: 2px; resize: none;" placeholder="Send Private Reply" rows="5"></textarea>
-			<input type="button" id="ReplyReacSubmit-{%=o.publicTextResponse.documentPageId%}-{%=reactionResponse.reactionId%}" style="display: none;"  class="ab p ReplyReacSubmit" value="Reply" />&nbsp;&nbsp;<input type="button" style="margin-left: 1em; display: none;" id="ReplyReacCancel-{%=o.publicTextResponse.documentPageId%}-{%=reactionResponse.reactionId%}" class="br lt p cancelrpltxtreac" value="Cancel" /></span>
-			{% } %}
-          </div>		  
-		</div>		
-		</div>		
-		</div>				
-	</li>
-	{% } %}
-	<div  id="RepliesToReplies-{%=reactionResponse.reactionId%}">
-      <div class="header"/>
-      <div class="replies">
-
-	<!-- Replies to comments -->
-	{% if (reactionResponse.replyReactionResponseList) { %}
-	<ul style="list-style: none; margin:0px; padding: 0px;" class="cd">
-	{% for (var j=0, replyResponse; replyResponse=reactionResponse.replyReactionResponseList[j]; j++) { %}
-	{% if (replyResponse.reactionType != 'AGREE') { %}
-	<li  style="list-style: none;" class="{%=replyResponse.reactionType%} {%=replyResponse.reactionNewOld%} {%=replyResponse.pageReactionType%}">
-		{% if (replyResponse.reactionRemoveableByUser) { %}
-		<div class="al" style="padding-left: 5px; " >
-			<a class="stdf remtxtreac lt ePtr u"  id="RemoveReac-{%=replyResponse.reactionId%}-{%=replyResponse.pageReactionType%}-{%=replyResponse.reactionType%}">Remove</a>&nbsp;<a class="stdf remtxtreacall lt ePtr u"  id="RemoveReac-{%=replyResponse.reactionId%}-{%=replyResponse.pageReactionType%}-{%=replyResponse.reactionType%}">Remove All From {%=replyResponse.userSummary.userFullName%}</a>                
-        </div>	
-		{% } %}					
-		<div class="yui3-g-r {%=replyResponse.reactionType%}" >
-		<div  class="yui3-u contactToolTip" style="text-align: left; width: 95%; padding-left: 2.5em;">
-		<span style="display:none;" id="#memberTooltipDetails">
-			<span class="memberTooltipUsername">{%=replyResponse.userSummary.username%}</span>
-			<span class="memberTooltipPhotoYesNo">{%=replyResponse.userSummary.userHasProfPic%}</span>
-			<span class="memberTooltipFullName">{%=replyResponse.userSummary.userFullName%}</span>
-			<span class="memberTooltipOrientation">e</span>
-			<span class="memberAdd">false</span>
-		</span>
-		{% if (replyResponse.userSummary.userHasProfPic) { %}
-		<div class="reactionPhoto photo-{%=replyResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=replyResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
-		</div>
-		{% } %}
-		{% if (!replyResponse.userSummary.userHasProfPic) { %}
-		<div class="reactionPhoto photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
-		</div>
-		{% } %}
-		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
-		  <div class="" style="margin-left: 5px; ">
-			<a>{%=replyResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=replyResponse.reactionRichText%}</span><br>	
-			<span class="lt sf timeago" title="{%=replyResponse.reactionTimeStamp%}">{%=replyResponse.reactionTimeStamp%}</span>
-			{% if (replyResponse.allowAgree || replyResponse.allowRemoveAgree) { %}
-      		  <span id="reactionHighlightArea-{%=replyResponse.reactionId%}">			
-		   		  {% if (replyResponse.allowAgree) { %}
-					<span  title="Highlight" id="HighlightReacSubmit-{%=replyResponse.documentPageId%}-{%=replyResponse.reactionId%}-{%=replyResponse.pageReactionId%}-{%=replyResponse.pageReactionType%}-{%=replyResponse.pageReactionTitle%}" class="ePtr sf cb hiliteResponse"><i class="fa fa-star" style="color: #3299BB;"></i> Highlight
-					</span>	 									
-				  {% } %}	     		  
-	     		  <span id="reactionAgreeCount-{%=replyResponse.reactionId%}" class="sf cg ReactionAgreeCount">{% if (replyResponse.agreeCount > 0) { %}<i class="fa fa-star"></i> ({%=replyResponse.agreeCount%}){% } %}</span>
-		   		  {% if (replyResponse.allowRemoveAgree) { %}
-					<span  title="Un Highlight" id="UnHighlightReacSubmit-{%=replyResponse.reactionId%}-{%=replyResponse.pageReactionType%}" class="ePtr sf cg unhiliteResponse"><i class="fa fa-star" style="color: grey;"></i> Remove
-					</span>										
-				  {% } %}          
-         	  </span>
-			{% } %}
-			{% if (replyResponse.allowReply && o.allowPrivateTextReactions) { %}<span class="rpltxtreac  ePtr sf cb  id="ReplyReac-{%=replyResponse.documentPageId%}-{%=replyResponse.toReactionId%}-{%=replyResponse.reactionId%}">Reply</span>
-			<span class="nd replyarea p" ><textarea class="rplytxtara sq fill box tnc lnc" id="ReplyTextArea-{%=replyResponse.documentPageId%}-{%=replyResponse.toReactionId%}-{%=replyResponse.reactionId%}" style="resize: none; padding-top: 2px; padding-left: 2px;" placeholder="Send Private Reply" rows="5"></textarea>
-			<input type="button" id="ReplyReacSubmit-{%=replyResponse.documentPageId%}-{%=replyResponse.toReactionId%}-{%=replyResponse.reactionId%}" class="ab p ReplyReacSubmit" value="Reply" />&nbsp;&nbsp;<input type="button" style="margin-left: 1em;" id="ReplyReacCancel-{%=replyResponse.documentPageId%}-{%=replyResponse.toReactionId%}-{%=replyResponse.reactionId%}" class="br lt p cancelrpltxtreac" value="Cancel" /></span>
-			{% } %}
-          </div>		  
-		</div>		
-		</div>		
-		</div>				
-	</li>
-	{% } %}	
-	{% } %}
-	</ul>
-	{% } %}
-	<!-- Replies to replies -->
-	  </div>
-	</div>
-	{% } %}
-	</ul>
-	{% } %}
-	</div>
-	{% } %}
-	<!-- Public Reactions End -->
-		{% if (o.allowPublicTextReactions) { %}
-	   	<div class="textAreaSection" style="margin: 0px; padding: 0px;" >
-			<textarea class="txtara sq fill p box bnc"  id="CommentArea-{%=o.storyDocumentPageId%}" style="resize: none; padding-top: 1em; padding-left: 1em;"  rows="2" placeholder="Add a Public Comment"></textarea>
-			<input type="button" id="submitTxtReaction-{%=o.storyDocumentPageId%}" style="display: none;" class="ab sf txtreaction ui-btn ui-btn-inline" value="Comment" />
-			<input type="button" id="cancel" style="display: none;"  class="br sf lt ui-btn ui-btn-inline txtaracancel" value="Cancel" />
-		</div>
-		{% } %}
-			</div>
-			{% if (o.publicTextResponse && o.publicTextResponse.pageReactionHasMoreReactions) { %}
-	   		<button class="ui-btn showMore sf ba cb showMoreTextReactions" id="showMore-{%=o.storyDocumentPageId%}-{%=o.publicTextResponse.pageReactionTitle%}-{%=o.publicTextResponse.pageReactionType%}" style="">Show more Comments</button>
-			{% } %}
-	   	</div>
-		<div class="textReactionList-{%=o.hasReplies%}" id="RepliesDiv-{%=o.storyDocumentPageId%}" style="display: none;">
-			<div class="textReactionList" style="max-height: 1000px; overflow-y: scroll; overflow-x: hidden;">
-	<!-- Private Reactions Start-->
-	{% if (o.privateTextResponse) { %}
-	<div id="TxtReactionList-{%=o.privateTextResponse.documentPageId%}-{%=o.privateTextResponse.pageReactionType%}" class="cd">		
-	{% if (o.privateTextResponse.reactionResponseList && o.privateTextResponse.reactionResponseList.length > 0) { %}
-	<ul style="list-style: none; margin: 0px; padding: 0px;">
-	{% for (var i=0, reactionResponse; reactionResponse=o.privateTextResponse.reactionResponseList[i]; i++) { %}
-	{% if (reactionResponse.reactionType != 'AGREE') { %}
-	<li  style="list-style: none;" class="{%=reactionResponse.reactionType%} {%=reactionResponse.reactionNewOld%}">
-		{% if (reactionResponse.reactionRemoveableByUser) { %}
-		<div class="al" style="padding-left: 5px; " >
-			<a class="stdf remtxtreac lt ePtr u"  id="RemoveReac-{%=reactionResponse.reactionId%}-{%=reactionResponse.pageReactionType%}-{%=reactionResponse.reactionType%}">Remove</a>&nbsp;<a class="stdf remtxtreacall lt ePtr u"  id="RemoveReac-{%=reactionResponse.reactionId%}-{%=reactionResponse.pageReactionType%}-{%=reactionResponse.reactionType%}">Remove All From {%=reactionResponse.userSummary.userFullName%}</a>                
-        </div>	
-		{% } %}					
-		<div class="yui3-g-r {%=reactionResponse.reactionType%}" >
-		<div  class="yui3-u contactToolTip" style="text-align: left; width: 95%; padding-left: 2.5em;">
-		<span style="display:none;" id="#memberTooltipDetails">
-			<span class="memberTooltipUsername">{%=reactionResponse.userSummary.username%}</span>
-			<span class="memberTooltipPhotoYesNo">{%=reactionResponse.userSummary.userHasProfPic%}</span>
-			<span class="memberTooltipFullName">{%=reactionResponse.userSummary.userFullName%}</span>
-			<span class="memberTooltipOrientation">e</span>
-			<span class="memberAdd">false</span>
-		</span>
-		{% if (reactionResponse.userSummary.userHasProfPic) { %}
-		<div class="reactionPhoto photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
-		</div>
-		{% } %}
-		{% if (!reactionResponse.userSummary.userHasProfPic) { %}
-		<div class="reactionPhoto photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
-		</div>
-		{% } %}
-		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
-		  <div class="" style="margin-left: 5px; ">
-			<a>{%=reactionResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=reactionResponse.reactionRichText%}</span><br>	
-			<span class="lt sf timeago" title="{%=reactionResponse.reactionTimeStamp%}">{%=reactionResponse.reactionTimeStamp%}</span>
-			{% if (reactionResponse.allowAgree || reactionResponse.allowRemoveAgree) { %}
-      		  <span id="reactionHighlightArea-{%=reactionResponse.reactionId%}">			
-		   		  {% if (reactionResponse.allowAgree) { %}
-					<span  title="Highlight" id="HighlightReacSubmit-{%=reactionResponse.documentPageId%}-{%=reactionResponse.reactionId%}-{%=reactionResponse.pageReactionId%}-{%=reactionResponse.pageReactionType%}-{%=reactionResponse.pageReactionTitle%}" class="ePtr sf cb hiliteResponse"><i class="fa fa-star" style="color: #3299BB;"></i> Highlight
-					</span>	 									
-				  {% } %}	     		  
-	     		  <span id="reactionAgreeCount-{%=reactionResponse.reactionId%}" class="sf cg ReactionAgreeCount">{% if (reactionResponse.agreeCount > 0) { %}<i class="fa fa-star"></i> ({%=reactionResponse.agreeCount%}){% } %}</span>
-		   		  {% if (reactionResponse.allowRemoveAgree) { %}
-					<span  title="Un Highlight" id="UnHighlightReacSubmit-{%=reactionResponse.reactionId%}-{%=reactionResponse.pageReactionType%}" class="ePtr sf cg unhiliteResponse"><i class="fa fa-star" style="color: grey;"></i> Remove
-					</span>										
-				  {% } %}          
-         	  </span>
-			{% } %}
-			{% if (reactionResponse.allowReply && o.allowPrivateTextReactions) { %}<span class="rpltxtreac  ePtr sf cb"  id="ReplyReac-{%=o.privateTextResponse.documentPageId%}-{%=reactionResponse.reactionId%}">Reply</span><br>
-			<span class="nd replyarea p" ><textarea class="rplytxtara sq fill box tnc lnc" id="TextArea-{%=o.privateTextResponse.documentPageId%}-{%=reactionResponse.reactionId%}" style="padding-top: 2px; padding-left: 2px; resize: none;" placeholder="Send Private Reply" rows="5"></textarea>
-			<input type="button" id="ReplyReacSubmit-{%=o.privateTextResponse.documentPageId%}-{%=reactionResponse.reactionId%}" class="ab p ReplyReacSubmit" value="Reply" />&nbsp;&nbsp;<input type="button" style="margin-left: 1em;" id="ReplyReacCancel-{%=o.privateTextResponse.documentPageId%}-{%=reactionResponse.reactionId%}" class="br lt p cancelrpltxtreac" value="Cancel" /></span>
-			{% } %}
-          </div>		  
-		</div>		
-		</div>		
-		</div>				
-	</li>
-	{% } %}
-	<div  id="RepliesToReplies-{%=reactionResponse.reactionId%}">
-      <div class="header"/>
-      <div class="replies">
-
-	<!-- Replies to replies -->
-	{% if (reactionResponse.replyReactionResponseList) { %}
-	<ul style="list-style: none; margin:0px; padding: 0px;" class="cd">
-	{% for (var j=0, replyResponse; replyResponse=reactionResponse.replyReactionResponseList[j]; j++) { %}
-	{% if (replyResponse.reactionType != 'AGREE') { %}
-	<li  style="list-style: none;" class="{%=replyResponse.reactionType%} {%=replyResponse.reactionNewOld%}">
-		{% if (replyResponse.reactionRemoveableByUser) { %}
-		<div class="al" style="padding-left: 5px; " >
-			<a class="stdf remtxtreac lt ePtr u"  id="RemoveReac-{%=replyResponse.reactionId%}-{%=replyResponse.pageReactionType%}-{%=replyResponse.reactionType%}">Remove</a>&nbsp;<a class="stdf remtxtreacall lt ePtr u"  id="RemoveReac-{%=replyResponse.reactionId%}-{%=replyResponse.pageReactionType%}-{%=replyResponse.reactionType%}">Remove All From {%=replyResponse.userSummary.userFullName%}</a>                
-        </div>	
-		{% } %}					
-		<div class="yui3-g-r {%=replyResponse.reactionType%}" >
-		<div  class="yui3-u contactToolTip" style="text-align: left; width: 95%; padding-left: 2.5em;">
-		<span style="display:none;" id="#memberTooltipDetails">
-			<span class="memberTooltipUsername">{%=replyResponse.userSummary.username%}</span>
-			<span class="memberTooltipPhotoYesNo">{%=replyResponse.userSummary.userHasProfPic%}</span>
-			<span class="memberTooltipFullName">{%=replyResponse.userSummary.userFullName%}</span>
-			<span class="memberTooltipOrientation">e</span>
-			<span class="memberAdd">false</span>
-		</span>
-		{% if (replyResponse.userSummary.userHasProfPic) { %}
-		<div class="reactionPhoto photo-{%=replyResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=replyResponse.userSummary.username%}?mediaType=jpeg'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
-		</div>
-		{% } %}
-		{% if (!replyResponse.userSummary.userHasProfPic) { %}
-		<div class="reactionPhoto photo"  style="background-image: url('img/User-plain.gif'); margin-left: -2.5em; float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; ">
-		</div>
-		{% } %}		
-		<div class="yui3-u" style="float: left; width: 95%; margin-bottom: 2px;" >
-		  <div class="" style="margin-left: 5px; ">
-			<a>{%=replyResponse.userSummary.userFullName%}</a>: <span class="stdf roberto cb">{%=replyResponse.reactionRichText%}</span><br>	
-			<span class="lt sf timeago" title="{%=replyResponse.reactionTimeStamp%}">{%=replyResponse.reactionTimeStamp%}</span>
-			{% if (replyResponse.allowAgree || replyResponse.allowRemoveAgree) { %}
-      		  <span id="reactionHighlightArea-{%=replyResponse.reactionId%}">			
-		   		  {% if (replyResponse.allowAgree) { %}
-					<span  title="Highlight" id="HighlightReacSubmit-{%=replyResponse.documentPageId%}-{%=replyResponse.reactionId%}-{%=replyResponse.pageReactionId%}-{%=replyResponse.pageReactionType%}-{%=replyResponse.pageReactionTitle%}" class="ePtr sf cb hiliteResponse"><i class="fa fa-star" style="color: #3299BB;"></i> Highlight
-					</span>	 									
-				  {% } %}	     		  
-	     		  <span id="reactionAgreeCount-{%=replyResponse.reactionId%}" class="sf cg ReactionAgreeCount">{% if (replyResponse.agreeCount > 0) { %}<i class="fa fa-star"></i> ({%=replyResponse.agreeCount%}){% } %}</span>
-		   		  {% if (replyResponse.allowRemoveAgree) { %}
-					<span  title="Un Highlight" id="UnHighlightReacSubmit-{%=replyResponse.reactionId%}-{%=replyResponse.pageReactionType%}" class="ePtr sf cg unhiliteResponse"><i class="fa fa-star" style="color: grey;"></i> Remove
-					</span>										
-				  {% } %}          
-         	  </span>
-			{% } %}
-			{% if (replyResponse.allowReply && o.allowPrivateTextReactions) { %}<span class="rpltxtreac  ePtr sf cb  id="ReplyReac-{%=replyResponse.documentPageId%}-{%=replyResponse.toReactionId%}-{%=replyResponse.reactionId%}">Reply</span>
-			<span class="nd replyarea p" ><textarea class="rplytxtara sq fill box tnc lnc" id="ReplyTextArea-{%=replyResponse.documentPageId%}-{%=replyResponse.toReactionId%}-{%=replyResponse.reactionId%}" style="resize: none; padding-top: 2px; padding-left: 2px;" placeholder="Send Private Reply" rows="5"></textarea>
-			<input type="button" id="ReplyReacSubmit-{%=replyResponse.documentPageId%}-{%=replyResponse.toReactionId%}-{%=replyResponse.reactionId%}" class="ab p ReplyReacSubmit" value="Reply" />&nbsp;&nbsp;<input type="button" style="margin-left: 1em;" id="ReplyReacCancel-{%=replyResponse.documentPageId%}-{%=replyResponse.toReactionId%}-{%=replyResponse.reactionId%}" class="br lt p cancelrpltxtreac" value="Cancel" /></span>
-			{% } %}
-          </div>		  
-		</div>		
-		</div>			
-		</div>				
-	</li>
-	{% } %}	
-	{% } %}
-	</ul>
-	{% } %}
-	<!-- Replies to replies -->
-	  </div>
-	</div>
-	{% } %}
-	</ul>
-	{% } %}
-	</div>
-	{% } %}
-	<!-- Private Reactions End -->
-		{% if (o.allowPrivateTextReactions) { %}
-	   	<div class="textAreaSection" style="margin: 0px; padding: 0px;" >
-			<textarea class="txtara sq fill p box bnc"  id="ReplyArea-{%=o.storyDocumentPageId%}" style="resize: none; padding-top: 1em; padding-left: 1em;" placeholder="Send Private Reply" rows="2"></textarea>
-			<input type="button" id="submitTxtReaction-{%=o.storyDocumentPageId%}" style="display: none;" class="ab sf txtreaction ui-btn ui-btn-inline" value="Comment" />
-			<input type="button" id="cancel" style="display: none;"  class="br sf lt ui-btn ui-btn-inline txtaracancel" value="Cancel" />
-		</div>
-		{% } %}
-			</div>
-			{% if (o.privateTextResponse && o.privateTextResponse.pageReactionHasMoreReactions) { %}
-			<button class="ui-btn showMore sf ba cb showMoreTextReactions" id="showMore-{%=o.storyDocumentPageId%}-{%=o.privateTextResponse.pageReactionTitle%}-{%=o.privateTextResponse.pageReactionType%}" >Show more Replies</button>
-			{% } %}
-		</div>	
-		{% if (o.clickResponsePageReactionId) { %}
-		<div class="defaultClickReactionList"  id="reactions-{%=o.clickResponsePageReactionId%}" style="display: none;">
-			<div  class="clickReactionList p" style="max-height: 1000px; overflow-y: scroll; overflow-x: hidden;">
-<!-- Click Reaction Response-->
-{% if (!o.clickReactionResponse.reactionResponseList) { %}
-<div id="ClickReactionList-{%=o.clickReactionResponse.documentPageId%}-{%=o.clickReactionResponse.pageReactionType%}" style="display: inline; " class="cd">	
-		<a href="http://www.palpostr.com/Palkar"><span class="roberto cg">To Highlight this Story, log on to www.palpostr.com/Palkar</span></a>
-</div>
-{% } %}
-{% if (o.clickReactionResponse.reactionResponseList) { %}
-<div id="ClickReactionList-{%=o.clickReactionResponse.documentPageId%}-{%=o.clickReactionResponse.pageReactionType%}" style="display: inline; " class="cd">	
-	<ul style="list-style: none; margin: 0px; padding: 0px; display: inline;" class="cd">
-	{% for (var i=0, reactionResponse; reactionResponse=o.clickReactionResponse.reactionResponseList[i]; i++) { %}
-	<li  style="display: inline; list-style: none; margin: 0px; padding: 1px;"  >
-	  <div class="contactToolTip" style="display: inline-block; margin: 0px; padding: 0px;">
-	   <a style="margin: 0px; padding: 0px;" title="{%=reactionResponse.userSummary.userFullName%}" >
-		<span style="display:none; float: left;" id="#memberTooltipDetails">
-			<span class="memberTooltipUsername">{%=reactionResponse.userSummary.username%}</span>
-			<span class="memberTooltipPhotoYesNo">{%=reactionResponse.userSummary.userHasProfPic%}</span>
-			<span class="memberTooltipFullName">{%=reactionResponse.userSummary.userFullName%}</span>
-			<span class="memberTooltipOrientation">e</span>
-			<span class="memberAdd">false</span>
-		</span>
-		{% if (reactionResponse.userSummary.userHasProfPic) { %}
-		<div class="reactionPhoto photo-{%=reactionResponse.userSummary.userProfPicId%}"  style="background-image: url('http://www.palpostr.com/userpictn/{%=reactionResponse.userSummary.username%}?mediaType=jpeg'); float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>
-		{% } %}
-		{% if (!reactionResponse.userSummary.userHasProfPic) { %}
-		<div class="reactionPhoto photo"  style="background-image: url('img/User-plain.gif'); float: left; height: 2.5em; width: 2.5em; border: 1px solid #3299BB; background-size: 2.5em 2.5em; background-repeat: no-repeat; background-position: center center; "/>		
-		{% } %}
-	   </a>
-	  </div>
-	</li>
-	{% } %}
-	</ul>
-</div>
-{% } %}
-<!-- Click Reaction Response End -->
-			</div>
-			 {% if (o.clickReactionResponse && o.clickReactionResponse.pageReactionHasMoreReactions) { %}
-			<button class="ui-btn showMore sf ba cb showMoreClickReactions" id="showMore-{%=o.clickReactionResponse.pageReactionId%}" >Show more {%=o.clickResponseTitle%}</button>
-			{% } %}
-		</div>
-		{% } %}
-	</div>
-			</div>	
-		</div>
-		<div class="bnc sf" id="TextReacSelection-{%=o.storyDocumentPageId%}" style="display: none;">
-			<button id="Comments-{%=o.storyDocumentPageId%}" class="ui-btn ui-btn-inline cmt ca stdf ePtr ab cw cmntsection" style="border: 0px solid; margin: 0px;" >Comments {% if (o.publicTextResponse) { %}({%=o.publicTextResponse.pageReactionCount%}){% } %}
-			</button>
-			<button  id="Replies-{%=o.storyDocumentPageId%}" class="ui-btn ui-btn-inline ab stdf cw ePtr rplysection" style="border: 0px solid; margin: 0px;" ><span style="padding-right: 5px;">Replies {% if (o.privateTextResponse) { %}({%=o.privateTextResponse.pageReactionCount%}){% } %} </span>
-			</button>
-			{% if (o.clickResponsePageReactionId) { %}
-			<button  id="clickReacMessage-{%=o.clickResponsePageReactionId%}" class="ui-btn ui-btn-inline ab stdf cw ePtr clickReacMessage" style="border: 0px solid; margin: 0px;" ><span style="padding-right: 5px;">{%=o.clickResponseTitle%} {% if (o.clickReactionResponse) { %}({%=o.clickReactionResponse.pageReactionCount%}){% } %} </span>
-			</button>
-			{% } %}
-	   	</div>
-	</div> 
-	<div class="yui3-u storyItemFooter {%=o.hasComments%} {%=o.hasReplies%} p" id="storyItemFooter-{%=o.storyDocumentPageId%}" style="width: 100%;">
-		<div  class="ar" style="height: 100%; float: left; width: 100%;" id="storyItemFooterDiv-{%=o.storyDocumentPageId%}">
-			{% if (o.clickResponseTitle && o.allowClickReactions) { %}
-			  	{% if (o.clickReactionEnabled == 'enabled') { %}
-					<button type="button" title="Click to highlight this story among your friends." id="button-{%=o.clickResponsePageReactionId%}-{%=o.clickReactionEnabled%}" class="yui3-button sf cb b hilite" style="float: left; background-image: url(http://www.palpostr.com/resources/images/icons/stared.gif); background-color: #ffffff;">{%=o.clickResponseTitle%}
-					</button>
-				{% } %}
-				{% if (o.clickReactionEnabled == 'disabled') { %}
-					<button type="button" title="Click to remove your reaction for this story." id="button-{%=o.clickResponsePageReactionId%}-{%=o.clickReactionEnabled%}" class="yui3-button sf cb b hilite" style="float: left; background-image: url(http://www.palpostr.com/resources/images/icons/stared.gif); background-color: #3299BB;">Remove
-					</button>										
-				{% } %}										
-			{% } %}		
-			{% if (o.pageCanBeShared) { %}
-				<button type="button" id="sharePage-{%=o.storyDocumentPageId%}" class="sharePageButton yui3-button sf cb bw"><i class="fa fa-retweet"></i></button>
-			{% } %}	
-			{% if (o.userCanUnShare) { %}
-				<button type="button" id="unSharePage-{%=o.referenceID%}" class="unSharePageButton yui3-button sf cb bw"><i class="fa fa-times"></i><span class="bigScreenItem">Remove from {%=o.referencedDocumentName%}</span></button>
-			{% } %}			
-   			{% if (o.pageReferenceInformation && o.pageReferenceInformation.sharedCount > 0) { %}
-			<a  id="ShareReacSummary-{%=o.storyDocumentPageId%}" class="ShareSummary"> 
-    				<i class="fa fa-retweet"></i>	<span class="bigScreenItem">RePosts</span> ({%=o.pageReferenceInformation.sharedCount%})
-			</a>
-    		{% } %}	
-			<a  id="WhatsAppShare-{%=o.storyDocumentPageId%}" href="whatsapp://send?text={% if (o.story){ %}{%=o.story%}{% } %} Read more on Palkar App http://www.palpostr.com/{%=o.storyDocumentType%}/Story/{%=o.storyDocumentPageId%}-true?fromWhatsApp=true" class="WhatsAppShare">
-				<i class="fa fa-whatsapp" aria-hidden="true"></i>
-			</a>			
-			<a  id="CommentsReacSummary-{%=o.storyDocumentPageId%}" title="Number of Comments" class="CommentsSummary">
-				{% if (o.publicTextResponse) { %}
-					{% if (o.publicTextResponse.pageReactionCount == 0 || !o.publicTextResponse.pageReactionCount) { %}
-						<i class="fa fa-comments-o"></i>
-					{% } %}
-					{% if (o.publicTextResponse.pageReactionCount > 0) { %}
-						<i class="fa fa-comments"></i>&nbsp;
-					{% } %}
-					<span class="bigScreenItem">Comments</span>
-					{% if (o.publicTextResponse.pageReactionCount > 0) { %}
-						({%=o.publicTextResponse.pageReactionCount%})
-					{% } %}
-				{% } %}
-			</a>
-			<a  id="HighlightReacSummary-{%=o.clickResponsePageReactionId%}" title="Number of Highlights" class="HighlightSummary">
-				{% if (o.clickReactionResponse) { %}
-					{% if (o.clickReactionResponse.pageReactionCount == 0) { %}
-						<i class="fa fa-star-o"></i>
-					{% } %}
-					{% if (o.clickReactionResponse.pageReactionCount > 0) { %}
-						<i class="fa fa-star"></i>&nbsp;
-					{% } %}
-					<span class="bigScreenItem">{%=o.clickResponseTitle%}</span>
-					{% if (o.clickReactionResponse.pageReactionCount > 0) { %}
-						({%=o.clickReactionResponse.pageReactionCount%})
-					{% } %}
-				{% } %}
-			</a>
-			{% if (o.viewReactionResponse) { %}
-			<a  id="ViewReacSummary-{%=o.viewReactionResponse.pageReactionId%}" title="Number of people who viewed this story" class="ViewSummary">
-					{% if (o.viewReactionResponse.pageReactionCount == 0) { %}
-						<i class="fa fa-eye"></i>
-					{% } %}
-					{% if (o.viewReactionResponse.pageReactionCount > 0) { %}
-						<i class="fa fa-eye"></i>&nbsp;
-					{% } %}
-					<span class="bigScreenItem">Views</span>
-					{% if (o.viewReactionResponse.pageReactionCount > 0) { %}
-						({%=o.viewReactionResponse.pageReactionCount%})
-					{% } %}
-			</a>
-			{% } %}
-		</div>		
-	</div> 
-			{% if (o.storyType == 'RICHTEXT' || o.storyType === 'COVERPAGE') { %}
-	   			{% if (o.storyDeleteAllowed) { %}
-					<a style="font-weight: 500;"  id="deleteStory-{%=o.storyDocumentPageId%}" class="ePtr sf cg deleteStory">Delete Story</a>       
-   					<a style="font-weight: 500;"  id="editStory-{%=o.storyDocumentPageId%}-{%=o.storyDocumentType%}" class="ePtr sf cg editStory">Edit Story</a>
-	      		{% } %}
-	   			{% if (!o.storyDeleteAllowed && o.storyEditAllowed) { %}       
-   					<a style="font-weight: 500;" id="editStory-{%=o.storyDocumentPageId%}-{%=o.storyDocumentType%}" class="ePtr sf cg editStory">Edit Story</a>
-	      		{% } %}
-			{% } %}	
-</div>
-{% } %}
-{% } %}
-</script>
+<script type="text/template" id="jstemplate-login-success-label"><i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home</script>
+<script type="text/template" id="jstemplate-login-success-message">Login Success!</script>
+<script type="text/template" id="jstemplate-registration-success-message">Your Registration was Successful! <br> <a class="ui-btn cd" href="#inviteFrields"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;Invite Friends</a> <br> <a  href="#mainPage" id="palpostr-url" class="ui-btn ui-btn-inline noshadow"><i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home</a></script>
+<script type="text/template" id="jstemplate-login-message"><i class="fa fa-lock"></i>&nbsp;Please Login using PalPostr Account</script>
+<script type="text/template" id="jstemplate-login-label"><i class="fa fa-lock"></i>&nbsp;Login</script>
 <script type="text/template" id="jstemplate-pageViewController-placeHolderContainer">
 <div id="placeHolderContainer" class="container placeHolderContainer" style="padding: 0em;  text-align: center; " class="tile">
 	<img src="img/Palkar.png" height="64" /><br>
 	<span class="sr-only bigScreenItem">Loading...</span>
 </div>
 </script>
-<script type="text/x-tmpl" id="template-documentItemList">	
-{% for (var i=0, documentItem; documentItem=o.documentListResponse.documentItemList[i]; i++) { %}
-
-{% if (documentItem.documentCoverMediaItem) { %}
-<a style="text-decoration: none; text-alg; background-image: url('http://www.palpostr.com/tnphoto1.pvt/{%=documentItem.documentCoverMediaItem.documentPageId%}?mediaType=jpeg');" data-snippet-url="http://www.palpostr.com/{%=documentItem.documentType%}/snippet/page/{%=documentItem.documentId%}?viewAllStories=true&mediaType=text" class="ui-btn snippetAnchorWithPic asper {% if (documentItem.pageCategories && documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=documentItem.pageCategories[j]; j++) { %}{%=category%} {% } %} {% } %}">
-{% } %}		
-{% if (!documentItem.documentCoverMediaItem) { %}
-<a style="text-decoration: none; text-alg;" data-snippet-url="http://www.palpostr.com/{%=documentItem.documentType%}/snippet/page/{%=documentItem.documentId%}?viewAllStories=true&mediaType=text" class="ui-btn asper {% if (documentItem.pageCategories && documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=documentItem.pageCategories[j]; j++) { %}{%=category%}{% } %} {% } %}">
-{% } %}		
-	<span>{%=documentItem.documentTitle%}</span><br>
-	<span>
-		{% if (documentItem.pageCategories && documentItem.pageCategories.length > 0) { %}{% for (var j=0, category; category=documentItem.pageCategories[j]; j++) { %}{%=category%}&nbsp;{% } %} {% } %}		
-	</span>
-</a>
-{% } %}
+<script type="text/template" id="jstemplate-unAuthorizedAccessDialog">
+				<div id="unAuthorizedAccessDialog" class="container subContainer">
+					<p>To protect your identity, you need to login or register to use this feature. </p>
+					<a href="#loginRegisterPage" onclick="Core.publish('initializeUserRegistration', null);" class="containerBackButton">Continue</a>
+				</div>			
 </script>
-
-<script type="text/JavaScript">
+<script type="text/unittest">
 $(document).ready(function(){
 
-	try{
-	Core.register('clickReactionsController',clickReactionsController,{relPath: "http://192.168.0.101:8080/palpostr/", reactionCountPerPage: "5"});
-	Core.register('textReactionsController',textReactionsController,{relPath: "http://192.168.0.101:8080/palpostr/", reactionCountPerPage: "5"});
-	Core.register('storyItemController',storyItemController, {relPath: "http://192.168.0.101:8080/palpostr/", storyPage: false, authenticatedUser: "none", storyJSTemplateName: "template-storyTemplate", getMoreStories: true, storiesDivId: "#storiesDiv", appname: "palkartest", numberOfStoriesToGet: 5});
-	Core.register('pageViewController', pageViewController, {relPath: "http://192.168.0.101:8080/palpostr/", loadingText: "Welcome, <br> We are downloading your stream.", appname: "PalkarTest", appmaintitle: "Community Updates", appextendedtitle: "Share your local community stories and pictures with more than 1 Million Palkars worldwide", streamSize: 5});	
-	Core.register('sseController',sseController, {relPath: "http://192.168.0.101:8080/palpostr/", username: "guest", userAuthenticated: "false", pageHandle: "PalkarTest"});
-	Core.register('userLoginController',userLoginController, {relPath: "http://192.168.0.101:8080/palpostr/", pageHandle: "PalkarTest"});
+try{
+	Core.register('clickReactionsController',clickReactionsController,{relPath: "", reactionCountPerPage: "5"});
+	Core.register('textReactionsController',textReactionsController,{relPath: "", reactionCountPerPage: "5"});
+	Core.register('storyEditController',storyEditController,{elemHandle: '#createStory', relPath: "http://www.palpostr.com/", addPostTextAreaHandle: ".addPostTextArea", storiesDiv: "#storiesDiv", storyJSTemplateName: "template-storyTemplate"});		
+	Core.register('storyItemController',storyItemController, {relPath: "", storyPage: false, authenticatedUser: "none", storyJSTemplateName: "template-storyTemplate", getMoreStories: true, storiesDivId: "#storiesDiv", appname: "Palkar", numberOfStoriesToGet: 5});
+	Core.register('pageViewController', pageViewController, {relPath: "", loadingText: "Welcome, <br> We are downloading your stream.", appname: "Palkar", appmaintitle: "Community Updates", appextendedtitle: "Share your local community stories and pictures with more than 1 Million Palkars worldwide", streamSize: 5});	
+	Core.register('sseController',sseController, {relPath: "", username: "guest", userAuthenticated: "false", pageHandle: "Palkar"});
+	Core.register('userLoginController',userLoginController, {relPath: "", pageHandle: "Palkar", palpostrHost: "http://192.168.0.101:8080/palpostr/"});
+	Core.register('messageDisplayController',messageDisplayController,{appname: 'Palkar'});
+	Core.register('photoUploadController',photoUploadController, {relPath: "", containerDiv: "#photoUploadContainerDiv"});
+	Core.register('albumsController',albumsController,{relPath: "http://www.palpostr.com/"});
+	Core.register('userLogo',userLogo,{elemHandle: '#user-logo', relPath: "http://www.palpostr.com/"});
 	
-	Core.start('clickReactionsController');
-	Core.start('textReactionsController');
-	Core.start('storyItemController');
+	Core.loadUserData("http://www.palpostr.com/");
 	Core.start('pageViewController');
+	Core.start('photoUploadController');
+	Core.start('clickReactionsController');
+	Core.start('messageDisplayController');
+	Core.start('textReactionsController');
+	Core.start('storyEditController');
+	Core.start('storyItemController');
 	Core.start('sseController');
 	Core.start('userLoginController');
+	Core.start('albumsController');
+	Core.start('userLogo');
 	
 	}catch(err){
 		alert(err);
@@ -895,6 +497,5 @@ $(document).ready(function(){
 
 });
 </script>
-
 
 </html>
