@@ -5,7 +5,7 @@ var textReactionsController = function(sb, input){
 	function _addTextReaction(e){
 	 try{		
 		if(sb.utilities.isUserLoggedIn()){
-			reactionText = sb.dom.find('#'+e.currentTarget.id).parent().find('.txtara').val();
+			reactionText =  tinymce.html.Entities.encodeNumeric(sb.dom.find('#'+e.currentTarget.id).parent().find('.txtara').val());
 			sb.dom.find('#'+e.currentTarget.id).parent().find('.txtara').val("");
 			docPageId = e.currentTarget.id.split("-")[1];
 			var addPageReactionTitle=sb.dom.find("#TxtReactionList-"+docPageId).find(".textReacSelection").html();

@@ -1,7 +1,7 @@
 var userLogo = function(sb, input){
-	var htmlBody = sb.dom.find(input.elemHandle), relPathIn=input.relPath, userToolTipCard = null,
-	    userLogoHtml = null, changePictureLinkNode=null, timeout=null, tStamp=1, profpicurl=null, profilepicalbumid = null,
-		userLogoNode=null, userLogoPanelHtml=null, userLogoPanelNode=null, userLogoNodePos=null, userLogoNameNode=null, tempUserDetail = null, tempLocation = null,
+	var htmlBody = sb.dom.find(input.elemHandle), relPathIn=input.relPath, userToolTipCard = null, notificationButton = sb.dom.find("#notificationButton"), notificationPanel = null, tempName = null,
+	    userLogoHtml = null, changePictureLinkNode=null, timeout=null, tStamp=1, profpicurl=null, profilepicalbumid = null, 
+		userLogoNode=null, userLogoPanelHtml=null, userLogoPanelNode=null, userLogoNodePos=null, userLogoNameNode=null, tempUserDetail = null, tempLocation = null, pushNotification = null,
 		stopPushNotificationButtonHtml = sb.dom.find('#jstemplate-stopPusbNotificationButtonHtml').html(), activatePushNotificationButtonHtml = sb.dom.find('#jstemplate-activatePushNotificationButtonHtml').html();
  
 
@@ -34,8 +34,20 @@ var userLogo = function(sb, input){
 				profpicurl = relPathIn+'api/profpic/'+tStamp+'?a='+sb.utilities.getUserInfo().authorization;
 			   var newProfPicture = sb.dom.wrap('<img>');
 			   newProfPicture.attr({'src': profpicurl});
-			   sb.dom.find(userToolTipCard).find('.card-image').find('img').remove();
-			   sb.dom.find(userToolTipCard).find('.card-image').prepend(newProfPicture);
+			   if(sb.dom.find(userToolTipCard).find('.card-image').length > 0){
+				   sb.dom.find(userToolTipCard).find('.card-image').find('img').remove();
+				   sb.dom.find(userToolTipCard).find('.card-image').prepend(newProfPicture);				   
+			   }else{
+				 var cardImageDiv = sb.dom.wrap('<div>');
+				 cardImageDiv.addClass('card-image');
+				 cardImageDiv.html(newProfPicture);
+				 var cardTitleSpan = sb.dom.wrap('<span>');
+				 cardTitleSpan.addClass("card-title");
+				 cardTitleSpan.html(sb.utilities.getUserInfo().userDetails.userAccount.userFullName);
+				 cardImageDiv.append(cardTitleSpan);
+				 sb.dom.find(userToolTipCard).prepend(cardImageDiv);
+			   }
+
 		}catch(e){
 					alert(e);   
 		}		
@@ -109,6 +121,7 @@ var userLogo = function(sb, input){
 	   try{		   
 		   sb.dom.find(userToolTipCard).find("#updateDetailsText").click(_userDetailsChanged);
 		   sb.dom.find(userToolTipCard).find("#updateLocation").click(_userLocationChanged);
+		   sb.dom.find(userToolTipCard).find("#updateName").click(_userNameChanged);		   
 		   sb.dom.find(userToolTipCard).find("#changeProfilePicture").click(_changeProfilePicture);		   
 		   sb.dom.find(userToolTipCard).find("#changeProfilePictureFromGallery").click(_changeProfilePictureFromGallery);
 		   sb.dom.find(userToolTipCard).find("#changeProfilePictureFromCamera").click(_changeProfilePictureFromCamera);	
@@ -137,6 +150,13 @@ var userLogo = function(sb, input){
 	   sb.utilities.getUserInfo().userDetails.userAccount.location = tempLocation;
    }
    
+   function _userFullNameUpdateSuccess(data){
+	   Materialize.toast('Saved!', 2000);
+	   sb.utilities.getUserInfo().userDetails.userAccount.userFullName = tempName;
+	   sb.dom.find(userToolTipCard).find('.card-title').html(tempName);
+	   sb.dom.find(userToolTipCard).find('.card-content').find('p').html('Welcome, ' + tempName);
+   }
+   
    function _userDetailsChanged(e){
 	   tempUserDetail = sb.dom.find(this).parent().find('textarea').val();
 	   sb.utilities.postV2("userdetailsText?mediaType=json",{detailsText: tempUserDetail},_userDetailsUpdateSuccess);
@@ -147,6 +167,19 @@ var userLogo = function(sb, input){
 	   sb.utilities.postV2("userlocation?mediaType=json",{location: tempLocation},_userLocationUpdateSuccess);
    }
    
+   function _userNameChanged(e){
+	   tempName = sb.dom.find(this).parent().find('textarea').val();
+	   if(isNotEmpty(tempName)){
+			   sb.utilities.postV2("userFullName?mediaType=json",{fullName: tempName},_userFullNameUpdateSuccess);	   
+	   }
+	}
+	function isNotEmpty(str){
+		if(str == null || str == '' || str == 'undefined'){
+			return false;	
+		}else{
+			return true;	
+		}
+	}	
    function _pushNotificationRegistrationResponseReceived(registrationInfo){ 
    		try{
 			var registerPushRequest = {
@@ -185,23 +218,55 @@ var userLogo = function(sb, input){
 			if(sb.dom.find('#storyItem-'+message.additionalData.deleteStoryId).length > 0){
 				sb.dom.find('#storyItem-'+message.additionalData.deleteStoryId).remove();															   
 		   }
-		}		
+		}
+		try{
+			var notificationHtml = tmpl('jstemplate-notification-item', message);
+			if(sb.dom.find(notificationPanel).find('.notificationItem').length == 0){
+				notificationPanel.html(sb.dom.wrap(notificationHtml));		
+			}else{
+				notificationPanel.prepend(sb.dom.wrap(notificationHtml));
+			}
+			notificationButton.show();
+			notificationButton.find('.fa').addClass('fa-bell');
+			notificationButton.find('.fa').removeClass('fa-bell-o');
+			notificationButton.find('#notificationCount').html(sb.dom.find(notificationPanel).find('.NewEntry').length);
+		}catch(e){
+			alert(e);	
+		}
    }
    
+   function _notificationItemClickReceived(message){
+			sb.dom.find(notificationPanel).find('#'+message.id).removeClass('NewEntry');
+			if(sb.dom.find(notificationPanel).find('.NewEntry').length > 0){
+				notificationButton.find('#notificationCount').html(sb.dom.find("#notificationPane").find('.NewEntry').length);
+			}else{
+				notificationButton.find('#notificationCount').html("");
+			}	   
+   }
    function _setupPushNotifications(){
-		var pushNotification = PushNotification.init({
+		pushNotification = PushNotification.init({
 						android: {
 						senderID: "601600954865"
 						},
 						ios: {
 						alert: "true",
 						badge: true,
-						sound: 'false'
+						sound: 'false',
+						clearBadge: 'true'
 						},
 						windows: {}
 						});
 		pushNotification.on('registration', _pushNotificationRegistrationResponseReceived);
-		pushNotification.on('notification', _pushNotificationMessageReceived);
+		pushNotification.on('notification', _pushNotificationMessageReceived);	
+		notificationPanel = sb.dom.wrap(sb.dom.find("#jstemplate-notifications-pane").html());		
+		notificationButton.data('powertipjq', notificationPanel);
+		notificationButton.powerTip({
+					  placement: 'se-alt',
+					  mouseOnToPopup: false,
+					  smartPlacement: false,
+					  offset: 0
+				   });
+		notificationButton.removeAttr("href");
    }
    function _setupProfile(message){
 				var userPreferencesCard = tmpl('template-user-panel-edit', sb.utilities.getUserInfo());
@@ -262,6 +327,7 @@ var userLogo = function(sb, input){
 			}			
 			sb.utilities.getUserInfo().userDetails.userAccount.deviceId = response.deviceId;
 			sb.utilities.getUserInfo().userDetails.userAccount.streamingActive = true;
+			Core.subscribe('notificationItemClick', _notificationItemClickReceived);			
 		}else{
 			navigator.notification.alert('There was a problem while setting up your push notification.' + response.txtStatusReason, dismissAlert, input.appname, 'Ok, Thanks');					
 		}
@@ -296,6 +362,22 @@ var userLogo = function(sb, input){
 		alert(JSON.stringify(response) + " " + JSON.stringify(errorMessage) + " " + JSON.stringify(errorObj));
 	}
 	
+	function _successHandler(){
+		;	
+	}
+	function _failureHandler(){
+		;	
+	}	
+	function _applicationResumeEvent(message){
+
+		try{
+			pushNotification.setApplicationIconBadgeNumber(_successHandler, _failureHandler, 0);
+		}catch(e){
+			console.log(e);	
+		}
+		
+	}
+	
    return{
 	   init:function() {
        	try{
@@ -304,10 +386,7 @@ var userLogo = function(sb, input){
 			Core.subscribe('profilePreferencesClick', _profilePreferencesClick);		
 			Core.subscribe('refreshProfilePicture', _refreshProfilePicture);
 			Core.subscribe('removeProfilePicture', _removeProfilePicture);	
-
-
-
-
+			Core.subscribe('applicationResume', _applicationResumeEvent);
 			Core.subscribe('registerPushNotification', _registerPushNotification);	
 			Core.subscribe('stopPushNotification', _stopPushNotification);	
 			Core.subscribe('activatePushNotification', _activatePushNotification);				

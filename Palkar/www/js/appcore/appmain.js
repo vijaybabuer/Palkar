@@ -329,15 +329,18 @@ Core = function(_$) {
 		alert('device accounts ' + JSON.stringify(accounts));
 	}
 	
+	function disconnectAlertDismissed(){
+		;	
+	}
 	function defaultErrorMethod(request, errorMessage, errorObj){
-		alert('Default error' + JSON.stringify(request));
+			navigator.notification.alert('Restarting app to get latest info from server.', disconnectAlertDismissed, input.appname, 'Ok, Thanks');
 			if(navigator.app){
 				navigator.app.exitApp();
 			}else if(navigator.device){
 				navigator.device.exitApp();
 			}else{
 				navigator.notification.alert('There was a problem processing your request. You may be able to fix this by restarting your App. If the problem persists, please contact your Community Coordinator.', disconnectAlertDismissed, input.appname, 'Ok, Thanks');		
-			}		
+			}
 		//alert("There was a problem processing your request. You may be able to fix this by restarting your App. If the problem persists, please contact your Community Coordinator." + JSON.stringify(errorMessage) + " " + JSON.stringify(errorObj) );	
 	}
 	function _getDeviceAccountsError(error){

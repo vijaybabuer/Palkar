@@ -122,6 +122,7 @@ var photoUploadController = function(sb, input){
 			_updateAlbumView(data);
 			if(appPicInput.documenttype == 'PROFPICS'){
 				sb.utilities.getUserInfo().userDetails.profilePictureId = data.documentpageid;
+				Core.publish('refreshProfilePicture', null);
 			}
 		}
 	}

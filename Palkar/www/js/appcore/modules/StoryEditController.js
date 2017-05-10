@@ -226,9 +226,11 @@ var storyEditController = function(sb, input){
 		   Core.publish("displayMessage",{message: "Please choose the document to post the story to." + documentId, messageType: "alert"});
 	   }else{
 		   if(httpMethod=="POST"){
-			   sb.utilities.postV2("shrmsg.pvt?mediaType=json",{title: subjectBox.val(), details: messageBox.html(), documentId: documentidBox.val(), albumId: albumForStoryID, allowPublicTextReactions: allowPublicTextReactions, allowPrivateTextReactions: allowPrivateTextReactions, allowClickReactions: allowClickReactions}, sendMessageSuccess);
+			   var detailsMessage = tinymce.html.Entities.encodeNumeric(messageBox.text());
+														 
+			   sb.utilities.postV2("shrmsg.pvt?mediaType=json",{title: subjectBox.val(), details: detailsMessage, documentId: documentidBox.val(), albumId: albumForStoryID, allowPublicTextReactions: allowPublicTextReactions, allowPrivateTextReactions: allowPrivateTextReactions, allowClickReactions: allowClickReactions}, sendMessageSuccess);
 		   }else if(httpMethod=="PUT"){
-			   sb.utilities.put("shrmsg.pvt?mediaType=json",{title: subjectBox.val(), details: messageBox.html(), documentId: "", albumId: albumForStoryID, documentpageid: editStoryDocumentPageId, allowPublicTextReactions: allowPublicTextReactions, allowPrivateTextReactions: allowPrivateTextReactions, allowClickReactions: allowClickReactions},updateMessageSuccess);
+			   sb.utilities.put("shrmsg.pvt?mediaType=json",{title: subjectBox.val(), details: detailsMessage, documentId: "", albumId: albumForStoryID, documentpageid: editStoryDocumentPageId, allowPublicTextReactions: allowPublicTextReactions, allowPrivateTextReactions: allowPrivateTextReactions, allowClickReactions: allowClickReactions},updateMessageSuccess);
 		   }
 		   alertBeforeNavigatingAway = false;
 		   Core.publish('storyEditStatusUpdate', {storyEditHappening: alertBeforeNavigatingAway});
@@ -543,6 +545,18 @@ var storyEditController = function(sb, input){
 	 //  _showNewMessageForm();
 	 newMessageButton.show();
 	}
+	
+	function _shareScoreMessage(message){
+		_showNewMessageForm();
+		try{
+		var messageText = "Can you beat my score of " + message.score + " at " + message.game + "?";
+		var subjectText = sb.utilities.getUserInfo().userDetails.userAccount.userFullName + " shared a score";
+		messageBox.html(messageText);
+		subjectBox.val(subjectText);
+		}catch(e){
+			alert(e);	
+		}
+	}
    function _startController(){
 				try{
        			//Module Initializing
@@ -601,6 +615,7 @@ var storyEditController = function(sb, input){
 	    		Core.subscribe('addAlbumButtonClick', _newAlbumMessageReceived);
 	    		Core.subscribe('pageSnippetAdded', _pageSnippetAddedProcess);
 				Core.subscribe('userLoginEvent', _userLoggedIn);
+				Core.subscribe('shareScore', _shareScoreMessage);
 				}catch(e){
 					alert(e);	
 				}

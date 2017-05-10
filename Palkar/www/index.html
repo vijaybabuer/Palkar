@@ -41,8 +41,11 @@
 		<link rel="stylesheet" href="css/wysiwyg.css" type="text/css" />
 		<link rel="stylesheet" href="css/swipe.css" type="text/css" />		
 		<link rel="stylesheet" href="css/scroll.css" type="text/css" />
+		<!-- Begin emoji-picker Stylesheets -->
+		
 		<link rel="apple-touch-icon" href="icon.png">
         <title>Welcome to Palkar News!</title>
+	
 		<style type="text/css" media="all">
 			@font-face{
 				font-family: AsperGit;
@@ -56,15 +59,16 @@
         <div data-role="page" class="appBody" id="mainPage" > 		       
 				<div class="appHeader noshadow">
 					<div class="topRow">
-						<a href="#rightPanel" class="ui-btn ui-btn-inline noshadow" id="showRightPanel"><i class="fa fa-bars"></i></a>
-						<a class="ui-btn ui-btn-inline noshadow" id="newMessageButton"><i class="material-icons">message</i></a>						
+						<a class="ui-btn ui-btn-inline noshadow" href="#loginRegisterNotification" id="notificationButton"><i class="fa fa-bell" aria-hidden="true"></i><span id="notificationCount"></span></a>					
+						<a href="#rightPanel" class="ui-btn ui-btn-inline noshadow" id="showRightPanel"><i class="fa fa-bars"></i></a>	
+						<a  href="" class="ui-btn ui-btn-inline noshadow" id="newMessageButton"><i class="fa fa-plus" aria-hidden="true"></i></a>						
 						<a href="#loginRegisterPage" class="ui-btn ui-btn-inline noshadow" id="loginRegisterButton"><i class="fa fa-user-plus" aria-hidden="true"></i></a>				
 						
 						<a  id="containerBackButton" class="ui-btn ui-btn-inline noshadow nd">
 							<i class="fa fa-chevron-left"></i>
 						</a>
 						<a  href="#leftPanel" id="palpostr-url" class="ui-btn ui-btn-inline noshadow" >
-							<i class="fa fa-home" aria-hidden="true"></i>&nbsp;Palkar
+							Palkar
 						</a>		
 					</div>
 				</div>
@@ -73,8 +77,9 @@
 					<div>
 						  <ul class="tabs">
 							<!-- <li class="tab col"><a id="storyPostContainerTab" href="#storyPostContainer"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Post</a></li> -->
-							<li class="tab col"><a class="active" href="#mainContainer">Stream</a></li>
-							<li class="tab col"><a id="profileContainerTab" href="#profileContainer"><i class="fa fa-user" aria-hidden="true"></i> Profile</a></li>
+							<li class="tab col"><a class="active" href="#mainContainer"><i class="fa fa-home mf" aria-hidden="true"></i></a></li>
+							<li class="tab col"><a id="gameContainerTab" href="#gameContainer"><i class="fa fa-gamepad mf" aria-hidden="true"></i></a></li>							
+							<li class="tab col"><a id="profileContainerTab" href="#profileContainer"><i class="fa fa-user mf" aria-hidden="true"></i></a></li>							
 						  </ul>									
 					</div>					
 					<div class="container" id="mainContainer">
@@ -88,15 +93,14 @@
 									<div class="card-content" style="margin: 0px; padding: 0px; border: 1px solid #ffffff;">
 										<div id="storyMedia">
 											<div id="panel-hdr">											
-												<a class="ui-btn  ui-btn-inline lt activator bw stdf" style="margin: 5px; padding: 5px; border: 0px;"><i class="fa fa-gear"  aria-hidden="true"></i></a>	
-												<a class="ui-btn  ui-btn-inline lt stdf" id="initializeRichTextEditor" style="margin: 5px; padding: 5px; border: 0px;"><i class="fa fa-paragraph" aria-hidden="true"></i></a>
+												<a class="ui-btn  ui-btn-inline lt activator bw stdf" style="margin: 5px; padding: 5px; border: 0px;"><i class="fa fa-gear"  aria-hidden="true"></i></a>
 												<a  id="attachPictures" title="Attach Pictures from your computer" class="ui-btn ui-btn-inline mf right cd" style="margin: 5px; padding: 5px; border: 0px;"><i class="fa fa-paperclip" aria-hidden="true"></i></a> 
 												<a  id="myComp"  class="ui-btn ui-btn-inline mf nd right cd" style="margin: 5px; padding: 5px; border: 0px;"><i class="fa fa-file-image-o"></i></a>&nbsp;
 												<a  id="webCam" class="ui-btn ui-btn-inline mf nd right cd" style="margin: 5px; padding: 5px; border: 0px;"><i class="fa fa-camera"></i></a>   			
 											</div>																		
 											<div class="bw PVTSTYPIC privateStoryPicDiv">											
 											</div>	     
-											<div class="al addPostTextArea roberto mf bnc rnc" style="margin: 0px; padding: 2px; height: 15em; max-height: 15em; overflow-y: scroll; -webkit-user-select: text; user-select: text;" contenteditable="true" placeholder="Message"></div>
+											<div class="form-control textarea-control al addPostTextArea roberto mf bnc rnc" style="margin: 0px; padding: 2px; height: 10em; max-height: 15em; overflow-y: scroll; -webkit-user-select: text; user-select: text;"  contenteditable=true placeholder="Message"></div>
 										</div>
 									</div>
 									<div class="card-reveal">										
@@ -150,6 +154,9 @@
 						<p>To protect your identity, you need to login or register to use this feature. </p>
 						<a href="#loginRegisterPage" onClick="Core.publish('initializeUserRegistration', null);" class="containerBackButton">Continue</a>	
 					</div>
+					<div id="gameContainer">
+						Games!	
+					</div>					
 
 				</div>	    
 				<div class="appFooter" id="mainAppFooter">
@@ -157,7 +164,7 @@
 					<div id="deviceready"></div>
 				</div>		
 				
-			<div class="al b nd" data-position="right" data-position-fixed="true" data-role="panel" data-display="overlay" id="rightPanel">
+			<div class="al b nd" data-position="right" data-position-fixed="true" data-role="panel" data-display="overlay" id="rightPanel">				
 				<div id="documentPageList">Please wait while the section is loading..</div>
 			</div><!-- /panel -->		
 			<div class="al cd nd" style="overflow: scroll; " data-position="left" data-position-fixed="true" data-role="panel" data-display="overlay" id="leftPanel">
@@ -264,6 +271,15 @@
 						</a>						
 					</div>
 				</div>	
+		  <div id="loginRegisterNotification" class="modal">
+			<div class="modal-content">
+			  <h4>Palkar</h4>
+			  <p>Please login or register to receive push notifications.</p>
+			</div>
+			<div class="modal-footer">
+			  <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Ok, Thanks</a>
+			</div>
+		  </div>				
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript">
@@ -288,6 +304,7 @@
 <script type="text/javascript" src="js/plugins/photoupload/js/jquery.fileupload-ui.js"></script>
 <script type="text/javascript" src="js/plugins/jquery.photobooth/jquery.photobooth.min.js"></script>
 <script type="text/javascript" src="js/plugins/tinymce/js/tinymce/jquery.tinymce.min.js"></script>
+<script type="text/javascript" src="js/plugins/tinymce/js/tinymce/tinymce.min.js"></script>
 <script type="text/javascript" src="js/plugins/jquery-visible/jquery.visible.min.js"></script>
 <script type="text/javascript" src="js/plugins/photoupload/js/tmpl.js"></script>
 <script type="text/javascript" src="js/plugins/jquery.powertip-1.2.0/jquery.powertip.js"></script>
@@ -315,8 +332,8 @@
 <script type="text/javascript" src="js/appcore/modules/storyItemController.js"></script>
 <script type="text/javascript" src="js/appcore/modules/sseController.js"></script>
 <script type="text/javascript" src="js/appcore/modules/userLoginController.js"></script>
-<script type="text/javascript" src="js/appcore/modules/userLogo.js"></script>
-
+<script  src="js/appcore/modules/userLogo.js"></script>
+  
 <script type="text/template" id="jstemplate-confirmLabel">Confirm</script>
 <script type="text/template" id="jstemplate-yesLabel">Yes</script>
 <script type="text/template" id="jstemplate-noLabel">No</script>

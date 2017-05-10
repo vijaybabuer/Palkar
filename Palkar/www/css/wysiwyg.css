@@ -353,9 +353,9 @@ width: 50%;
 }
 
 .appHeader{
-	background-color: #ffffff;
+	background-color: #3299BB;
 	text-shadow: none;
-	color: #333;
+	color: #ffffff;
 	position: fixed;
 	left: 0px;
 	top: 0px;
@@ -364,7 +364,6 @@ width: 50%;
 	z-index: 1000;
 	height: 45px;
 }
-
 .appBody{
 	overflow-y: scroll;
 	-webkit-overflow-scrolling: touch;
@@ -377,12 +376,12 @@ width: 50%;
 	border: 0px;
 	text-shadow: none;
 	float: left;
-	color: #3299BB;
+	color: #ffffff;
 	font-size: 1.5em;
-	font-weight: normal;
+	font-weight: 900;
 	margin: 0px;
 }
-.txtreaction, #updateLocation, #updateDetailsText{
+.txtreaction, #updateLocation, #updateDetailsText, #updateName{
 
 	background: rgba(0,0,0,0) !important; 
 	border: 0px;
@@ -395,7 +394,7 @@ width: 50%;
 	border: 0px;
 	text-shadow: none;
 	float: left;
-	color: #3299BB;
+	color: #ffffff;
 	font-size: 1.5em;
 	font-weight: normal;
 	margin: 0px;
@@ -417,24 +416,19 @@ width: 50%;
 	max-height: 1000px;
 	overflow: hidden;
 }
-
-#newMessageButton{
-	float: right; 
-	background-color: rgba(0,0,0,0); 
-	border: 0px;
-	text-shadow: none;	
-	color: #009966 !important;
-	margin: 0px;	
-	max-height: 1000px;
-	overflow: hidden;
+#notificationCount{
+	margin-left: 2px;
 }
-
-#showRightPanel, #refreshPanel{
+#notificationButton{
+	padding-left: 5px;
+	padding-right: 10px;	
+}
+#showRightPanel, #refreshPanel, #newMessageButton, #notificationButton{
 	float: right; 
 	background-color: rgba(0,0,0,0); 
 	border: 0px;
 	text-shadow: none;	
-	color: #3299BB !important;
+	color: #ffffff !important;
 	margin: 0px;	
 	max-height: 1000px;
 	overflow: hidden;
@@ -500,24 +494,26 @@ width: 50%;
 	height: 5em;
 	text-align: right;
  }
+ 
 .sharePageButton{
  	display: none;
  }
+ 
  #storyItemTitle-Big{
  	text-decoration: none; 
 	margin: 0px; 
 	border: 0px solid; 
 	font-size: 2em;
-	color: #333 !important;
-	font-weight: 800;
+	color: #3299BB !important;
+	font-weight: 500;
  }
  #storyItemTitle-small{ 
  	text-decoration: none; 
 	margin: 0px; 
 	border: 0px solid; 
 	font-size: 1.5em;
-	color: #333 !important;
-	font-weight: 800;
+	color: #3299BB !important;
+	font-weight: 500;
  }
   #storyItemTitle{
  	text-decoration: none; 
@@ -535,6 +531,7 @@ width: 50%;
   	text-decoration: none; 
 	color: #333;
 	font-weight: 400;
+	font-size: 1.25em;
  }
  .roberto{
 	 font-family: 'Roboto Condensed', sans-serif;
@@ -659,8 +656,8 @@ width: 50%;
  	margin-top: 128px;
  }
  .reactionPhoto{
- 	border-radius: 0px;
-	 border-radius: 4em;  
+  border-radius: 0px;
+  border-radius: 4em; 
  }
  div.PBRTRMK, div.PRRTRMK{
  	padding: 0.25em; 
@@ -671,6 +668,7 @@ width: 50%;
  #guestWelcome{
  	color: #FF0000;
  }
+ 
  #loginRegisterButton, #guestWelcome, #newMessageButton{
  	display: none;
  }
@@ -691,9 +689,8 @@ width: 50%;
  #loginSlideScrollBar, #termsAndConditions, #inviteFriendsDiv{
    	margin-top: 45px;
 	background-color: #ffffff !important;
-	padding: 2px;
+	padding: 0px;	
  }
-  
 #loginRegisterPageSlides{
   	padding-top: 1em;	
 }

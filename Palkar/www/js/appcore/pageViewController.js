@@ -240,7 +240,7 @@ var pageViewController = function(sb, input){
 	   function _hideContainer(){
 		   sb.dom.find(this).hide();
 	   }
-	   
+
 	function _anchorClickEvent(e){
 		try{			
 			var snippetUrl = sb.dom.find(this).attr('data-snippet-url');
@@ -251,6 +251,7 @@ var pageViewController = function(sb, input){
 					   //alert(sb.dom.find('#containerDiv').scrollTop());
 					   //alert(sb.dom.find(this).scrollTo(0, 0));
 					   //window.scrollTo(0, 0);
+					   
 					   sb.utilities.get(snippetUrl,null,_snippetResponseReceived);			
 			}
 			sb.dom.find("#rightPanel").panel("close");
@@ -350,6 +351,42 @@ var pageViewController = function(sb, input){
 			appendFooterMessage("Getting data stream");
 			sb.utilities.postV2(snippetUrl, data, _loadMainPage, _reloadAppPage);
 	}
+	
+	function _gameLoadStart(event){
+	
+	}
+	function _gameClickEvent(e){
+		try{
+		e.preventDefault();
+		var url = sb.dom.find(this).attr('href');
+		var gameRef = cordova.InAppBrowser.open(url, '_self', 'location=no');
+		gameRef.addEventListener('loadstart', function(event){
+			 if (event.url.match("close")) {
+				 gameRef.close();
+				 gameRef = null;
+			 }	
+			 if (event.url.match("shareMyScore")) {
+				 gameRef.close();
+				 gameRef = null;
+				 var gameDetails = event.url.split("?")[1];
+				 var gameAttributes = gameDetails.split("&");
+				 var score = gameAttributes[0].split("=")[1];
+				 var game = gameAttributes[1].split("=")[1];
+				 if(sb.utilities.isUserLoggedIn()){
+					 Core.publish('shareScore', {score: score, game: game});
+				 }else{
+					alert("Please login to share score with " + input.appname);	 
+				}
+			 }			 
+		});
+		}catch(e){
+			alert(e);	
+		}
+	}
+	
+	function _setGameClickEvent(){
+		sb.dom.find(this).click(_gameClickEvent);		
+	}
 	function _loadAppPage(appPage){
 		   if(appPage != null){	
 			   
@@ -365,7 +402,10 @@ var pageViewController = function(sb, input){
 				sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").find('script').each(_loadAppTemplates);
 				sb.dom.find('head').prepend(tokenHtml);
 				sb.dom.find('head').prepend(headerHtml);
-
+				
+				sb.dom.find('#gameContainer').html(sb.dom.find('#template-games').html());
+				sb.dom.find('#gameContainer').find('a').each(_setGameClickEvent);
+				
 					if(sb.utilities.isUserLoggedIn()){
 						_triggerMainPageRequest();
 						appendFooterMessage("User Info Not Null");						
@@ -427,6 +467,22 @@ var pageViewController = function(sb, input){
 			sb.dom.find('#mainPage').page({
 				domCache: true							  
 			});
+		 $('.modal').modal({
+			  dismissible: true, // Modal can be dismissed by clicking outside of the modal
+			  opacity: .5, // Opacity of modal background
+			  inDuration: 300, // Transition in duration
+			  outDuration: 200, // Transition out duration
+			  startingTop: '4%', // Starting top style attribute
+			  endingTop: '10%', // Ending top style attribute
+			  ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+				//alert("Modal Ready");
+				console.log(modal, trigger);
+			  },
+			  complete: function() { 
+			  	//alert('Closed'); 
+			  } // Callback for Modal close
+			}
+		  );			
 		}catch(error){
 			alert(error);	
 		}
@@ -602,6 +658,7 @@ var pageViewController = function(sb, input){
 	function onResume(e) {
 		//e.preventDefault();
 		appOnPause = false;
+		Core.publish('applicationResume', null);		
 	}
 
 	function _userLoginEventReceived(message){
@@ -649,6 +706,26 @@ var pageViewController = function(sb, input){
 			console.log(e);	
 		}
 	}
+	
+	function _notificationItemClickReceived(message){
+		try{
+			sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');
+			var notificationItemId = message.id.split('-')[1];
+			var notificationStoryItem = sb.dom.find("#storyItem-"+notificationItemId);
+			//sb.dom.find('#containerDiv').animate({scrollTop: sb.dom.find(notificationStoryItem).offset().top+100}, 200);
+			if(sb.dom.find(notificationStoryItem).length > 0){
+				sb.dom.find('#containerDiv').animate({scrollTop: 0}, 0);
+				sb.dom.find('#mainContainer').animate({scrollTop: 0}, 0);
+				sb.dom.find('#mainPage').animate({scrollTop: 0}, 0);
+				sb.dom.find('#mainContainer').animate({scrollTop: sb.dom.find(notificationStoryItem).offset().top-100}, 200);
+				sb.dom.find('.storyItem').removeClass('z-depth-3');
+				sb.dom.find(notificationStoryItem).addClass('z-depth-3');
+			}
+			//sb.dom.find('#mainPage').animate({scrollTop: sb.dom.find(notificationStoryItem).offset().top}+100, 200);
+		}catch(e){
+			alert(e);	
+		}
+	}
    return{
 	   init:function() {
        	try{
@@ -660,6 +737,7 @@ var pageViewController = function(sb, input){
 			Core.subscribe('streamUpdateReceived', _streamUpdateReceived);
 			Core.subscribe('userLoginEvent', _userLoginEventReceived);	
 			Core.subscribe('unAuthorizedFunctionality', _unAuthorizedFunctionality);
+			Core.subscribe('notificationItemClick', _notificationItemClickReceived);
 			document.addEventListener("resume", onResume, false);
 			document.addEventListener("pause", onPause, false);			
 			document.addEventListener("backbutton", _deviceBackButtonClicked, true);

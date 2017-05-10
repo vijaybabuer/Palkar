@@ -655,8 +655,8 @@ li.PRRTRPL{
 	margin-left: 10px;
 }
 
-li.NewEntry{
-	background-color: lightyellow;
+li.NewEntry, div.NewEntry{
+	background-color: lightyellow !important;
 }
 
 li.OldEntry, .OldEntry{

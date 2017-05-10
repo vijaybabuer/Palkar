@@ -323,6 +323,7 @@ var storyItemController = function(sb, input){
 		
 		try{			
 		if(data.antahRequestStatus == "SUCCESS"){
+			
 			for(var i=0; i < data.streamResponse.storyItemList.length; i++){
 				try{
 				addStoryItemToView(data.streamResponse.storyItemList[i]);
@@ -376,7 +377,7 @@ var storyItemController = function(sb, input){
 				}
 			}
 		}else{
-			console.log("could not get stream. " + data.txtStatusReason);
+			console.log("could not get stream. " + data.txtStatusReason);			
 		}
 		}catch(e){
 			console.log("There was a problem getting stream data..  " + e);
@@ -389,8 +390,8 @@ var storyItemController = function(sb, input){
 		gettingNewerStories = false;
 	}
 	
-	
 	   function addStoryItemToView(storyItem){
+		   
 		   var storyItemHtml = tmpl("template-storyTemplate", storyItem);	   
 		   sb.dom.find(storiesDivId).append(sb.utilities.htmlDecode(storyItemHtml));
 		   Core.publish("newStoryAdded", {storyItemDivId: "#storyItem-"+storyItem.storyDocumentPageId});
