@@ -5,6 +5,7 @@
     <author email="welcome@palpostr.com" href="http://palpostr.com">PalPostr Team</author>
 	<access origin="whatsapp:*" launch-external="yes" />
 	<access origin="mailto:*" launch-external="yes" />	
+	<access origin="http://www.palpostr.com/*" launch-external="yes" />	
     <content src="index.html" />
     <preference name="permissions" value="none" />
     <preference name="orientation" value="default" />
