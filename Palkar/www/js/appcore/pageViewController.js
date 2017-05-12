@@ -359,7 +359,12 @@ var pageViewController = function(sb, input){
 		try{
 		e.preventDefault();
 		var url = sb.dom.find(this).attr('href');
-		var gameRef = cordova.InAppBrowser.open(url, '_self', 'location=no');
+		var gameRef = null
+		if(device.platform == 'Android'){
+			gameRef = cordova.InAppBrowser.open(url, '_self', 'location=no');
+		}else{
+			gameRef = cordova.InAppBrowser.open(url, '_system', 'location=no');
+		}
 		gameRef.addEventListener('loadstart', function(event){
 			 if (event.url.match("close")) {
 				 gameRef.close();
