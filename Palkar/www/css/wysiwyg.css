@@ -69,7 +69,7 @@ em{
 	padding: 1px 5px !important;
 }
 
-.CommentsSummary, .RepliesSummary, .HighlightSummary, .ViewSummary, .ShareSummary, .WhatsAppShare{
+.CommentsSummary, .RepliesSummary, .HighlightSummary, .ViewSummary, .ShareSummary{
 	font-size: 1.25em; 
 	margin-right: 1em; 
 	margin-bottom: 1px;	
@@ -80,6 +80,16 @@ em{
 	opacity: 0.75;
 }
 
+.WhatsAppShare{
+	font-size: 1.25em; 
+	margin-right: 1em; 
+	margin-bottom: 1px;	
+	border: 0px;
+	font-weight: normal;	
+	color: green !important;
+	text-shadow: none;
+	opacity: 0.75;	
+}
 
 .ui-dialog-title{
 	color: #3299BB !important;
@@ -725,3 +735,11 @@ width: 50%;
 .bar.bar-nav {
   position: static;
 }
+.dropdown-button{
+ margin-right: 2px;
+ padding-right: 2px;
+ }
+ .highlighted{
+ 	color: #e91e63 !important;
+	text-shadow: 1px 1px #333;
+ }

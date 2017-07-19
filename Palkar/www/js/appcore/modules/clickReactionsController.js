@@ -30,6 +30,7 @@ var clickReactionsController = function(sb, input){
 
 			pageReactionSummary = reaction.pageReactionSummary;
 			if(pageReactionSummary.pageReactionEnabledForUser == 'enabled'){
+				
 				curTarget = sb.dom.find("#button-"+pageReactionSummary.pageReactionId+"-disabled");
 				if(!curTarget){
 					curTarget = sb.dom.find("#button-"+pageReactionSummary.pageReactionId+"-enabled");
@@ -43,15 +44,15 @@ var clickReactionsController = function(sb, input){
 
 				curTarget.attr("id", pgReaction+"-"+pageReactionSummary.pageReactionId+"-"+pageReactionSummary.pageReactionEnabledForUser);
 				
-				if(pageReactionSummary.pageReactionEnabledForUser == 'enabled'){								
-					curTarget.css("background-color","#ffffff");
-					curTarget.attr("title",sb.dom.find("#jstemplate-clickReactionEnabledMessage").html());	
-					curTarget.html(pageReactionSummary.pageReactionTitle);
-				}else{
-					curTarget.css("background-color","#ffffff");
-					curTarget.attr("title",sb.dom.find("#jstemplate-clickReactionDisabledMessage").html());
-					curTarget.html("Remove");
-				}	
+			if(pageReactionSummary.pageReactionEnabledForUser == 'enabled'){								
+				//curTarget.css("background-color","#ffffff");
+				curTarget.attr("title",sb.dom.find("#jstemplate-clickReactionEnabledMessage").html());	
+				curTarget.html(pageReactionSummary.pageReactionTitle);
+			}else{
+				//curTarget.css("background-color","#3299BB");				
+				curTarget.attr("title",sb.dom.find("#jstemplate-clickReactionDisabledMessage").html());
+				curTarget.html("Remove");
+			}	
 
 			
 			sb.utilities.get(relPathIn+'pageReaction.pvt?mediaType=json',{pageReactionId: pageReactionSummary.pageReactionId, reactionCount: reactionCountPerPage, retrieveSummary: "false"},_loadReactionList);
@@ -215,6 +216,8 @@ var clickReactionsController = function(sb, input){
    		//defaultClickReactionsDivList = sb.dom.find('.storyItemFooter');
    		//_loadPageReactionList(defaultClickReactionsDivList);
    		sb.dom.find(message.storyItemDivId).find('.hilite').bind('click',_addReaction);
+		sb.dom.find(message.storyItemDivId).find('.flagStory').bind('click',_addFlagStoryReactionClicked);
+   		sb.dom.find(message.storyItemDivId).find('.removeFlagStory').bind('click',_removeFlagStoryReactionClicked);		
    		sb.dom.find(message.storyItemDivId).find('.clickReacMessage').bind('click',_toggleReactionList);
    		sb.dom.find(message.storyItemDivId).find('.showMoreClickReactions').bind('click',_showMoreButtonClickEventFirst);
    		sb.dom.find(message.storyItemDivId).find('.timeago').timeago();
@@ -490,8 +493,87 @@ var clickReactionsController = function(sb, input){
    		);
 	}
 	
+	function _updateFlagReactionView(reaction){
+		//Materialize.toast('_updateFlagReactionView');
+		try{
+		pageReactionSummary = reaction.pageReactionSummary;
+
+		curTarget = sb.dom.find("#flagStory-"+pageReactionSummary.pageReactionId+"-"+pageReactionSummary.documentPageId+"-FLAG");
+
+		
+		console.log(pageReactionSummary.pageReactionEnabledForUser);
+		console.log(sb.dom.find("#jstemplate-Flag-Story").html());
+		console.log(sb.dom.find("#jstemplate-Remove-Flag").html());
+		if(pageReactionSummary.pageReactionEnabledForUser == 'enabled'){								
+			curTarget.removeClass("removeFlagStory");
+			curTarget.addClass("flagStory");
+			curTarget.unbind('click', _removeFlagStoryReactionClicked);
+			curTarget.bind('click', _addFlagStoryReactionClicked);
+			curTarget.html(sb.dom.find("#jstemplate-Flag-Story").html());
+			Materialize.toast('Flag has been removed.');
+		}else{
+			curTarget.addClass("removeFlagStory");
+			curTarget.removeClass("flagStory");
+			curTarget.unbind('click', _addFlagStoryReactionClicked);
+			curTarget.bind('click', _removeFlagStoryReactionClicked);
+			curTarget.html(sb.dom.find("#jstemplate-Remove-Flag").html());
+			Materialize.toast('This post has been flagged as inappropriate. The administrator of the site will be notified.');
+		}	
+		
+		
+		}catch(e){
+			alert(e);
+		}
+	}
+
+	function _flagReactionUpdated(reaction){
+		//Materialize.toast('_flagReactionUpdated');
+		if(reaction.txnStatus == 'SUCCESS'){
+			_updateFlagReactionView(reaction);
+			//Core.publish("displayMessage",{message: "Story was highlighted.", messageType: "success"});
+		}else{
+			Core.publish("displayMessage",{message: "There was a problem highlighting the story.", messageType: "failure"});
+		}		
+	}
+	
+	function _addFlagStoryReactionClicked(e){
+		//Materialize.toast('_addFlagStoryReactionClicked');
+		 try{
+			pgReacInfo=e.currentTarget.id.split("-");
+			pgReacId=pgReacInfo[1];
+			
+			if(pgReacId != '0'){
+				sb.utilities.postV2(relPathIn+'reaction.pvt?mediaType=json',{reactionId: "", pageReactionId: pgReacId, documentPageId: pgReacInfo[2], pageReactionType: "FLAG", reactionType: "FLAG", reactionRichText: ""},_flagReactionUpdated);
+			}else{
+				Core.publish("displayMessage",{messageTitle: "Failure", message: "Could not complete the process.", messageType: "failure"});
+			}
+		 }
+		 catch(err){
+			 serverLog(err);
+		 }
+	}
+	
+	function _removeFlagStoryReactionClicked(e){
+		//Materialize.toast('_removeFlagStoryReactionClicked');
+		 try{
+			pgReacInfo=e.currentTarget.id.split("-");
+			pgReacId=pgReacInfo[1];
+			
+			if(pgReacId != '0'){
+				sb.utilities.serverDelete(relPathIn+'flagreaction.pvt/'+pgReacId+'?mediaType=json',null,_flagReactionUpdated);				
+			}else{
+				Core.publish("displayMessage",{messageTitle: "Failure", message: "Could not complete the process.", messageType: "failure"});
+			}
+		 }
+		 catch(err){
+			 serverLog(err);
+		 }
+	}
+	
 	function _startController(msg){
        		sb.dom.find('.hilite').bind('click',_addReaction);  
+			sb.dom.find('.flagStory').bind('click',_addFlagStoryReactionClicked);
+			sb.dom.find('.removeFlagStory').bind('click',_removeFlagStoryReactionClicked);
        		sb.dom.find('.sharePageButton').each(_setSharePageTooltipV2);
        		sb.dom.find('.clickReacMessage').bind('click',_toggleReactionList);
        		sb.dom.find('.showMoreClickReactions').click(_showMoreButtonClickEventFirst);

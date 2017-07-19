@@ -122,6 +122,7 @@ var storyItemController = function(sb, input){
 	   storyItemStoryList.each(_removeAnchorFromStory);
    }
    
+   
    function _showStory(e){
 	   e.preventDefault();
 	   var storyId=sb.dom.find(this).attr('id');
@@ -244,7 +245,7 @@ var storyItemController = function(sb, input){
 			try{
 				var storyItemNode =sb.dom.find(message.storyItemDivId);				
 				storyItemNode.find('.showPictures').bind('click', _showPicturesButtonClick);
-				storyItemNode.find('.storyItemHeader').bind('click', _storyHeaderClick);
+				//storyItemNode.find('.storyItemHeader').bind('click', _storyHeaderClick);
 				storyItemNode.find('.CommentsSummary').bind('click', _CommentsSummaryClick);
 				console.log(storyItemNode.find('.CommentsSummary').html() + " " + storyItemNode.find('.CommentsSummary'));
 				storyItemNode.find('.RepliesSummary').bind('click', _RepliesSummaryClick);
@@ -255,6 +256,20 @@ var storyItemController = function(sb, input){
 	    		
 				storyItemNode.find('.listElement').bind('click', _listElementClick);
 				storyItemNode.find('.reactionCountButton').on('click', _scrollToReactionsSection);
+
+				storyItemNode.find('.dropdown-button').show();
+				storyItemNode.find('.dropdown-button').dropdown({
+				  inDuration: 300,
+				  outDuration: 225,
+				  constrainWidth: false, // Does not change width of dropdown to that of the activator
+				  hover: true, // Activate on hover
+				  gutter: 0, // Spacing from edge
+				  belowOrigin: false, // Displays dropdown below the button
+				  alignment: 'right', // Displays dropdown with edge aligned to the left of button
+				  stopPropagation: false // Stops event propagation
+				}
+				);
+				
 				scrollListContainer=storyItemNode.find('#scrollListContainer');
 				
 				storyItemNode.find('#hideCaption').bind('click', _hideCaptionClicked);
@@ -287,7 +302,7 @@ var storyItemController = function(sb, input){
 	   					try{
 	   						var storyItemNode =sb.dom.find(this);				
 	   						storyItemNode.find('.showPictures').bind('click', _showPicturesButtonClick);
-	   						storyItemNode.find('.storyItemHeader').bind('click', _storyHeaderClick);
+	   						//storyItemNode.find('.storyItemHeader').bind('click', _storyHeaderClick);
 	   						storyItemNode.find('.CommentsSummary').bind('click', _CommentsSummaryClick);
 	   						console.log(storyItemNode.find('.CommentsSummary').html() + " " + storyItemNode.find('.CommentsSummary'));
 	   						storyItemNode.find('.RepliesSummary').bind('click', _RepliesSummaryClick);
@@ -304,6 +319,19 @@ var storyItemController = function(sb, input){
 
 	   						storyItemNode.find('.unSharePageButton').bind('click', _unSharePageButtonClickEvent);
 
+							storyItemNode.find('.dropdown-button').show();
+							storyItemNode.find('.dropdown-button').dropdown({
+								  inDuration: 300,
+								  outDuration: 225,
+								  constrainWidth: false, // Does not change width of dropdown to that of the activator
+								  hover: true, // Activate on hover
+								  gutter: 0, // Spacing from edge
+								  belowOrigin: false, // Displays dropdown below the button
+								  alignment: 'right', // Displays dropdown with edge aligned to the left of button
+								  stopPropagation: false // Stops event propagation
+								}
+							  );
+				
 	   			    		_correctImageUrlForStory();
 
 	   			    		_removeAnchorsForStoryItems();
@@ -484,7 +512,7 @@ var storyItemController = function(sb, input){
 	    		sb.dom.find('.storyPreview').bind('click', _showStory);
 	    		
 	    		sb.dom.find('.showPictures').bind('click', _showPicturesButtonClick);
-	    		sb.dom.find('.storyItemHeader').bind('click', _storyHeaderClick);
+	    		//sb.dom.find('.storyItemHeader').bind('click', _storyHeaderClick);
 	    		sb.dom.find('.CommentsSummary').bind('click', _CommentsSummaryClick);
 	    		sb.dom.find('.RepliesSummary').bind('click', _RepliesSummaryClick);
 	    		sb.dom.find('.HighlightSummary').bind('click', _HighlightSummaryClick);
@@ -505,6 +533,19 @@ var storyItemController = function(sb, input){
 				sb.dom.find("#storiesDivTrailer").find("#showMore").off("click");
 	    		sb.dom.find("#storiesDivTrailer").find("#showMore").click(_showMoreStoriesClicked);
 	    		
+				sb.dom.find('.dropdown-button').show();
+				sb.dom.find('.dropdown-button').dropdown({
+								  inDuration: 300,
+								  outDuration: 225,
+								  constrainWidth: false, // Does not change width of dropdown to that of the activator
+								  hover: true, // Activate on hover
+								  gutter: 0, // Spacing from edge
+								  belowOrigin: false, // Displays dropdown below the button
+								  alignment: 'right', // Displays dropdown with edge aligned to the left of button
+								  stopPropagation: false // Stops event propagation
+								}
+							  );
+											
 	    		if(storyPage){	 
 		    		reSizeBigPictures();
 		    		sb.dom.find(window).resize(reSizeBigPictures);
