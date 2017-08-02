@@ -162,6 +162,8 @@ var photoUploadController = function(sb, input){
 	}
 	
 	function uploadFilePhoto(fileName){
+		alert('file photo');
+		 try{
 		var options = new FileUploadOptions();
 		 options.fileKey = "file";
 		 options.fileName = fileName.substr(fileName.lastIndexOf('/')+1)+'.png';
@@ -178,7 +180,7 @@ var photoUploadController = function(sb, input){
 		 options.headers = headers;		 
 
 		 alert('here');
-		 try{
+		
 		 ft.upload(fileName, encodeURI('http://192.168.0.101:8080/palpostr/fileUpload/STYPIC/23123.pvt?mediaType=json&'+csrfTokenName+'='+csrfTokenValue), function(result){
 		 alert('here1');																 
 		 alert("SUCCEESS! " + JSON.stringify(result));
