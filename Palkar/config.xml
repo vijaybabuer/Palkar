@@ -102,6 +102,8 @@
 	<plugin name="cordova-plugin-file"  spec="4.3.1"/>		
     <plugin name="cordova-plugin-whitelist" version="1" />
 	<plugin name="cordova-plugin-device" version="1.1.5" />
+	<plugin name="cordova-plugin-file-transfer" version="1.6.1" />	
+	
 	<plugin name="phonegap-plugin-push" spec="1.6.0">
 		<param name="SENDER_ID" value="601600954865" />
 	</plugin>	
