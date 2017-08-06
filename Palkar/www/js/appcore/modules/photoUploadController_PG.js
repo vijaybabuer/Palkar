@@ -162,11 +162,9 @@ var photoUploadController = function(sb, input){
 	}
 	
 	function uploadFilePhoto(fileName){
-		alert('file photo');
-		 try{
 		var options = new FileUploadOptions();
 		 options.fileKey = "file";
-		 options.fileName = fileName.substr(fileName.lastIndexOf('/')+1)+'.png';
+		 options.fileName = fileName.substr(fileName.lastIndexOf('/')+1)+'.jpeg';
 		 options.mimeType = "image/jpeg";
 		 options.httpMethod = "POST";
 		 options.chunkedMode = true;
@@ -179,9 +177,12 @@ var photoUploadController = function(sb, input){
 		alert(csrfTokenValue + " " + csrfTokenName);
 		 options.headers = headers;		 
 
-		 alert('here');
-		
-		 ft.upload(fileName, encodeURI('http://192.168.0.101:8080/palpostr/fileUpload/STYPIC/23123.pvt?mediaType=json&'+csrfTokenName+'='+csrfTokenValue), function(result){
+			options.params = {
+					"_csrf" : csrfTokenValue
+				}
+		 alert('here ' + JSON.stringify(options.params));
+		 try{
+		 ft.upload(fileName, encodeURI('http://192.168.0.101:8080/palpostr/api/fileUpload/'+appPicInput.documenttype+'/'+appPicInput.documentid+'.pvt?mediaType=json&a='+authoriztion), function(result){
 		 alert('here1');																 
 		 alert("SUCCEESS! " + JSON.stringify(result));
 		 
@@ -198,7 +199,15 @@ var photoUploadController = function(sb, input){
 		try{
      		window.resolveLocalFileSystemURL(imageURI, function(fileEntry) {
 			alert(imageURI + '-1' + fileEntry.fullPath);
+			var fileMimeType = "image/jpeg";
+			fileEntry.getMetadata(metaSuccess, metaFail);
 			uploadFilePhoto(fileEntry.toURL());
+			var metaSuccess = function(meta){
+				alert(JSON.springify(meta));	
+			}
+			var metaFail = function(fail){
+				alert(JSON.springify(fail));	
+			}
         });
 		}catch(e){
 			alert('uri problem ' + e);
@@ -284,15 +293,16 @@ var photoUploadController = function(sb, input){
 		try{
 		if(input.documentid != null && input.documentid != ""){
 			appPicInput=input;
-			navigator.camera.getPicture(uploadPhoto, function(message) {
+			navigator.camera.getPicture(uploadPhoto1, function(message) {
 			 alert('Get Picture Cancelled');
 			 }, {
-			 quality: 50,
+			 quality: 100,
 			 destinationType: navigator.camera.DestinationType.FILE_URI,
 			 sourceType: navigator.camera.PictureSourceType.CAMERA,
- 			 mediaType: navigator.camera.PictureSourceType.PICTURE
+ 			 mediaType: navigator.camera.PictureSourceType.ALLMEDIA
 			 });
 			//Create Pictures for album
+			
 		}else{
 			photoUploadMessageDiv.html('There was problem. Please try again later.');
 			alert('Album ID was not provided. ');
@@ -305,14 +315,25 @@ var photoUploadController = function(sb, input){
 		try{
 		if(input.documentid != null && input.documentid != ""){
 			appPicInput=input;
-			navigator.camera.getPicture(uploadPhoto1, function(message) {
-			 alert('Get Picture Cancelled');
+			/* navigator.camera.getPicture(uploadPhoto1, function(message) {
+			 alert('Get Picture Cancelled ' + message);
 			 }, {
-			 quality: 50,
+			 quality: 100,
 			 destinationType: navigator.camera.DestinationType.FILE_URI,
 			 sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY,
- 			 mediaType: navigator.camera.PictureSourceType.PICTURE
-			 });
+ 			 mediaType: navigator.camera.PictureSourceType.ALLMEDIA
+			 });*/
+			
+			window.imagePicker.getPictures(
+				function(results) {
+					for (var i = 0; i < results.length; i++) {
+						alert('Image URI: ' + results[i]);
+						uploadPhoto1(results[i]);
+					}
+				}, function (error) {
+					alert('Error: ' + error);
+				});	
+			
 			//Create Pictures for album
 		}else{
 			photoUploadMessageDiv.html('There was problem. Please try again later.');
