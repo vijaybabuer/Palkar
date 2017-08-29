@@ -743,3 +743,8 @@ width: 50%;
  	color: #e91e63 !important;
 	text-shadow: 1px 1px #333;
  }
+ 
+ .img-album{
+ 	border: 2px solid #3299BB;
+	margin: 2px;
+ }

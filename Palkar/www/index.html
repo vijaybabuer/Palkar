@@ -514,6 +514,10 @@ Ex: john@example.com;sam@example.com</script>
 	<span class="sr-only bigScreenItem">Loading...</span>
 </div>
 </script>
+<script type="text/template" id="jstemplate-photoUploadController-deleteDownloadPhoto">
+	<br>
+	<a class="deletePhoto right btn-flat"  id="deleteLink-albumpicid" onclick="Core.publish('deleteDownloadPhoto', {photoId: 'albumpicid'})"><i class="fa fa-times"></i> Delete</a>
+</script>
 <script type="text/template" id="jstemplate-unAuthorizedAccessDialog">
 				<div id="unAuthorizedAccessDialog" class="container subContainer">
 					<p>To protect your identity, you need to login or register to use this feature. </p>

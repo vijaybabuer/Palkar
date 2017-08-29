@@ -209,7 +209,8 @@ var pageViewController = function(sb, input){
 	   function _snippetResponseReceived(snippetResponse){
 		   if(snippetResponse != null){
 			   try{
-			   sb.dom.find('.placeHolderContainer').remove();
+			   sb.dom.find('.placeHolderContainer').remove();	
+			   
 			   sb.dom.find('#containerDiv').prepend(snippetResponse);
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerBackButton').show();
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerBackButton').bind('click', _containerBackButtonClicked);
