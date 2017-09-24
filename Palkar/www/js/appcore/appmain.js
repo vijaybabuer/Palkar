@@ -64,6 +64,7 @@ Core = function(_$) {
 				return userData;
 			},
 			setUserInfo: function(username, authorization, authorizationType, userDetails){
+				alert("1 : " + username + " " + JSON.stringify(userDetails));
 				userData.username=username;
 				userData.authorization=authorization;
 				userData.authorizationType = authorizationType;
@@ -440,8 +441,9 @@ Core = function(_$) {
 	}
 	function writeUserData(fileEntry, dataObj){
     // Create a FileWriter object for our FileEntry (log.txt).
+		alert("4 : " + JSON.stringify(dataObj));
 		fileEntry.createWriter(function (fileWriter) {
-	
+			alert("5 : " );
 			fileWriter.onwriteend = function() {
 				console.log('Success Write');
 			};
@@ -454,8 +456,9 @@ Core = function(_$) {
 		});		
 	}
 	function createUserData(username, authorization, authorizationType, userDetails){
-		
+				alert("2 : " + username + " " + JSON.stringify(userDetails));
 				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+					alert("3 : ");														  
 					fs.root.getFile("userInfo.txt", { create: true, exclusive: false }, function (fileEntry) {					
 					var userDataTemp = {username: username, authorization: authorization, authorizationType: authorizationType, userDetails: userDetails};
 					writeUserData(fileEntry, userDataTemp);
