@@ -344,10 +344,12 @@ var pageViewController = function(sb, input){
 			var data = null;
 			snippetUrl = relPathIn+"appView?mediaType=json";
 			if(sb.utilities.isUserLoggedIn()){
+				alert('user logged in 1');
 				Core.publish('startUserLogo', null);				
 				var userData = sb.utilities.getUserInfo();				
 				data = {username: userData.username, appname: appname, streamSize: streamSize};
 			}else{
+				alert('user not logged in 1');
 			   data = {appname: appname, streamSize: streamSize};				
 			}
 			appendFooterMessage("Getting data stream");
@@ -415,9 +417,9 @@ var pageViewController = function(sb, input){
 				
 					if(sb.utilities.isUserLoggedIn()){
 						_triggerMainPageRequest();
-						appendFooterMessage("User Info Not Null");						
+						alert("User Info Not Null");						
 					}else{
-						appendFooterMessage("User Info Null");
+						alert("User Info Null");
 						setTimeout(function(){_triggerMainPageRequest()}, 2000);
 					}
 			   }catch(error){

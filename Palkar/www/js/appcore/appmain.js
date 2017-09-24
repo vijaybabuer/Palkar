@@ -415,11 +415,13 @@ Core = function(_$) {
 	}
 	function loadUserData(){
 		try{
+				alert("Read 1");
 				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {				
 					fs.root.getFile("userInfo.txt", { create: false, exclusive: false }, function (fileEntry) {
 						readUserData(fileEntry);
 					}, function(error){createUserData('guest',null, null, null);});				
-				}, function(error){console.log('Problem Accessing File System');});		
+				}, function(error){console.log('Problem Accessing File System');});	
+				alert("Read 2");
 		}catch(e){
 			alert('Problem create user data ' + e);	
 		}
@@ -429,31 +431,42 @@ Core = function(_$) {
 		alert('error on file read');	
 	}
 	function readUserData(fileEntry){
+		try{
 		fileEntry.file(function (file) {
 			var reader = new FileReader();	
 			reader.onloadend = function() {
-				console.log("Successful file read: " + this.result);
+				alert("Successful file read: " + this.result);
 				var userDataText = this.result;
 				userData = JSON.parse(userDataText.toString());
+				alert('Read User Data : ' + JSON.stringify(userData));
 			};
 			reader.readAsText(file);
-		}, onErrorReadFile);			
+		}, onErrorReadFile);
+		}catch(e){
+			alert('Problem reading user info ' + e);	
+		}
 	}
 	function writeUserData(fileEntry, dataObj){
     // Create a FileWriter object for our FileEntry (log.txt).
 		alert("4 : " + JSON.stringify(dataObj));
+		try{
 		fileEntry.createWriter(function (fileWriter) {
 			alert("5 : " );
 			fileWriter.onwriteend = function() {
 				console.log('Success Write');
+				alert('6: uccess Write');
 			};
 	
 			fileWriter.onerror = function (e) {
 				console.log('Failure Write');
+				alert('7: uccess Write');
 			};
 	
 			fileWriter.write(dataObj);
-		});		
+		});	
+		}catch(e){
+			alert('There was a problem storing your profile information ' + e);	
+		}
 	}
 	function createUserData(username, authorization, authorizationType, userDetails){
 				alert("2 : " + username + " " + JSON.stringify(userDetails));
