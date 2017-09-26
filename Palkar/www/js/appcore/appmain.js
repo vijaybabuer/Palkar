@@ -459,7 +459,7 @@ Core = function(_$) {
 	
 			fileWriter.onerror = function (e) {
 				console.log('Failure Write');
-				alert('7: uccess Write ' + e);
+				alert('7: uccess Write ' + JSON.stringify(e));
 			};
 	
 			fileWriter.write(dataObj);

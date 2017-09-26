@@ -41,6 +41,9 @@ var app = {
     onDeviceReady: function() {
         app.receivedEvent('deviceready');
 	try{
+		
+	$.mobile.pageLoadErrorMessage = "";
+	$.mobile.pageLoadErrorMessageTheme = null;
 	var appVersion = '1.1.36';
 	
 	Core.register('clickReactionsController',clickReactionsController,{relPath: "", reactionCountPerPage: "5"});
