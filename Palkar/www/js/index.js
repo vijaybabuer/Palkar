@@ -42,7 +42,7 @@ var app = {
         app.receivedEvent('deviceready');
 	try{
 		
-	$.mobile.pageLoadErrorMessage = "";
+	$.mobile.pageLoadErrorMessage = "Page Loading..";
 	$.mobile.pageLoadErrorMessageTheme = null;
 	var appVersion = '1.1.36';
 	
