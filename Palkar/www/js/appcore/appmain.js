@@ -462,7 +462,7 @@ Core = function(_$) {
 				alert('7: uccess Write ' + JSON.stringify(e));
 			};
 	
-			fileWriter.write(dataObj);
+			fileWriter.write(JSON.stringify(dataObj));
 		});	
 		}catch(e){
 			alert('There was a problem storing your profile information ' + e);	
