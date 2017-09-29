@@ -64,7 +64,6 @@ Core = function(_$) {
 				return userData;
 			},
 			setUserInfo: function(username, authorization, authorizationType, userDetails){
-				alert("1 : " + username + " " + JSON.stringify(userDetails));
 				userData.username=username;
 				userData.authorization=authorization;
 				userData.authorizationType = authorizationType;
@@ -415,13 +414,11 @@ Core = function(_$) {
 	}
 	function loadUserData(){
 		try{
-				alert("Read 1");
 				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {				
 					fs.root.getFile("userInfo.txt", { create: false, exclusive: false }, function (fileEntry) {
 						readUserData(fileEntry);
 					}, function(error){createUserData('guest',null, null, null);});				
-				}, function(error){console.log('Problem Accessing File System');});	
-				alert("Read 2");
+				}, function(error){console.log('Problem Accessing File System');});		
 		}catch(e){
 			alert('Problem create user data ' + e);	
 		}
@@ -431,47 +428,35 @@ Core = function(_$) {
 		alert('error on file read');	
 	}
 	function readUserData(fileEntry){
-		try{
 		fileEntry.file(function (file) {
 			var reader = new FileReader();	
 			reader.onloadend = function() {
-				alert("Successful file read: " + this.result);
+				console.log("Successful file read: " + this.result);
 				var userDataText = this.result;
 				userData = JSON.parse(userDataText.toString());
-				alert('Read User Data : ' + JSON.stringify(userData));
 			};
 			reader.readAsText(file);
-		}, onErrorReadFile);
-		}catch(e){
-			alert('Problem reading user info ' + e);	
-		}
+		}, onErrorReadFile);			
 	}
 	function writeUserData(fileEntry, dataObj){
     // Create a FileWriter object for our FileEntry (log.txt).
-		alert("4 : " + JSON.stringify(dataObj));
-		try{
 		fileEntry.createWriter(function (fileWriter) {
-			alert("5 : " );
+	
 			fileWriter.onwriteend = function() {
 				console.log('Success Write');
-				alert('6: uccess Write');
 			};
 	
 			fileWriter.onerror = function (e) {
 				console.log('Failure Write');
-				alert('7: uccess Write ' + JSON.stringify(e));
+				alert('Error on Writing user data: ' + JSON.stringify(e));
 			};
 	
 			fileWriter.write(JSON.stringify(dataObj));
-		});	
-		}catch(e){
-			alert('There was a problem storing your profile information ' + e);	
-		}
+		});		
 	}
 	function createUserData(username, authorization, authorizationType, userDetails){
-				alert("2 : " + username + " " + JSON.stringify(userDetails));
+		
 				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-					alert("3 : ");														  
 					fs.root.getFile("userInfo.txt", { create: true, exclusive: false }, function (fileEntry) {					
 					var userDataTemp = {username: username, authorization: authorization, authorizationType: authorizationType, userDetails: userDetails};
 					writeUserData(fileEntry, userDataTemp);

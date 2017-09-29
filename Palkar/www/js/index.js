@@ -42,9 +42,10 @@ var app = {
         app.receivedEvent('deviceready');
 	try{
 		
-	$.mobile.pageLoadErrorMessage = "Page Loading..";
+	$.mobile.pageLoadErrorMessage = "";
 	$.mobile.pageLoadErrorMessageTheme = null;
-	var appVersion = '1.1.36';
+	
+	var appVersion = '1.1.42';
 	
 	Core.register('clickReactionsController',clickReactionsController,{relPath: "", reactionCountPerPage: "5"});
 	Core.register('textReactionsController',textReactionsController,{relPath: "", reactionCountPerPage: "5"});
