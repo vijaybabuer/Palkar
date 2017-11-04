@@ -561,8 +561,9 @@ var storyItemController = function(sb, input){
 	    		Core.subscribe('getNewStories', _getNewStoriesMessageReceived);
 	    		Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
 				Core.subscribe('newStoryReceived', _newStoryReceivedFromServer);	
-	    		
+	    		//alert(getMoreStories + " " + lastUpdatedStreamDate);
 	    		if(getMoreStories && lastUpdatedStreamDate != "" && lastUpdatedStreamDate != null && lastUpdatedStreamDate != "null"){
+					//alert('Getting more story items');
 					if(sb.utilities.isUserLoggedIn()){
 						var userData = sb.utilities.getUserInfo();				
 						snippetUrl = relPathIn+"appView?mediaType=json";

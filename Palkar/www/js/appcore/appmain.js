@@ -399,14 +399,24 @@ Core = function(_$) {
 		;	
 	}
 	function defaultErrorMethod(request, errorMessage, errorObj){
-			navigator.notification.alert('Restarting app to get latest info from server.', disconnectAlertDismissed, input.appname, 'Ok, Thanks');
-			if(navigator.app){
-				navigator.app.exitApp();
-			}else if(navigator.device){
-				navigator.device.exitApp();
+		try{
+			if(request.status = '405'){
+			//navigator.notification.alert('Restarting app to get latest info from server.', disconnectAlertDismissed, 'Error', 'Ok, Thanks');
+			Core.publish('restartApp', null);
 			}else{
-				navigator.notification.alert('There was a problem processing your request. You may be able to fix this by restarting your App. If the problem persists, please contact your Community Coordinator.', disconnectAlertDismissed, input.appname, 'Ok, Thanks');		
+				navigator.notification.alert(request.status  + ' ' + request.statusText + ' Restarting App', disconnectAlertDismissed, 'Error', 'Ok, Thanks');
+				if(navigator.app){
+					navigator.app.exitApp();
+				}else if(navigator.device){
+					navigator.device.exitApp();
+				}else{
+					navigator.notification.alert('There was a problem processing your request. You may be able to fix this by restarting your App. If the problem persists, please contact your Community Coordinator.', disconnectAlertDismissed, input.appname, 'Ok, Thanks');		
 			}
+				
+			}
+		}catch(e){
+			alert('There was a problem processing your request. Please try again later ' + e);	
+		}
 		//alert("There was a problem processing your request. You may be able to fix this by restarting your App. If the problem persists, please contact your Community Coordinator." + JSON.stringify(errorMessage) + " " + JSON.stringify(errorObj) );	
 	}
 	function _getDeviceAccountsError(error){

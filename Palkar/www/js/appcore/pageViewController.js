@@ -84,8 +84,7 @@ var pageViewController = function(sb, input){
 			    sb.dom.wrap('<select>').attr({'name':'select-choice-1','id':'createStoryDocument','data-native-menu':'false', 'class':'browser-default cd'}).appendTo('#createStoryHeaderDiv');
 				var optionHtml = null;
 				
-				
-			   for(var i=0; i < snippetResponse.documentListResponse.documentItemList.length; i++){				   
+			   for(var i=0; i < snippetResponse.documentListResponse.documentItemList.length; i++){		
 					  if(snippetResponse.documentListResponse.documentItemList[i].acceptPosts){
 						if(firstDocToPost){
 							optionHtml = sb.dom.wrap('<option>').attr({'value':snippetResponse.documentListResponse.documentItemList[i].documentId}).attr({'selected':'selected'}).html(snippetResponse.documentListResponse.documentItemList[i].documentTitle);
@@ -98,7 +97,7 @@ var pageViewController = function(sb, input){
 					  } 
 			   }
 			   if(showWriteToButton){
-				   sb.dom.find("#createStoryDocument").selectmenu();
+				    sb.dom.find("#createStoryDocument").selectmenu();
 					sb.dom.find("#newMessageButton").fadeIn();
 					sb.dom.find("#submitButtonForm").removeClass('nd');
 					sb.dom.find("#attachPictures").removeClass('nd');
@@ -398,6 +397,11 @@ var pageViewController = function(sb, input){
 		   if(appPage != null){	
 			   
    			   try{
+				if(sb.dom.find("meta[name='_csrf']").length > 0){
+					sb.dom.find("meta[name='_csrf']").remove();
+	    			sb.dom.find("meta[name='_csrf_header']").remove();
+					Materialize.toast('a) Establishing connection with Palkar Server ', 2000);
+				}
  			    sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").html(appPage + "Device ID " + device.uuid);
 				var token = sb.dom.find("meta[name='_csrf']").attr("content");
 				var header = sb.dom.find("meta[name='_csrf_header']").attr("content");
@@ -450,8 +454,11 @@ var pageViewController = function(sb, input){
 		}
 		try{
 			document.getElementById("message1").innerHTML = "Requesting new CSRF Token " + JSON.stringify(request);
+			if(sb.dom.find('meta[name=_csrf]').length > 0){
 			sb.dom.find('meta[name=_csrf]').remove();
 			sb.dom.find('meta[name=_csrf_header]').remove();		
+			Materialize.toast('b) Reestablishing connection with Host ', 2000);
+			}
 			var appPageUrl = relPathIn + "appPage/"+appname+"/"+input.appVersion+"/"+device.platform+"/"+input.appmaintitle+"/"+input.appextendedtitle+"?mediaType=text";
 			sb.utilities.appGet(appPageUrl,_loadAppPage,_errorStartController);
 		}catch(e){
@@ -733,6 +740,24 @@ var pageViewController = function(sb, input){
 			alert(e);	
 		}
 	}
+	
+	function _restartApp(data){
+		sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');
+		storyItemControllerPublish = true;
+		try{
+			//document.getElementById("message1").innerHTML = "Requesting new CSRF Token " + JSON.stringify(request);
+			if(sb.dom.find('meta[name=_csrf]').length > 0){
+			sb.dom.find('meta[name=_csrf]').remove();
+			sb.dom.find('meta[name=_csrf_header]').remove();		
+			Materialize.toast('Reestablishing connection with Host.', 2000);
+			//alert('Reestablishing connection with Host ');
+			}
+			var appPageUrl = relPathIn + "appPage/"+appname+"/"+input.appVersion+"/"+device.platform+"/"+input.appmaintitle+"/"+input.appextendedtitle+"?mediaType=text";
+			sb.utilities.appGet(appPageUrl,_loadAppPage,_errorStartController);
+		}catch(e){
+				alert(e);	
+		}		
+	}
    return{
 	   init:function() {
        	try{
@@ -745,6 +770,7 @@ var pageViewController = function(sb, input){
 			Core.subscribe('userLoginEvent', _userLoginEventReceived);	
 			Core.subscribe('unAuthorizedFunctionality', _unAuthorizedFunctionality);
 			Core.subscribe('notificationItemClick', _notificationItemClickReceived);
+			Core.subscribe('restartApp', _restartApp);
 			document.addEventListener("resume", onResume, false);
 			document.addEventListener("pause", onPause, false);			
 			document.addEventListener("backbutton", _deviceBackButtonClicked, true);

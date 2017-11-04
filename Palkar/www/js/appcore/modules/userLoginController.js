@@ -23,21 +23,45 @@ var userLoginController = function(sb, input){
 		
 			Materialize.toast("Unable to login. " + txnResponse.txtStatusReason, 2000);
 			//navigator.notification.alert("Information you provided did not match our records. Please provide valid username and password. If you do not have an username and password, please click on Register Button", null, input.pageHandle, "Ok"); 
+			sb.dom.find('#loginDiv').find('#loginForm').show();	
+			sb.dom.find('#loginDiv').find('#message').html("");	
 			sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
 		}
    }
    
    function _errorLogin(request, errorMessage, errorObj){
+		if(request.status == '401'){
+			alert("Your Login has expired.");
+			document.getElementById("message1").innerHTML = "Your Login has expired.";
+			sb.utilities.setUserInfo('guest', null, null, null);
+		}else{
+			try{
+				sb.dom.find('#loginDiv').find('#loginForm').show();	
+				sb.dom.find('#loginDiv').find('#message').html("");
+				sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
+				Core.publish('restartApp', null);
+			}catch(e){
+					alert(e);	
+			}
+		}	   
+		/*
 		  	sb.dom.find('#socialDiv').find('#message').find('fa-cog').hide();
 			sb.dom.find('#socialDiv').find('#socialDivTNC').fadeIn();	   
 	   sb.dom.find("#loginDiv").prepend(JSON.stringify(request));	   
 			navigator.notification.alert("There was a problem. Please restart your App. " + JSON.stringify(errorMessage) + " : " + JSON.stringify(errorObj), null, input.pageHandle, "Ok"); 
 			sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
+			*/
 	}
 	
    function _userRegistrationFailure(request, errorMessage, errorObj){
-			navigator.notification.alert(errorMessage, null, input.pageHandle, "Ok"); 
-			sb.dom.find("#registrationDiv").find("#registerUser").button('enable');
+	   		if(request.status = '405'){
+				sb.dom.find("#registrationDiv").find("#registerUser").button('enable');	
+				Core.publish('restartApp', null);	
+			}else{
+				navigator.notification.alert(request.statusText, null, input.pageHandle, "Ok"); 
+				sb.dom.find("#registrationDiv").find("#registerUser").button('enable');				
+			}
+
 	}
 	
 	
@@ -48,7 +72,9 @@ var userLoginController = function(sb, input){
 	   var password = sb.dom.find('#password').val();	   
 	   var token = userName+":"+password;
 	   if(userName && userName != "" && password && password != "" && userName != null && password != null){
-			   sb.dom.find("#loginDiv").find("#authorizeUser").button('disable');		   
+			   sb.dom.find("#loginDiv").find("#authorizeUser").button('disable');		
+				sb.dom.find('#loginDiv').find('#message').html("<i class='fa fa-cog fa-spin bf cd'></i>");
+				sb.dom.find('#loginDiv').find('#loginForm').hide();			   
 		   	   sb.utilities.postPublic(relPathIn+'apipublic/userLogin?&mediaType=json',{userName: userName, password: password, communityName: input.pageHandle},_userLoginSuccess, _errorLogin);
 	   }else{
 //			navigator.notification.alert("Please Enter User Name and Password.", null, input.pageHandle, "Ok");   
@@ -290,6 +316,28 @@ var userLoginController = function(sb, input){
 		;
 	}
 	function _logOffFailure(request, errorMessage, errorObj){
+		if(request.status = '200'){
+			if(navigator.app){
+				navigator.app.exitApp();
+			}else if(navigator.device){
+				navigator.device.exitApp();
+			}else{
+				navigator.notification.alert('Successfully logged off. Please close the App by pressing the home button on your Device', alertDismissed, input.appname, 'Ok, Thanks');		
+			}			
+		}else if(request.status == '401'){
+			alert("Your Login has expired.");
+			document.getElementById("message1").innerHTML = "Your Login has expired.";
+			sb.utilities.setUserInfo('guest', null, null, null);
+		}else{
+			alert("Problem Logging Off. Please close your app using your Device Home Button." + JSON.stringify(request));
+			try{
+				//sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
+				Core.publish('restartApp', null);
+			}catch(e){
+					alert(e);	
+			}
+		}
+		/*
 		navigator.notification.alert('There was a problem. Please try agin later. ' + JSON.stringify(request), alertDismissed, input.appname, 'Ok, Thanks');		
 			if(navigator.app){
 				sb.utilities.setUserInfo('guest', null, null, null);
@@ -299,7 +347,8 @@ var userLoginController = function(sb, input){
 				navigator.device.exitApp();
 			}else{
 				navigator.notification.alert('Your Operating System does not support this feature. Please close the App by pressing the home button on your Device', alertDismissed, input.appname, 'Ok, Thanks');		
-			}		
+			}
+			*/
 	}
 	function _logOffSuccess(response){
 		if(response.antahRequestStatus == 'SUCCESS'){
@@ -322,6 +371,7 @@ var userLoginController = function(sb, input){
 	}
 	function _exitAppConfirmLogoff(button){
 		if(button == 2){
+			sb.utilities.setUserInfo('guest', null, null, null);
 			_logOffuser();
 		}
 	}
