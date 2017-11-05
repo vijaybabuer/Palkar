@@ -1,5 +1,5 @@
 var pageViewController = function(sb, input){
-	var thisIsMobileDevice = true, storyEditorInitialized=false, albumContainerJS=null, storyEditHappening = false, documentEditHappening = false, placeHolderContainer=sb.dom.find("#jstemplate-pageViewController-placeHolderContainer").html(), relPathIn = input.relPath, appname=input.appname, streamSize = input.streamSize, newStream = null, storyItemControllerPublish = true, logoutAttempt=0, appOnPause = false;
+	var thisIsMobileDevice = true, storyEditorInitialized=false, albumContainerJS=null, storyEditHappening = false, documentEditHappening = false, userLogoStarted = false, placeHolderContainer=sb.dom.find("#jstemplate-pageViewController-placeHolderContainer").html(), relPathIn = input.relPath, appname=input.appname, streamSize = input.streamSize, newStream = null, storyItemControllerPublish = true, logoutAttempt=0, appOnPause = false;
 	
 	function _enableBigScreenFeatures(){
 		sb.dom.find(".bigScreenItem").show();
@@ -315,6 +315,10 @@ var pageViewController = function(sb, input){
 			}
 			sb.dom.find('.toggleFullScreen').on('click',_toggleFullScreenEvent);
 			sb.dom.find('.timeago').timeago();
+			if(sb.utilities.isUserLoggedIn() && !userLogoStarted){
+				Core.publish('startUserLogo', null);	
+				userLogoStarted = true;
+			}			
 		   }else{
 			   updateFooterMessage("There was a problem loading the Page. Please try again after some time. " + snippetResponse.antahResponseMessage);
 			}
@@ -343,7 +347,7 @@ var pageViewController = function(sb, input){
 			var data = null;
 			snippetUrl = relPathIn+"appView?mediaType=json";
 			if(sb.utilities.isUserLoggedIn()){
-				Core.publish('startUserLogo', null);				
+				//Core.publish('startUserLogo', null);				
 				var userData = sb.utilities.getUserInfo();				
 				data = {username: userData.username, appname: appname, streamSize: streamSize};
 			}else{
