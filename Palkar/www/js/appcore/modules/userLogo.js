@@ -192,7 +192,7 @@ var userLogo = function(sb, input){
 				stopStreaming: false,
 				communityName: input.appname
 			};
-			sb.utilities.postV2('updatePushNotification?mediaType=json', registerPushRequest, _registerPushNotificationResponse, _notificationResponseError);
+			sb.utilities.postV2('updatePushNotification?mediaType=json', registerPushRequest, _registerPushNotificationResponse);
 		}catch(e){
 			alert('_pushNotificationRegistrationResponseReceived '	 + e);
 		}
@@ -305,7 +305,7 @@ var userLogo = function(sb, input){
 				stopStreaming: true,
 				communityName: input.appname
 			};
-		sb.utilities.postV2('updatePushNotification?mediaType=json', stopPushRequest, _stopPushNotificationResponse, _notificationResponseError);			
+		sb.utilities.postV2('updatePushNotification?mediaType=json', stopPushRequest, _stopPushNotificationResponse);			
 	}
 	
 	function _activatePushNotification(message){
