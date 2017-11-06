@@ -461,7 +461,7 @@ var pageViewController = function(sb, input){
 			if(sb.dom.find('meta[name=_csrf]').length > 0){
 			sb.dom.find('meta[name=_csrf]').remove();
 			sb.dom.find('meta[name=_csrf_header]').remove();		
-			Materialize.toast('b) Reestablishing connection with Host ', 2000);
+			Materialize.toast('Establishing connection with Host ', 2000);
 			}
 			var appPageUrl = relPathIn + "appPage/"+appname+"/"+input.appVersion+"/"+device.platform+"/"+input.appmaintitle+"/"+input.appextendedtitle+"?mediaType=text";
 			sb.utilities.appGet(appPageUrl,_loadAppPage,_errorStartController);
@@ -748,12 +748,13 @@ var pageViewController = function(sb, input){
 	function _restartApp(data){
 		sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');
 		storyItemControllerPublish = true;
+		userLogoStarted = false;
 		try{
 			//document.getElementById("message1").innerHTML = "Requesting new CSRF Token " + JSON.stringify(request);
 			if(sb.dom.find('meta[name=_csrf]').length > 0){
 			sb.dom.find('meta[name=_csrf]').remove();
 			sb.dom.find('meta[name=_csrf_header]').remove();		
-			Materialize.toast('Reestablishing connection with Host.', 2000);
+			Materialize.toast('Connecting with Host.', 2000);
 			//alert('Reestablishing connection with Host ');
 			}
 			var appPageUrl = relPathIn + "appPage/"+appname+"/"+input.appVersion+"/"+device.platform+"/"+input.appmaintitle+"/"+input.appextendedtitle+"?mediaType=text";
