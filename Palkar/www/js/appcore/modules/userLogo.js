@@ -194,7 +194,7 @@ var userLogo = function(sb, input){
 			};
 			sb.utilities.postV2('updatePushNotification?mediaType=json', registerPushRequest, _registerPushNotificationResponse);
 		}catch(e){
-			alert('_pushNotificationRegistrationResponseReceived '	 + e);
+			alert('_pushNotificationRegistrationResponseReceived '	 + e + " " + JSON.stringify(registrationInfo));
 		}
    }
 	
