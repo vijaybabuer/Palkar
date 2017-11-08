@@ -182,11 +182,7 @@ var userLogo = function(sb, input){
 	}	
    function _pushNotificationRegistrationResponseReceived(registrationInfo){ 
    		try{
-			alert(sb.utilities.getUserInfo().userDetails.userAccount.userName);
-			alert(device.uuid);
-			alert(device.platform );
-			alert(device.version);
-			alert(input.appname);
+
 			var registerPushRequest = {
 				userName : sb.utilities.getUserInfo().userDetails.userAccount.userName,
 				deviceUUID : device.uuid,
@@ -197,10 +193,16 @@ var userLogo = function(sb, input){
 				stopStreaming: false,
 				communityName: input.appname
 			};
-			alert('Object done');
+
 			sb.utilities.postV2('updatePushNotification?mediaType=json', registerPushRequest, _registerPushNotificationResponse);
 		}catch(e){
+
 			alert('_pushNotificationRegistrationResponseReceived '	 + e + " " + JSON.stringify(registrationInfo));
+			alert(sb.utilities.getUserInfo().userDetails.userAccount.userName);
+			alert(device.uuid);
+			alert(device.platform );
+			alert(device.version);
+			alert(input.appname);			
 		}
    }
 	
