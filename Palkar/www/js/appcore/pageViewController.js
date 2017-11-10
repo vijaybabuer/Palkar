@@ -81,7 +81,9 @@ var pageViewController = function(sb, input){
 		   if(sb.utilities.isUserLoggedIn()){
 			   var showWriteToButton = false;
 			   var firstDocToPost = true;
-			    sb.dom.wrap('<select>').attr({'name':'select-choice-1','id':'createStoryDocument','data-native-menu':'false', 'class':'browser-default cd'}).appendTo('#createStoryHeaderDiv');
+			   if(sb.dom.find('#createStoryHeaderDiv').find('#createStoryDocument').length == 0){
+			    	sb.dom.wrap('<select>').attr({'name':'select-choice-1','id':'createStoryDocument','data-native-menu':'false', 'class':'browser-default cd'}).appendTo('#createStoryHeaderDiv');
+			   }
 				var optionHtml = null;
 				
 			   for(var i=0; i < snippetResponse.documentListResponse.documentItemList.length; i++){		
