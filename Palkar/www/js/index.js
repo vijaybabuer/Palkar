@@ -45,11 +45,13 @@ var app = {
 	$.mobile.pageLoadErrorMessage = "";
 	$.mobile.pageLoadErrorMessageTheme = null;
 	
-	var appVersion = '1.1.52';
-	var palpostrServerName = "http://www.palpostr.com/";
+	var appVersion = '1.1.53';
+	
+	var palpostrServerName = "http://192.168.0.105:8080/palpostr/";	
+	
 	Core.register('clickReactionsController',clickReactionsController,{relPath: "", reactionCountPerPage: "5"});
 	Core.register('textReactionsController',textReactionsController,{relPath: "", reactionCountPerPage: "5"});
-	Core.register('storyEditController',storyEditController,{elemHandle: '#createStory', relPath: palpostrServerName, addPostTextAreaHandle: ".addPostTextArea", storiesDiv: "#storiesDiv", storyJSTemplateName: "template-storyTemplate"});		
+	Core.register('storyEditController',storyEditController,{elemHandle: '#createStory', relPath: palpostrServerName, addPostTextAreaHandle: ".addPostTextArea", storiesDiv: "#storiesDiv", storyJSTemplateName: "template-storyTemplate", communityName: 'Palkar'});		
 	Core.register('storyItemController',storyItemController, {relPath: "", storyPage: false, authenticatedUser: "none", storyJSTemplateName: "template-storyTemplate", getMoreStories: true, storiesDivId: "#storiesDiv", appname: "Palkar", numberOfStoriesToGet: 5});
 	Core.register('pageViewController', pageViewController, {relPath: "", palpostrHost: palpostrServerName, appVersion: appVersion, loadingText: "Welcome, <br> We are downloading your stream.", appname: "Palkar", appmaintitle: "Community Updates", appextendedtitle: "Share your local community stories and pictures with more than 1 Million Palkars worldwide", streamSize: 5});	
 	Core.register('sseController',sseController, {relPath: "", username: "guest", userAuthenticated: "false", pageHandle: "Palkar"});

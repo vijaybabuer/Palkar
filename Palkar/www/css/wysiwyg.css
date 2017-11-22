@@ -752,3 +752,7 @@ width: 50%;
  #createStoryDocument{
  	font-size: 2em;
  }
+ 
+ #getMoreStoriesForPageButton{
+ 	color: #ffffff;
+ }

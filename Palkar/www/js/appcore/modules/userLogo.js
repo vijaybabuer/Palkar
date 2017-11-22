@@ -385,7 +385,6 @@ var userLogo = function(sb, input){
 		}
 		
 	}
-	
    return{
 	   init:function() {
        	try{

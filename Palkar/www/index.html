@@ -78,8 +78,9 @@
 						  <ul class="tabs" style="width: 100%; padding: 0px; margin: 0px; list-style: none; text-align: center;">
 							<!-- <li class="tab col"><a id="storyPostContainerTab" href="#storyPostContainer"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Post</a></li> -->
 							<li class="tab col"><a class="active" href="#mainContainer"><i class="fa fa-home mf" aria-hidden="true"></i></a></li>
+							<li class="tab col"><a id="membersTab" href="#membersContainer"><i class="fa fa-users mf" aria-hidden="true"></i></a></li>							
 							<li class="tab col"><a id="gameContainerTab" href="#gameContainer"><i class="fa fa-gamepad mf" aria-hidden="true"></i></a></li>							
-							<li class="tab col"><a id="profileContainerTab" href="#profileContainer"><i class="fa fa-user mf" aria-hidden="true"></i></a></li>							
+							<li class="tab col"><a id="profileContainerTab" href="#profileContainer"><i class="fa fa-user mf" aria-hidden="true"></i></a></li>																	
 						  </ul>									
 					</div>					
 					<div class="container" id="mainContainer">
@@ -92,7 +93,12 @@
 								<div class="card" style="margin: 0px; padding: 0px; border: 1px solid #ffffff;">
 									<div class="card-content" style="margin: 0px; padding: 0px; border: 1px solid #ffffff;">
 										<div id="createStoryHeaderDiv" class="input-field col s12">
-										</div>										
+										</div>
+										<p class="m">
+										<button class="ui-btn cd nd" id="newTopicAdd"><i class="fa fa-play" aria-hidden="true"></i> Start a New Topic</button>
+										<button class="ui-btn cg nd" id="newTopicCancel"><i class="fa fa-ban" aria-hidden="true"></i> Cancel New Topic</button>    
+										<input class="nd" id="newTopic" placeholder="What is the new topic Ex: Vegan Food" value="" />
+										</p>																				
 										<div id="storyMedia">
 											<div id="panel-hdr">											
 												<a class="ui-btn  ui-btn-inline lt activator bw stdf" style="margin: 5px; padding: 5px; border: 0px;"><i class="fa fa-gear"  aria-hidden="true"></i></a>
@@ -156,7 +162,37 @@
 					</div>
 					<div id="gameContainer">
 						Games!	
-					</div>					
+					</div>
+					<div id="membersContainer">
+					  <ul class="collapsible" data-collapsible="accordion">
+						<li>
+						  <div class="collapsible-header cd mf active active">Founders</div>
+						  <div id="foundingMembers" class="collapsible-body row" style="padding: 5px; margin: 0px;">
+							  <div class="progress">
+								  <div class="indeterminate" ></div>
+							  </div>						  
+						  </div>
+						</li>
+						<li>
+						  <div class="collapsible-header cd mf">Contributors</div>
+						  <div id="contributors"  class="collapsible-body row" style="padding: 5px; margin: 0px;">
+							  <div class="progress">
+								  <div class="indeterminate"></div>
+								  
+							  </div>
+						  </div>
+						</li>												
+						<li>
+						  <div class="collapsible-header cd mf">Members</div>
+						  <div id="subscribers"  class="collapsible-body row" style="padding: 5px; margin: 0px;">
+							  <div class="progress">
+								  <div class="indeterminate""></div>
+							  </div>						  
+						  </div>
+						</li>
+					  </ul>
+					  Please login or register to become member of this community.    					  
+					</div>											
 
 				</div>	    
 				<div class="appFooter" id="mainAppFooter">
@@ -523,6 +559,19 @@ Ex: john@example.com;sam@example.com</script>
 					<p>To protect your identity, you need to login or register to use this feature. </p>
 					<a href="#loginRegisterPage" onclick="Core.publish('initializeUserRegistration', null);" class="containerBackButton">Continue</a>
 				</div>			
+</script>
+<script type="text/template" id="jstemplate-materialize-spinner">
+  <div class="preloader-wrapper active" style="margin-left: 47.5%;">
+    <div class="spinner-layer spinner-red-only">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div><div class="gap-patch">
+        <div class="circle"></div>
+      </div><div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+  </div>
 </script>
 <script type="text/template" id="jstemplate-Remove-Flag"><i class="fa fa-flag" aria-hidden="true"></i> Remove Inappropriate Flag</script>
 <script type="text/template" id="jstemplate-Flag-Story"><i class="fa fa-flag-o" aria-hidden="true"></i> Flag as Inappropraiate</script>

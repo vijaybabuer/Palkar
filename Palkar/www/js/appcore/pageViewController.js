@@ -155,6 +155,7 @@ var pageViewController = function(sb, input){
 		   sb.dom.find('.containers').find('.subContainer').first().remove();
 		   if(sb.dom.find('.containers').find('.subContainer').length == 0){
 				sb.dom.find(this).hide();  
+				sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');
 		   }
 		   var nextContainer = sb.dom.find('.container').first();		   
 /*		   var nextContainerScrollTop = nextContainer.attr("data-scroll-top");
@@ -207,6 +208,52 @@ var pageViewController = function(sb, input){
 		   nextContainer.show();			
 		}
 		
+		
+		function _moreStoriesResponseReceived(snippetResponse){
+
+		   
+		   if(snippetResponse != null){
+			   sb.dom.find('#containerDiv').find('.container').first().find("#storiesDivPage").find("#storiesDiv").find('.preloader-wrapper').remove();
+			   sb.dom.find('#containerDiv').find('.container').first().find("#storiesDivPage").find("#storiesDiv").append(snippetResponse);
+			   var lastPageCount = sb.dom.find("#lastStoryPageCount").html();
+			   sb.dom.find('#containerDiv').find('.container').first().find("#getMoreStoriesForPageButton").attr('data-attrib-lastPageNumber', lastPageCount);
+			   if(lastPageCount == 1){
+				   sb.dom.find('#containerDiv').find('.container').first().find('#documentPagination').hide();
+				   sb.dom.find('#containerDiv').find('.container').first().find("#storiesDivPage").find("#storiesDiv").append(sb.dom.find("#jstemplate-noMoreStories").html());
+				   sb.dom.find('#containerDiv').find('.container').first().find('#getMoreStoriesButton').html(sb.dom.find("#jstemplate-noMoreStories").html());
+				   sb.dom.find('#containerDiv').find('.container').first().find('#getMoreStoriesButton').attr('enabled', false);
+			   }
+			   if(lastPageCount == 0){
+				   sb.dom.find('#containerDiv').find('.container').first().find('#documentPagination').hide();				   
+			   }			   
+		   }else{
+			   sb.dom.find('#containerDiv').find('.container').first().find("#storiesDivPage").find("#storiesDiv").find('.spinner-layer').remove();
+			   sb.dom.find('#containerDiv').find('.container').first().find('#getMoreStoriesButton').html(sb.dom.find("#noMoreStories").html());
+			  	sb.dom.find('#containerDiv').find('.container').first().find('#getMoreStoriesButton').attr('enabled', false);
+		   }
+	   		   
+	   			
+			
+		}
+		
+	function _moreStoriesButtonClickEvent(e){
+		var snippetUrl = sb.dom.find(this).attr('data-snippet-url');
+		console.log('anchor click ');
+		if(snippetUrl){
+				   e.preventDefault();
+				   var lastPageCount = sb.dom.find(this).attr('data-attrib-lastPageNumber');
+				   var pageCountToGet = sb.dom.find('#pageCountSelect').val();				   
+				   snippetUrl = snippetUrl + '&lastPageNumber=' + lastPageCount + '&pageCount=' + pageCountToGet;
+				   sb.dom.find("#storiesDiv").append(sb.dom.find("#jstemplate-materialize-spinner").html());
+				   sb.utilities.get(snippetUrl,null,_moreStoriesResponseReceived);
+				   sb.dom.find('#lastStoryPageCount').remove();
+		}else{
+			console.log('now view snippet url has been set');
+		}
+			
+	}
+	
+	
 	   function _snippetResponseReceived(snippetResponse){
 		   if(snippetResponse != null){
 			   try{
@@ -225,6 +272,9 @@ var pageViewController = function(sb, input){
 			   sb.dom.find('#containerDiv').find('.container').first().find('.WhatsAppShare').removeClass('yui3-button');
 			   sb.dom.find('.container').first().find('.storyItemBody').show();			   
 			   sb.dom.find('.appHeader').find('#containerBackButton').show();
+			   sb.dom.find('#containerDiv').find('.container').first().find('#getMoreStoriesForPageButton').click(_moreStoriesButtonClickEvent);
+			   sb.dom.find('#containerDiv').find('.container').first().find('#documentPagination').show();	
+			   sb.dom.find('#containerDiv').find('.container').first().find('#pageCountSelect').material_select();
 			   openOverlay();
 			   }
 			   catch(error){
@@ -247,6 +297,7 @@ var pageViewController = function(sb, input){
 	function _anchorClickEvent(e){
 		try{			
 			var snippetUrl = sb.dom.find(this).attr('data-snippet-url');
+
 			if(snippetUrl){
 					   e.preventDefault();
 					   sb.dom.find('.container').each(_hideContainer);
@@ -320,12 +371,67 @@ var pageViewController = function(sb, input){
 			if(sb.utilities.isUserLoggedIn() && !userLogoStarted){
 				Core.publish('startUserLogo', null);	
 				userLogoStarted = true;
-			}			
+			}
+			sb.utilities.postV2('communityMembership?mediaType=json', {communityName: appname}, _communityMembershipInfo);
+			
 		   }else{
 			   updateFooterMessage("There was a problem loading the Page. Please try again after some time. " + snippetResponse.antahResponseMessage);
 			}
 	}
 	
+	function _parseCommunityInfoOwner(key, value){
+		
+		try{
+		sb.dom.find("#foundingMembers").append(tmpl("jstemplate-member-item", value));
+		}catch(e){
+			alert(e);
+		}
+	}
+	function _parseCommunityInfoContributor(key, value){
+		try{
+		sb.dom.find("#contributors").append(tmpl("jstemplate-member-item", value));
+		}catch(e){
+			alert(e);	
+		}		
+	}
+	function _parseCommunityInfoSubscriber(key, value){
+		try{
+		sb.dom.find("#subscribers").append(tmpl("jstemplate-member-item", value));
+		}catch(e){			
+			alert(e);	
+		}			
+	}	
+	
+	function _setToggleEvent(e){
+		sb.dom.find(this).find('.memberPages').slideToggle();	
+	}
+	
+	function _setFocusEvent(e){
+		sb.dom.find(this).find('.memberPages').slideUp();
+	}
+	function _setTapEvent(e){
+		sb.dom.find(this).bind('click', _setToggleEvent);
+		sb.dom.find(this).focusout(_setFocusEvent);
+	}
+	function _communityMembershipInfo(data){
+		
+		if(data.status == 'SUCCESS'){
+			sb.dom.find("#foundingMembers").html("");
+			sb.utilities.each(data.ownerManagerSummaries, _parseCommunityInfoOwner);
+			sb.dom.find("#contributors").html("");			
+			sb.utilities.each(data.contributorSummaries, _parseCommunityInfoContributor);
+			sb.dom.find("#subscribers").html("");			
+			sb.utilities.each(data.subscriberSummaries, _parseCommunityInfoSubscriber);
+			
+			//sb.dom.find('.communityMemberDiv').each(_setTapEvent);
+			sb.dom.find('.communityMemberDiv').find('a').each(_setAnchorClickEvent);
+			
+		}
+	}
+	
+	function _communityMembershipFailure(request, errorMessage, errorObj){
+		alert('_communityMembershipFailure ' + JSON.stringify(request));
+	}
 
 	function _enableGrid(){
 			sb.dom.find(this).masonry({
@@ -487,6 +593,7 @@ var pageViewController = function(sb, input){
 			sb.dom.find('#mainPage').page({
 				domCache: true							  
 			});
+			sb.dom.find('.collapsible').collapsible();
 		 $('.modal').modal({
 			  dismissible: true, // Modal can be dismissed by clicking outside of the modal
 			  opacity: .5, // Opacity of modal background
@@ -645,6 +752,7 @@ var pageViewController = function(sb, input){
 		   nextContainer.show();
 			if(sb.dom.find('.subContainer').length == 0){
 				sb.dom.find('#containerBackButton').hide();
+				sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');
 			}			   
 	   }else{
 			exitApp = true;   

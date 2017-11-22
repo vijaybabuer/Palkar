@@ -312,6 +312,7 @@ Core = function(_$) {
 			},
 			get: function(referenceUrl, data, successCallback){
 				var url = baseHost;
+				referenceUrl = referenceUrl.replace(url, '');
 				if(userData.authorizationType){
 					if(userData.authorizationType == 'social'){
 						url = url + userData.authorizationType + "/" + referenceUrl;

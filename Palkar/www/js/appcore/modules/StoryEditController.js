@@ -3,7 +3,7 @@ var storyEditController = function(sb, input){
 	    subjectBox=null, messageBox=null, picturesDiv=null, createStoryHeaderDiv=null, albumForStoryID=null, addPicturesButton=null,  removePicturesButton=null, newMessageButton=null, editStoryDocumentPageId=null;
 	    addPostTextAreaHandle=input.addPostTextAreaHandle, wysiwygEditorStatus=false, httpMethod="POST", thumnailhtmltemplate = null, albumcontainer = null, picturecontainer = null, storyItemTemplate = null, storiesDiv= input.storiesDiv,
 	    thisIsStoryPage = input.thisIsStoryPage, storyJSTemplateName = input.storyJSTemplateName, storyEditorCloseButton = null, allowPublicTextReactionsButton = null, allowPrivateTextReactionsButton = null, allowClickReactionsButton = null, allMessagesButtonSet = null,
-	    tinyMCEObject = null, storyContent = null, alertBeforeNavigatingAway = false;
+	    tinyMCEObject = null, storyContent = null, alertBeforeNavigatingAway = false, startNewTopic = false;
    function _removePicturesClick(){
 	   sb.utilities.trace('Pictures remove clicked..');
    }
@@ -56,6 +56,8 @@ var storyEditController = function(sb, input){
 	   }
    }
    function _showNewMessageForm(){
+	   	   startNewTopic = false;
+		   sb.dom.find('#newTopicAdd').show();
 	  	 sb.dom.find('#containerDiv').animate({scrollTop: 0}, 200);
 	  	 sb.dom.find('#mainContainer').animate({scrollTop: 0}, 200);
 		 sb.dom.find('#mainPage').animate({scrollTop: 0}, 200);
@@ -87,6 +89,8 @@ var storyEditController = function(sb, input){
    
    function _showEditMessageForm(storyResponse){
 	   try{
+		   startNewTopic = false;
+		   sb.dom.find('#newTopicAdd').hide();		   
 	  	 sb.dom.find('#containerDiv').animate({scrollTop: 0}, 200);
 	  	 sb.dom.find('#mainContainer').animate({scrollTop: 0}, 200);
 		 sb.dom.find('#mainPage').animate({scrollTop: 0}, 200);
@@ -192,6 +196,8 @@ var storyEditController = function(sb, input){
    
    
    function _hideForm(){
+	   startNewTopic = false;
+	   _hideNewTopicElements();	   
 	   subjectBox.val("");
 	   messageBox.html("");
 	   albumForStoryID=null;
@@ -227,8 +233,15 @@ var storyEditController = function(sb, input){
 	   }else{
 		   if(httpMethod=="POST"){
 			   var detailsMessage = tinymce.html.Entities.encodeNumeric(messageBox.text());
-														 
+			   if(startNewTopic){
+				   if(sb.dom.find('#newTopic').val() == null || sb.dom.find('#newTopic').val().trim() == "" || sb.dom.find('#newTopic').val().trim() == 'undefined'){
+					   alert('Please provide a topic name. Thanks.');
+				   }else{
+				  sb.utilities.postV2("shrmsg.pvt?mediaType=json",{title: subjectBox.val(), details: messageBox.html(), communityName: input.communityName, topicName: sb.dom.find('#newTopic').val().trim(), albumId: albumForStoryID, allowPublicTextReactions: allowPublicTextReactions, allowPrivateTextReactions: allowPrivateTextReactions, allowClickReactions: allowClickReactions},sendMessageSuccess);
+				   }
+			   }else{														 
 			   sb.utilities.postV2("shrmsg.pvt?mediaType=json",{title: subjectBox.val(), details: detailsMessage, documentId: documentidBox.val(), albumId: albumForStoryID, allowPublicTextReactions: allowPublicTextReactions, allowPrivateTextReactions: allowPrivateTextReactions, allowClickReactions: allowClickReactions}, sendMessageSuccess);
+			   }
 		   }else if(httpMethod=="PUT"){
 			   sb.utilities.put("shrmsg.pvt?mediaType=json",{title: subjectBox.val(), details: detailsMessage, documentId: "", albumId: albumForStoryID, documentpageid: editStoryDocumentPageId, allowPublicTextReactions: allowPublicTextReactions, allowPrivateTextReactions: allowPrivateTextReactions, allowClickReactions: allowClickReactions},updateMessageSuccess);
 		   }
@@ -314,7 +327,6 @@ var storyEditController = function(sb, input){
    }
    
    function addStoryItemToView(storyItem){
-	   
 	   try{
 	   var storyItemHtml = tmpl(storyJSTemplateName, storyItem);
 	   sb.dom.find(storiesDiv).prepend(sb.utilities.htmlDecode(storyItemHtml));
@@ -557,9 +569,38 @@ var storyEditController = function(sb, input){
 			alert(e);	
 		}
 	}
+
+   function _hideNewTopicElements(){
+	   sb.dom.find('#newTopicAdd').hide();
+	   sb.dom.find('#newTopicCancel').hide();
+	   sb.dom.find('#newTopic').hide();
+	   sb.dom.find('#communityName').hide();
+   }
+   
+   function _showNewTopicElements(){
+	   sb.dom.find('#newTopicAdd').show();
+	   sb.dom.find('#newTopicCancel').show();
+	   sb.dom.find('#newTopic').show();
+	   sb.dom.find('#communityName').show();
+   }
+   
+   function _newTopicAddClickEvent(e){
+	   e.preventDefault();
+	   startNewTopic = true;
+	   _showNewTopicElements();
+   }
+   function _newTopicCancelEvent(e){
+	   e.preventDefault();	   
+	   startNewTopic = false;
+	   _hideNewTopicElements();
+	   sb.dom.find('#newTopicAdd').show();
+	   
+   }
+   
    function _startController(){
 				try{
        			//Module Initializing
+				sb.dom.find("#newTopic").hide();
 				htmlBody = sb.dom.find(input.elemHandle);
 				albumcontainer = htmlBody.find('.PVTSTYPIC');
 				picturecontainer = albumcontainer.find(".albumpictures");
@@ -598,6 +639,8 @@ var storyEditController = function(sb, input){
        			sb.dom.find(".addStoryToDocument").bind('click',_addStoryToDocumentClickEvent);
        			sb.dom.find(".addAlbumToDocument").bind('click',_addAlbumToDocumentClickEvent);
 				sb.dom.find("#initializeRichTextEditor").click(_initializeWYSIWYGEditorEvent);
+       			sb.dom.find("#newTopicAdd").bind('click', _newTopicAddClickEvent);
+       			sb.dom.find("#newTopicCancel").bind('click', _newTopicCancelEvent);  				
        			newMessageButton.bind('click',_showNewMessageForm);  
 				//_showNewMessageForm();
        			
