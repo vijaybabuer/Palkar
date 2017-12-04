@@ -182,7 +182,7 @@ var userLogo = function(sb, input){
 	}	
    function _pushNotificationRegistrationResponseReceived(registrationInfo){ 
    		try{
-
+			//alert('Notification response received.');
 			var registerPushRequest = {
 				userName : sb.utilities.getUserInfo().userDetails.userAccount.userName,
 				deviceUUID : device.uuid,
@@ -196,7 +196,6 @@ var userLogo = function(sb, input){
 
 			sb.utilities.postV2('updatePushNotification?mediaType=json', registerPushRequest, _registerPushNotificationResponse);
 		}catch(e){
-
 			alert('_pushNotificationRegistrationResponseReceived '	 + e + " " + JSON.stringify(registrationInfo));
 			alert(sb.utilities.getUserInfo().userDetails.userAccount.userName);
 			alert(device.uuid);
@@ -251,7 +250,12 @@ var userLogo = function(sb, input){
 				notificationButton.find('#notificationCount').html("");
 			}	   
    }
+   
+   function _pushNotificationErrorReceived(e){
+		alert(e);   
+	}
    function _setupPushNotifications(){
+	   //alert('Setting up push');
 		pushNotification = PushNotification.init({
 						android: {
 						senderID: "601600954865"
@@ -266,6 +270,7 @@ var userLogo = function(sb, input){
 						});
 		pushNotification.on('registration', _pushNotificationRegistrationResponseReceived);
 		pushNotification.on('notification', _pushNotificationMessageReceived);	
+		pushNotification.on('error', _pushNotificationErrorReceived);			
 		notificationPanel = sb.dom.wrap(sb.dom.find("#jstemplate-notifications-pane").html());		
 		notificationButton.data('powertipjq', notificationPanel);
 		notificationButton.powerTip({

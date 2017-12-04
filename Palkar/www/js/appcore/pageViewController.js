@@ -155,15 +155,17 @@ var pageViewController = function(sb, input){
 		   sb.dom.find('.containers').find('.subContainer').first().remove();
 		   if(sb.dom.find('.containers').find('.subContainer').length == 0){
 				sb.dom.find(this).hide();  
-				sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');
+				//sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');
 		   }
-		   var nextContainer = sb.dom.find('.container').first();		   
-/*		   var nextContainerScrollTop = nextContainer.attr("data-scroll-top");
-		   if(nextContainerScrollTop){
-			   alert('have scroll top ' + nextContainerScrollTop);
-			   nextContainer.scrollTop(nextContainerScrollTop);
-		   }*/
-		   nextContainer.show();
+		   if(sb.dom.find('.containers').find('.subContainer').length > 0){
+			   var nextContainer = sb.dom.find('.subContainer').first();		   
+	/*		   var nextContainerScrollTop = nextContainer.attr("data-scroll-top");
+			   if(nextContainerScrollTop){
+				   alert('have scroll top ' + nextContainerScrollTop);
+				   nextContainer.scrollTop(nextContainerScrollTop);
+			   }*/
+			   nextContainer.show();
+		   }
 	   }	   
 
 	    function openOverlay() {
@@ -255,13 +257,15 @@ var pageViewController = function(sb, input){
 	
 	
 	   function _snippetResponseReceived(snippetResponse){
+    		sb.dom.find("#loading-modal").modal('close');
 		   if(snippetResponse != null){
 			   try{
-			   sb.dom.find('.placeHolderContainer').remove();	
-			   
+				snippetResponse = snippetResponse.trim();
+
+			   sb.dom.find('.placeHolderContainer').remove();
 			   sb.dom.find('#containerDiv').prepend(snippetResponse);
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerBackButton').show();
-			   sb.dom.find('#containerDiv').find('.container').first().find('.containerBackButton').bind('click', _containerBackButtonClicked);
+			   sb.dom.find('#containerDiv').find('.container').first().find('.containerBackButton').bind('click', _containerBackButtonClickedV2);
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerCloseButton').show();
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerCloseButton').bind('click', _containerCloseButtonClicked);		
 			   sb.dom.find('#containerDiv').find('.container').first().find('.CommentsSummary').removeClass('yui3-button');
@@ -299,14 +303,15 @@ var pageViewController = function(sb, input){
 			var snippetUrl = sb.dom.find(this).attr('data-snippet-url');
 
 			if(snippetUrl){
+						sb.dom.find("#loading-modal").modal('open');				
 					   e.preventDefault();
-					   sb.dom.find('.container').each(_hideContainer);
+					   sb.dom.find('.subContainer').each(_hideContainer);
 					   //sb.dom.find('#containerDiv').prepend(placeHolderContainer);		
 					   //alert(sb.dom.find('#containerDiv').scrollTop());
 					   //alert(sb.dom.find(this).scrollTo(0, 0));
 					   //window.scrollTo(0, 0);
 					   
-					   sb.utilities.get(snippetUrl,null,_snippetResponseReceived);			
+					   var xhrRequest  = sb.utilities.get(snippetUrl,null,_snippetResponseReceived);
 			}
 			sb.dom.find("#rightPanel").panel("close");
 		}catch(err){
@@ -422,10 +427,7 @@ var pageViewController = function(sb, input){
 			sb.utilities.each(data.contributorSummaries, _parseCommunityInfoContributor);
 			sb.dom.find("#subscribers").html("");			
 			sb.utilities.each(data.subscriberSummaries, _parseCommunityInfoSubscriber);
-			
-			//sb.dom.find('.communityMemberDiv').each(_setTapEvent);
 			sb.dom.find('.communityMemberDiv').find('a').each(_setAnchorClickEvent);
-			
 		}
 	}
 	
@@ -745,15 +747,17 @@ var pageViewController = function(sb, input){
 		if(sb.dom.find('.subContainer').length > 0){
 		   e.preventDefault();
 		   closeOverlay();		
-		   var firstSubContainer = sb.dom.find('.subContainer').first();
-		   firstSubContainer.slideUp();
-		   firstSubContainer.remove();
-		   var nextContainer = sb.dom.find('.container').first();		   
-		   nextContainer.show();
-			if(sb.dom.find('.subContainer').length == 0){
+		   
+		   sb.dom.find('.containers').find('.subContainer').first().slideUp();
+		   sb.dom.find('.containers').find('.subContainer').first().remove();
+		   if(sb.dom.find('.containers').find('.subContainer').length == 0){
 				sb.dom.find('#containerBackButton').hide();
-				sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');
-			}			   
+				//sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');
+		   }
+		   if(sb.dom.find('.containers').find('.subContainer').length > 0){
+			   var nextContainer = sb.dom.find('.subContainer').first();
+			   nextContainer.show();
+		   }			   
 	   }else{
 			exitApp = true;   
 		}
@@ -823,9 +827,13 @@ var pageViewController = function(sb, input){
 		}
 	}
 	
+	function _setCurrentTab(currentTab){
+		alert(currentTab);
+	}
 	function _setEffects(){
 		sb.dom.find('.ui-btn').addClass("waves-effect");	
-		sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');
+			sb.dom.find('#containerDiv').find('ul.tabs').tabs();
+			sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');			
         try{
 			StatusBar.show();
 			StatusBar.overlaysWebView(false);
@@ -856,7 +864,8 @@ var pageViewController = function(sb, input){
 	}
 	
 	function _restartApp(data){
-		sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');
+			sb.dom.find('#containerDiv').find('ul.tabs').tabs();
+			sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');			
 		storyItemControllerPublish = true;
 		userLogoStarted = false;
 		try{

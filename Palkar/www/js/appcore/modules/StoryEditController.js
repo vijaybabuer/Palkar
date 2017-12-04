@@ -243,6 +243,7 @@ var storyEditController = function(sb, input){
 			   sb.utilities.postV2("shrmsg.pvt?mediaType=json",{title: subjectBox.val(), details: detailsMessage, documentId: documentidBox.val(), albumId: albumForStoryID, allowPublicTextReactions: allowPublicTextReactions, allowPrivateTextReactions: allowPrivateTextReactions, allowClickReactions: allowClickReactions}, sendMessageSuccess);
 			   }
 		   }else if(httpMethod=="PUT"){
+   			   var detailsMessage = tinymce.html.Entities.encodeNumeric(messageBox.text());
 			   sb.utilities.put("shrmsg.pvt?mediaType=json",{title: subjectBox.val(), details: detailsMessage, documentId: "", albumId: albumForStoryID, documentpageid: editStoryDocumentPageId, allowPublicTextReactions: allowPublicTextReactions, allowPrivateTextReactions: allowPrivateTextReactions, allowClickReactions: allowClickReactions},updateMessageSuccess);
 		   }
 		   alertBeforeNavigatingAway = false;

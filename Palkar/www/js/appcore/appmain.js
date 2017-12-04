@@ -280,7 +280,7 @@ Core = function(_$) {
 						if(userData.authorizationType && userData.authorizationType == 'social'){
 							xhr.setRequestHeader('Authorization', 'Bearer ' + userData.authorization);	
 						}
-			        }					
+			        }		
 				});				
 			},
 			put: function(referenceUrl, data, successMethod){
@@ -346,7 +346,7 @@ Core = function(_$) {
 					}
 				}else{
 					url = url + referenceUrl;
-				}				
+				}
 				_$.ajax({
 					url: url,
 					type: "DELETE",

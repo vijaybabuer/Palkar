@@ -47,7 +47,7 @@ var app = {
 	
 	var appVersion = '1.1.53';
 	
-	var palpostrServerName = "http://192.168.0.105:8080/palpostr/";	
+	var palpostrServerName = "http://www.palpostr.com/";	
 	
 	Core.register('clickReactionsController',clickReactionsController,{relPath: "", reactionCountPerPage: "5"});
 	Core.register('textReactionsController',textReactionsController,{relPath: "", reactionCountPerPage: "5"});

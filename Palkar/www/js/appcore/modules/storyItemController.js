@@ -1,5 +1,5 @@
 var storyItemController = function(sb, input){
-	var relPathIn=input.relPath, textReactionShowAllButton=null, authenticatedUser=input.authenticatedUser, storyItemList=null, albumContainerJS=null, storyPage=input.storyPage, currentNavBtn=null, prevNavBtn=null, scrollListContainer=null, loginUserName=input.username, lastUpdatedStreamDate = input.lastUpdatedStreamDate, getMoreStories=input.getMoreStories, numberOfStoriesToGet=input.numberOfStoriesToGet, storiesDivId = input.storiesDivId, documentTypeToShow="ALL", contactTypeToShow="ANY", storyJSTemplateName = input.storyJSTemplateName, newestUpdatedStreamDate = input.newestUpdatedStreamDate, overRideHomeUrl = input.overRideHomeUrl, gettingNewerStories = false, lastScrollTop = sb.dom.find(window).scrollTop();
+	var relPathIn=input.relPath, textReactionShowAllButton=null, authenticatedUser=input.authenticatedUser, storyItemList=null, albumContainerJS=null, storyPage=input.storyPage, currentNavBtn=null, prevNavBtn=null, scrollListContainer=null, loginUserName=input.username, lastUpdatedStreamDate = input.lastUpdatedStreamDate, getMoreStories=input.getMoreStories, numberOfStoriesToGet=input.numberOfStoriesToGet, storiesDivId = input.storiesDivId, documentTypeToShow="ALL", contactTypeToShow="ANY", storyJSTemplateName = input.storyJSTemplateName, newestUpdatedStreamDate = input.newestUpdatedStreamDate, overRideHomeUrl = input.overRideHomeUrl, gettingNewerStories = false, lastScrollTop = sb.dom.find(window).scrollTop(), deleteUrl = null;
   
    
    function _showAlltextReactionsButtonClickEvent(){
@@ -29,13 +29,25 @@ var storyItemController = function(sb, input){
 	   sb.dom.find(this).parent().hide();
    }
    
-   
+   function deleteConfirm(button){
+	   //alert(button);
+	   if(button == 2 && deleteUrl != null){
+		   
+		   sb.utilities.serverDelete(deleteUrl,null,_deleteStoryTransactionSuccess);	   	   
+	   }else{
+			deleteUrl = null;   
+			Materialize.toast('Delete Cancelled!');
+	   }
+	   
+	
+   }
    function _unSharePageButtonClickEvent(e){
 		if(sb.utilities.isUserLoggedIn()){
 		   var unSharePageButton = sb.dom.find(this);
 		   var unSharePageButtonId = unSharePageButton.attr('id');
 		   var storyId = unSharePageButtonId.split('-')[1];
-		   sb.utilities.serverDelete(relPathIn+"Story/"+storyId+"?mediaType=json",null,_unSharePageTransactionSuccess);
+		   deleteUrl = relPathIn+"Story/"+storyId+"?mediaType=json";
+    	   navigator.notification.confirm('Are you sure?', deleteConfirm, 'Delete', 'Cancel, Yes Delete');		   
 		}else{
 			Core.publish('unAuthorizedFunctionality', {module: 'Highlight'});
 		}
@@ -50,7 +62,8 @@ var storyItemController = function(sb, input){
    
    function _deleteStoryConfirm(storyId){
 		if(sb.utilities.isUserLoggedIn()){
-		   sb.utilities.serverDelete(relPathIn+"Story/"+storyId+"?mediaType=json",null,_deleteStoryTransactionSuccess);
+			deleteUrl = relPathIn+"Story/"+storyId+"?mediaType=json";
+    	   navigator.notification.confirm('Are you sure?', deleteConfirm, 'Delete', 'Cancel, Yes Delete');
 		}else{
 			Core.publish('unAuthorizedFunctionality', {module: 'Highlight'});
 		}
