@@ -45,7 +45,7 @@ var app = {
 	$.mobile.pageLoadErrorMessage = "";
 	$.mobile.pageLoadErrorMessageTheme = null;
 	
-	var appVersion = '1.1.53';
+	var appVersion = '1.1.55';
 	
 	var palpostrServerName = "http://www.palpostr.com/";	
 	

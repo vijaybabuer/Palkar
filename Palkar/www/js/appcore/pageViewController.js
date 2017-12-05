@@ -387,7 +387,7 @@ var pageViewController = function(sb, input){
 	function _parseCommunityInfoOwner(key, value){
 		
 		try{
-		sb.dom.find("#foundingMembers").append(tmpl("jstemplate-member-item", value));
+		sb.dom.find("#foundingMembers").append(tmpl("jstemplate-member-item-local", value));
 		}catch(e){
 			alert(e);
 		}

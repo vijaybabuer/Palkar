@@ -196,12 +196,13 @@ var userLogo = function(sb, input){
 
 			sb.utilities.postV2('updatePushNotification?mediaType=json', registerPushRequest, _registerPushNotificationResponse);
 		}catch(e){
-			alert('_pushNotificationRegistrationResponseReceived '	 + e + " " + JSON.stringify(registrationInfo));
-			alert(sb.utilities.getUserInfo().userDetails.userAccount.userName);
-			alert(device.uuid);
-			alert(device.platform );
-			alert(device.version);
-			alert(input.appname);			
+			//alert('_pushNotificationRegistrationResponseReceived '	 + e + " " + JSON.stringify(registrationInfo));
+			//alert(sb.utilities.getUserInfo().userDetails.userAccount.userName);
+			//alert(device.uuid);
+			//alert(device.platform );
+			//alert(device.version);
+			//alert(input.appname);		
+			console.log('Problem with Push Notification.' + e);
 		}
    }
 	
