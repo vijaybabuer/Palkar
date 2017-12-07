@@ -45,9 +45,9 @@ var app = {
 	$.mobile.pageLoadErrorMessage = "";
 	$.mobile.pageLoadErrorMessageTheme = null;
 	
-	var appVersion = '1.1.55';
+	var appVersion = '1.1.56';
 	
-	var palpostrServerName = "http://www.palpostr.com/";	
+	var palpostrServerName = "http://www.palpostr.com/";
 	
 	Core.register('clickReactionsController',clickReactionsController,{relPath: "", reactionCountPerPage: "5"});
 	Core.register('textReactionsController',textReactionsController,{relPath: "", reactionCountPerPage: "5"});
