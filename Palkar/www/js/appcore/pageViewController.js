@@ -385,9 +385,8 @@ var pageViewController = function(sb, input){
 	}
 	
 	function _parseCommunityInfoOwner(key, value){
-		
 		try{
-		sb.dom.find("#foundingMembers").append(tmpl("jstemplate-member-item-local", value));
+		sb.dom.find("#foundingMembers").append(tmpl("jstemplate-member-item", value));
 		}catch(e){
 			alert(e);
 		}
@@ -405,8 +404,7 @@ var pageViewController = function(sb, input){
 		}catch(e){			
 			alert(e);	
 		}			
-	}	
-	
+	}
 	function _setToggleEvent(e){
 		sb.dom.find(this).find('.memberPages').slideToggle();	
 	}
@@ -418,6 +416,7 @@ var pageViewController = function(sb, input){
 		sb.dom.find(this).bind('click', _setToggleEvent);
 		sb.dom.find(this).focusout(_setFocusEvent);
 	}
+	
 	function _communityMembershipInfo(data){
 		
 		if(data.status == 'SUCCESS'){

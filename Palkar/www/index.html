@@ -586,67 +586,6 @@ Ex: john@example.com;sam@example.com</script>
   </div>
 </script>
 
-<script id="jstemplate-member-item-local" type="text/template">
-<div id="panel-contactTooltip-{%=o.username%}" class="communityMemberDiv col s6" name="popupPanel" style="padding: 2px; text-align: left; max-width: 250px;">  
-      <div class="card">
-        <div class="card-image">
-			{% if(o.userHasProfPic) { %}
-	          <img src="${relPath}/userpictn/{%=o.username%}?mediaType=${picRequestType}" style="height: 300px;">		
-			{% } %}
-			{% if(!o.userHasProfPic) { %}
-	          <img src="${relPath}resources/images/User-plain.gif" style="height: 300px;">		
-			{% } %}
-          <span class="card-title activator">{%=o.userFullName%}</span> 
-        </div>
-			<div class="card-content" style="margin: 0px; padding: 5px;">
-			  {% if(o.communityContributionTopics > 0) { %}
-				 <span class="purple-text text-darken-2 stdf u activator" >{%=o.communityContributionTopics%} Topics</span>
-			  {% } %}
-			  {% if(o.communityContribution > 0) { %}
-				 <a class="pink-text text-darken-2 stdf u" data-snippet-url="snippet/postsByUser/{%=o.username%}/{%=o.communityName%}?pageCount={%=o.communityContribution%}&mediaType=text">{%=o.communityContribution%} Posts</a>
-			  {% } %}
-			</div>
-	    <div class="card-reveal" style="padding: 1px;">
-			<span class="card-title" style="padding: 5px; font-size: 12px;">{%=o.userFullName%} <i class="fa fa-chevron-down" aria-hidden="true"></i></span>
-			{% if (o.detailsText || o.location) { %}
-			<div class="roberto" style="margin: 0px; padding: 5px;">
-			  {% if (o.detailsText) { %}
-				<span>About Me: </span><p>{%=o.detailsText%}</p>
-			  {% } %}
-			  {% if (o.location) { %}
-				<span>You can reach me @: </span><p>{%=o.location%}</p>
-			  {% } %}
-			{% } %}
-			</div>
-			{% } %}			
-			<div class="memberPages tnc" style="font-size: 12px; margin-top: 5px;">
-            {% if(o.ownerOf && o.ownerOf.length > 0) { %}
-				{% for (var i=0, file; file=o.ownerOf[i]; i++) { %}
-					<a class="ui-btn cd" data-snippet-url="{%=file.documentType%}/snippet/page/{%=file.documentId%}?mediaType=text&viewAllStories=false">
-						{%=file.documentTitle%}
-					</a>
-				{% } %}
-			{% } %}
-            {% if(o.managerOf && o.managerOf.length > 0) { %}
-				{% for (var i=0, file; file=o.managerOf[i]; i++) { %}
-					<a class="ui-btn cd" data-snippet-url="{%=file.documentType%}/snippet/page/{%=file.documentId%}?mediaType=text&viewAllStories=false">
-						{%=file.documentTitle%}
-					</a>
-				{% } %}
-			{% } %}
-			{% if(o.contributorOf && o.contributorOf.length > 0) { %}
-				{% for (var i=0, file; file=o.contributorOf[i]; i++) { %}
-					<a class="ui-btn cd" data-snippet-url="{%=file.documentType%}/snippet/page/{%=file.documentId%}?mediaType=text&viewAllStories=false">
-						{%=file.documentTitle%}
-					</a>
-				{% } %}
-			{% } %}
-			</div>
-    	</div>
-      </div>
-</div>
-</script>
-
 <script type="text/template" id="jstemplate-Remove-Flag"><i class="fa fa-flag" aria-hidden="true"></i> Remove Inappropriate Flag</script>
 <script type="text/template" id="jstemplate-Flag-Story"><i class="fa fa-flag-o" aria-hidden="true"></i> Flag as Inappropraiate</script>
 <script type="text/unittest">
