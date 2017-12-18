@@ -125,7 +125,8 @@
 		</feature>	
 		<feature name="Notification">
 			<param name="android-package" value="org.apache.cordova.dialogs.Notification" />
-		</feature>					
+		</feature>
+		<preference name="AndroidPersistentFileLocation" value="Compatibility" />						
     </platform>
 	
 	
