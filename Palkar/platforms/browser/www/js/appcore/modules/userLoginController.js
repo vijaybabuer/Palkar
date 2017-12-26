@@ -367,11 +367,13 @@ var userLoginController = function(sb, input){
 		}
 	}
 	function _logOffuser(){
+		
 		sb.utilities.postV2('logoff?mediaType=json', null, _logOffSuccess, _logOffFailure);
 	}
 	function _exitAppConfirmLogoff(button){
 		if(button == 2){
 			sb.utilities.setUserInfo('guest', null, null, null);
+			sb.utilities.deleteUserStream();
 			_logOffuser();
 		}
 	}

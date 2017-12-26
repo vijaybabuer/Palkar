@@ -4705,7 +4705,7 @@ small {
   top: 35px;
   width: auto;
   clear: both;
-  margin-top: 10px;
+  margin-top: 0px;
   position: relative;
   max-width: 100%;
   height: auto;
@@ -4714,7 +4714,7 @@ small {
   word-break: break-all;
   background-color: #ffffff;
   padding: 10px 25px;
-  font-size: 1rem;
+  font-size: 0.75rem;
   font-weight: 300;
   color: #3299BB;
   display: -webkit-flex;

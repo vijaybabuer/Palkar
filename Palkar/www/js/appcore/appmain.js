@@ -27,6 +27,7 @@ Core = function(_$) {
 	var moduleData = {},
 		userData = {username: 'guest', authorization: null, authorizationType: null, userDetails: null},
 		cache = {}, 
+		userStream = null,
 		deviceAccounts = null
 		baseHost = "",
 		_dom = {
@@ -79,6 +80,28 @@ Core = function(_$) {
 			deleteUserInfo: function(){
 				alert('not supported');
 			},	
+			
+			getUserStream: function(){
+				if(userStream == null){
+					loadUserStream();	
+				}
+				return userStream;
+			},
+			setUserStream: function(streamData){
+				userStream = streamData;
+			},
+			setUserStreamToDevice: function(){
+				try{
+					writeUserStream(userStream);
+				}catch(e){
+					alert('Problem create user data ' + e);	
+				}				
+			},
+			deleteUserStream: function(){
+				deleteUserStreamFromDevice();
+			},		
+			
+			
 			uploadFilePhoto: function(referenceUrl, fileName, progressId, _uploadSuccess, _uploadFailure){
 				var options = new FileUploadOptions();
 				var percentageText = "10%";
@@ -435,6 +458,33 @@ Core = function(_$) {
 		}
 	}
 	
+	
+	function loadUserStream(){
+		try{
+				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {				
+					fs.root.getFile("userStream.txt", { create: false, exclusive: false }, function (fileEntry) {
+						readUserStream(fileEntry);
+					}, function(error){alert(error);});				
+				}, function(error){alert(error);});		
+		}catch(e){
+			alert('Problem create user data ' + e);	
+		}
+	}
+
+	function deleteUserStreamFromDevice(){
+		try{
+				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {				
+					fs.root.getFile("userStream.txt", { create: false, exclusive: false }, function (fileEntry) {
+						fileEntry.remove(function(){
+							console.log('File Delete Success');						  
+						});
+					}, function(error){alert(error);});				
+				}, function(error){console.log('Problem Accessing File System');});		
+		}catch(e){
+			alert('Problem create user data ' + e);	
+		}
+	}
+	
 	function onErrorReadFile(){
 		alert('error on file read');	
 	}
@@ -449,6 +499,21 @@ Core = function(_$) {
 			reader.readAsText(file);
 		}, onErrorReadFile);			
 	}
+	
+	function readUserStream(fileEntry){
+		fileEntry.file(function (file) {
+			var reader = new FileReader();	
+			reader.onloadend = function() {
+				console.log("Successful file read: " + this.result);
+				var userDataStream = this.result;
+				userStream = JSON.parse(userDataStream.toString());
+				Core.publish("userStreamLoaded", null);
+				//alert(JSON.stringify(userStream));
+			};
+			reader.readAsText(file);
+		}, onErrorReadFile);			
+	}	
+	
 	function writeUserData(fileEntry, dataObj){
     // Create a FileWriter object for our FileEntry (log.txt).
 		fileEntry.createWriter(function (fileWriter) {
@@ -465,6 +530,38 @@ Core = function(_$) {
 			fileWriter.write(JSON.stringify(dataObj));
 		});		
 	}
+	
+	function writeUserStreamToDevice(fileEntry, dataObj){
+    // Create a FileWriter object for our FileEntry (log.txt).
+		fileEntry.createWriter(function (fileWriter) {
+	
+			fileWriter.onwriteend = function() {
+				console.log('Success Write');
+			};
+	
+			fileWriter.onerror = function (e) {
+				console.log('Failure Write');
+				alert('Error on Writing user data: ' + JSON.stringify(e));
+			};
+			//alert('writing json object');
+			try{
+			fileWriter.write(JSON.stringify(dataObj));
+			}catch(e){
+				alert(e);	
+			}
+		});		
+	}
+	
+	function writeUserStream(userStream){
+		
+				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+					fs.root.getFile("userStream.txt", { create: true, exclusive: false }, function (fileEntry) {										
+					writeUserStreamToDevice(fileEntry, userStream);
+					}, function(error){alert(error);});
+				
+				}, function(error){alert(error);});			
+	}
+	
 	function createUserData(username, authorization, authorizationType, userDetails){
 		
 				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {

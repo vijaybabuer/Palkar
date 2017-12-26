@@ -256,7 +256,8 @@ var storyItemController = function(sb, input){
 		}else{
 
 			try{
-				var storyItemNode =sb.dom.find(message.storyItemDivId);				
+				var storyItemNode =sb.dom.find(message.storyItemDivId);			
+				//alert('_newStoryAddedMessageReceived ' + message.storyItemDivId);
 				storyItemNode.find('.showPictures').bind('click', _showPicturesButtonClick);
 				//storyItemNode.find('.storyItemHeader').bind('click', _storyHeaderClick);
 				storyItemNode.find('.CommentsSummary').bind('click', _CommentsSummaryClick);
@@ -269,7 +270,7 @@ var storyItemController = function(sb, input){
 	    		
 				storyItemNode.find('.listElement').bind('click', _listElementClick);
 				storyItemNode.find('.reactionCountButton').on('click', _scrollToReactionsSection);
-				storyItemNode.find(".WhatsAppShare").click(_socialShareClicked);
+
 				storyItemNode.find('.dropdown-button').show();
 				storyItemNode.find('.dropdown-button').dropdown({
 				  inDuration: 300,
@@ -331,8 +332,6 @@ var storyItemController = function(sb, input){
 	   						storyItemNode.find('#hideCaption').bind('click', _hideCaptionClicked);
 
 	   						storyItemNode.find('.unSharePageButton').bind('click', _unSharePageButtonClickEvent);
-
-							storyItemNode.find(".WhatsAppShare").click(_socialShareClicked);
 				
 							storyItemNode.find('.dropdown-button').show();
 							storyItemNode.find('.dropdown-button').dropdown({
@@ -519,43 +518,65 @@ var storyItemController = function(sb, input){
 	
 
 	function _socialShareSuccess(result){
-		alert(JSON.stringify(result));	
+		sb.dom.find('#social-sharing-loading-modal').modal('close');
+		console.log("Story Published To Social Media");	
 	}
 
 	function _socialShareError(msg){
+		sb.dom.find('#social-sharing-loading-modal').modal('close');
 		alert(msg);	
 	}
 	
-	function _socialShareClicked(e){
-		e.preventDefault();
-		alert('Social Share clicked.');	
-		/* var dataMessage = sb.find(this).attr('data-message');
-		var dataSubject = sb.find(this).attr('data-subject');
-		var dataUrl = sb.find(this).attr('data-url');
-		var dataImage = sb.find(this).attr('data-image');	*/
+	function _socialShareRichTextServerResponseReceived(storyResponse){
+		
 		try{
-		var dataMessage = "Shared Message";
-		var dataSubject = "Shared Subject"
-		var dataUrl = null;
-		var dataImage = null;
-		
-		var options = {
-			message: dataMessage,
-			subject: dataSubject,
-			files: [dataUrl],
-			url: dataImage,
-			chooserTitle: "Pick an App"
-		};
-		
+			if(storyResponse.txnStatus == "SUCCESS"){
+						var options = {
+							url: input.serverUrl+storyResponse.storyitem.storyDocumentType+'/Story/'+storyResponse.storyitem.storyDocumentPageId+'-true',
+							chooserTitle: "Share With"
+						};	
+						if(storyResponse.storyitem.story){
+							options.message = storyResponse.storyitem.story + "\n\n" + "Posted By " + storyResponse.storyitem.storyAuthor + "\n\n" + "Read More on " + input.appname + " app. \n\n";	
+						}
+						if(storyResponse.storyitem.storyTitle){
+							options.subject = storyResponse.storyitem.storyTitle;	
+						}
+						if(storyResponse.base64PictureForSocialSharing){
+							options.files = ["data:image/gif;base64,"+storyResponse.base64PictureForSocialSharing];
+						}
+						window.plugins.socialsharing.shareWithOptions(options, _socialShareSuccess, _socialShareError);		
+						options = null;
+						sb.dom.find('#social-sharing-loading-modal').modal('close');
+			}else{
+				alert('There was a problem retrieving content for sharing. Please try again later. ' + storyResponse.txnStatusReason);	
+				sb.dom.find('#social-sharing-loading-modal').modal('close');
+			}
+		}catch(e){
+			alert(e);	
+			sb.dom.find('#social-sharing-loading-modal').modal('close');
+		}
+	}
+	function _socialShareRichText(data){
+		sb.utilities.get(data.docType+'/StoryForSocialSharing/'+data.id+'?mediaType=json',null,_socialShareRichTextServerResponseReceived);
+	}
+	
+	function _socialShareClicked(data){
+		try{
+		sb.dom.find('#social-sharing-loading-modal').modal('open');
+		if(data.idType == 'RICHTEXT'){
+			_socialShareRichText(data);
+		}else{
+			alert('Sharing this media type is not supported in this version. Please install a later version of the App to share this media type.');	
+		}
 
-			window.plugins.socialSharing.sharedWithOptions(options, _socialShareSuccess, _socialShareError);
+		
 		}catch(e){
 			alert(e);	
 		}
 	}
 	function _startController(message){
 		try{
-			
+				//alert('story item controller starting.');
 				sb.dom.find('#storyPostContainerTab').prop('disabled', false);
 				lastUpdatedStreamDate = message.lastUpdatedStreamDate;
 	    		_correctImageUrlForStory();
@@ -584,8 +605,6 @@ var storyItemController = function(sb, input){
 	    		
 				sb.dom.find("#storiesDivTrailer").find("#showMore").off("click");
 	    		sb.dom.find("#storiesDivTrailer").find("#showMore").click(_showMoreStoriesClicked);
-	    		
-				sb.dom.find(".WhatsAppShare").click(_socialShareClicked);
 				
 				sb.dom.find('.dropdown-button').show();
 				sb.dom.find('.dropdown-button').dropdown({
@@ -614,7 +633,8 @@ var storyItemController = function(sb, input){
 	    		Core.subscribe('newStoryAdded', _newStoryAddedMessageReceived);
 	    		Core.subscribe('getNewStories', _getNewStoriesMessageReceived);
 	    		Core.subscribe('pageSnippetAdded', _pageSnippetAddedReceived);
-				Core.subscribe('newStoryReceived', _newStoryReceivedFromServer);	
+				Core.subscribe('newStoryReceived', _newStoryReceivedFromServer);
+				Core.subscribe('socialShare', _socialShareClicked);
 	    		//alert(getMoreStories + " " + lastUpdatedStreamDate);
 	    		if(getMoreStories && lastUpdatedStreamDate != "" && lastUpdatedStreamDate != null && lastUpdatedStreamDate != "null"){
 					//alert('Getting more story items');

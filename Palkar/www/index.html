@@ -161,7 +161,7 @@
 						</div>												
 					</div>					
 					<div id="membersContainer" class="col s12 " style="width: 100%; margin-top: 50px;">
-					  <a href="#inviteFrields" class="ui-btn" style="text-shadow: none; background-color: #4aaecf; color: #ffffff; margin: 0.25em;">Invite Friends</a>					
+					  <a href="#inviteFrields" class="ui-btn inviteFriendsSocial"  style="text-shadow: none; background-color: #4aaecf; color: #ffffff; margin: 0.25em;">Invite Friends</a>					
 					  <ul class="collapsible" data-collapsible="accordion">
 						<li>
 						  <div class="collapsible-header cd mf active">Contributors</div>
@@ -189,7 +189,7 @@
 						  </div>
 						</li>						
 					  </ul>
-					  <a href="#inviteFrields" class="ui-btn" style="text-shadow: none; background-color: #4aaecf; color: #ffffff; margin: 0.25em;">Invite Friends</a>	
+					  <a href="#inviteFrields" class="ui-btn inviteFriendsSocial" style="text-shadow: none; background-color: #4aaecf; color: #ffffff; margin: 0.25em;">Invite Friends</a>	
 					  Please login or register to become member of this community.    					  
 					</div>											
 					<div id="gameContainer" class="col s12" style="width: 100%; margin-top: 50px;">
@@ -202,7 +202,7 @@
 				<div id="documentPageList">Please wait while the section is loading..</div>
 			</div><!-- /panel -->		
 			<div class="al cd nd" style="overflow: scroll; " data-position="left" data-position-fixed="true" data-role="panel" data-display="overlay" id="leftPanel">
-				<a class="ui-btn cd" href="#inviteFrields"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;Invite Friends</a>
+				<a class="ui-btn cd inviteFriendsSocial" href="#inviteFrields"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;Invite Friends</a>
 			   <p class="roberto">This App brings you Palkar Community Updates</p>
 			   <p class="roberto">Share your local community stories and pictures with more than 1 Million Palkars worldwide</p>
 			   <p class="roberto">There are an estimated 10 lac Sourashtrians world wide. Lets rediscover our culture and connect with our community world wide in this digital age.</p>
@@ -297,10 +297,10 @@
 						</a>
 					</div>
 					<div id="inviteFriendsDiv">				
-						<a href="whatsapp://send?text=Join Palkar App and connect with over 1 million Sourashtrians world wide. iPhone App: https://itunes.apple.com/US/app/Palkar/id1207494642?mt=8 Android Smart Phone App: https://play.google.com/store/apps/details?id=com.palpostr.palkar">
+						<a class="inviteFriendsSocial" href="whatsapp://send?text=Join Palkar App and connect with over 1 million Sourashtrians world wide. iPhone App: https://itunes.apple.com/US/app/Palkar/id1207494642?mt=8 Android Smart Phone App: https://play.google.com/store/apps/details?id=com.palpostr.palkar">
 										<i id="WhatsAppInvite" class="fa fa-whatsapp" aria-hidden="true"></i><br>Invite My WhatsApp Contacts
 						</a><br>
-						<a  href="mailto:YourEmailFriend@email.com?subject=Join Palkar App&body=Connect with over 1million Sourashtrians world wide. iPhone App: https://itunes.apple.com/US/app/Palkar/id1207494642?mt=8 Android Smart Phone App: https://play.google.com/store/apps/details?id=com.palpostr.palkar">
+						<a class="inviteFriendsSocial" href="mailto:YourEmailFriend@email.com?subject=Join Palkar App&body=Connect with over 1million Sourashtrians world wide. iPhone App: https://itunes.apple.com/US/app/Palkar/id1207494642?mt=8 Android Smart Phone App: https://play.google.com/store/apps/details?id=com.palpostr.palkar">
 										<i id="EmailInvite" class="fa fa-envelope-o" aria-hidden="true"></i><br>Invite My Email Contacts
 						</a>						
 					</div>
@@ -364,7 +364,25 @@ PalPostr.COM reserves the right, at its sole discretion, to modify or replace th
 	  </div>
     </div>
   </div>
+
+  <div id="saving-session-modal" class="modal center-align">
+    <div class="modal-content center-align">
+      <h6>Saving your session.</h6>
+	  <div class="progress">
+		  <div class="indeterminate"></div>
+	  </div>
+    </div>
+  </div>
   
+  <div id="social-sharing-loading-modal" class="modal center-align">
+    <div class="modal-content center-align">
+      <h6>Setting content for Sharing</h6>
+	  <div class="progress">
+		  <div class="indeterminate"></div>
+	  </div>
+    </div>
+  </div>
+    
 <div id="snippetModel" class="modal">
     <div class="modal-content">
     </div>

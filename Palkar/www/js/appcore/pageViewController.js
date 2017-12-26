@@ -71,7 +71,6 @@ var pageViewController = function(sb, input){
 		   if(storyItem.storyPictures && storyItem.storyPictures.length == 1){
 				sb.dom.find("#mainContainer").find("#storiesDiv").find("#storyItem-"+storyItem.storyDocumentPageId).find('.materialboxed').materialbox();
 			}
-
 	   }
 	   
 	function processPageInformation(snippetResponse){
@@ -337,6 +336,7 @@ var pageViewController = function(sb, input){
 			   updateFooterMessage("");
 			   sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").html("");
 			   if(snippetResponse.streamResponse && snippetResponse.streamResponse.storyItemList && snippetResponse.streamResponse.storyItemList.length > 0){
+				   sb.utilities.setUserStream(snippetResponse.streamResponse);
 					for(var i =0; i<snippetResponse.streamResponse.storyItemList.length;i++){
 						try{
 						addStoryItemToView(snippetResponse.streamResponse.storyItemList[i]);
@@ -529,6 +529,7 @@ var pageViewController = function(sb, input){
 				
 				sb.dom.find('#gameContainer').html(sb.dom.find('#template-games').html());
 				sb.dom.find('#gameContainer').find('a').each(_setGameClickEvent);
+				sb.utilities.getUserStream();
 				
 					if(sb.utilities.isUserLoggedIn()){
 						_triggerMainPageRequest();
@@ -578,8 +579,36 @@ var pageViewController = function(sb, input){
 				alert(e);	
 		}
 	}
+	
+	function _socialShareSuccess(result){
+		console.log("Story Published To Social Media");	
+	}
+
+	function _socialShareError(msg){
+		alert(msg);	
+	}
+	function _inviteFriendsToAppSocial(e){
+		e.preventDefault();
+		try{
+			sb.dom.find('#loading-modal').modal('open');
+						var options = {
+							url: input.appleAppStoreUrl,
+							chooserTitle: "Invite Friends To " + input.appname
+						};
+							options.message = "Join Palkar App today and connect with over 1 million Sourashtrians world wide.. \n\n Apple iPhone/iPod/iPad " + input.appleAppStoreUrl + "\n\n Android Smart Phone " +  input.androidAppStoreUrl;
+							options.subject = "Hi, join Palkar App";
+
+						window.plugins.socialsharing.shareWithOptions(options, _socialShareSuccess, _socialShareError);		
+						options = null;
+			sb.dom.find('#loading-modal').modal('close');
+		}catch(e){
+			alert(e);	
+		}
+	}
+	
+	
 	function _startControllerV2(){
-		try{			
+		try{
 			var screenHeight = sb.dom.find(window).height();
 			sb.dom.find('.appBody').css("height", screenHeight + " px");
 			document.getElementById("message1").innerHTML = "Loading "+appname+"..";
@@ -595,6 +624,7 @@ var pageViewController = function(sb, input){
 				domCache: true							  
 			});
 			sb.dom.find('.collapsible').collapsible();
+			sb.dom.find('.inviteFriendsSocial').click(_inviteFriendsToAppSocial);
 		 $('.modal').modal({
 			  dismissible: true, // Modal can be dismissed by clicking outside of the modal
 			  opacity: .5, // Opacity of modal background
@@ -725,6 +755,8 @@ var pageViewController = function(sb, input){
 	
 	function exitAppConfirm(button){
 		if(button == 2){
+			sb.dom.find('#saving-session-modal').modal('open');
+			sb.utilities.setUserStreamToDevice();
 			if(navigator.app){
 				sb.utilities.setUserInfo(sb.utilities.getUserInfo().username, sb.utilities.getUserInfo().authorization, sb.utilities.getUserInfo().authorizationType, sb.utilities.getUserInfo().userDetails);	
 				navigator.app.exitApp();
@@ -782,6 +814,7 @@ var pageViewController = function(sb, input){
 
 	function onPause(e){
 		sb.utilities.setUserInfo(sb.utilities.getUserInfo().username, sb.utilities.getUserInfo().authorization, sb.utilities.getUserInfo().authorizationType, sb.utilities.getUserInfo().userDetails);	
+		sb.utilities.setUserStreamToDevice();
 		appOnPause = true;
 		
 	}
@@ -881,6 +914,26 @@ var pageViewController = function(sb, input){
 				alert(e);	
 		}		
 	}
+	
+	function _userStreamLoadedMessageReceived(data){
+		
+		var userStream = sb.utilities.getUserStream();
+		//alert('_userStreamLoadedMessageReceived ' + userStream.storyItemList.length);
+		sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").html("<div class='chip amber lighten-1 cb'>Loading. Please wait.</div>");
+		try{
+				for(var i =0; i<userStream.storyItemList.length;i++){
+					try{
+						addStoryItemToView(userStream.storyItemList[i]);
+					}catch(e){
+						updateFooterMessage('problem loading story ' + userStream.storyItemList[i].storyDocumentPageId + " " + e);
+					}
+				}
+		}catch(e){
+			alert(e);
+		}
+		
+	}
+	
    return{
 	   init:function() {
        	try{
@@ -894,6 +947,7 @@ var pageViewController = function(sb, input){
 			Core.subscribe('unAuthorizedFunctionality', _unAuthorizedFunctionality);
 			Core.subscribe('notificationItemClick', _notificationItemClickReceived);
 			Core.subscribe('restartApp', _restartApp);
+			Core.subscribe('userStreamLoaded', _userStreamLoadedMessageReceived);
 			document.addEventListener("resume", onResume, false);
 			document.addEventListener("pause", onPause, false);			
 			document.addEventListener("backbutton", _deviceBackButtonClicked, true);
