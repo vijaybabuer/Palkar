@@ -464,8 +464,8 @@ Core = function(_$) {
 				window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {				
 					fs.root.getFile("userStream.txt", { create: false, exclusive: false }, function (fileEntry) {
 						readUserStream(fileEntry);
-					}, function(error){alert(error);});				
-				}, function(error){alert(error);});		
+					}, function(error){alert(JSON.stringify(error));});				
+				}, function(error){alert(JSON.stringify(error));});		
 		}catch(e){
 			alert('Problem create user data ' + e);	
 		}
