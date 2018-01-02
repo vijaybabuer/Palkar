@@ -756,3 +756,7 @@ width: 50%;
  #getMoreStoriesForPageButton{
  	color: #ffffff;
  }
+ 
+ .dropdown-content{
+ 	z-index: 1000px;
+ }
