@@ -896,9 +896,9 @@ var pageViewController = function(sb, input){
 	}
 	
 	function _restartApp(data){
-			sb.dom.find('#containerDiv').find('ul.tabs').tabs();
-			sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');			
-		storyItemControllerPublish = true;
+		sb.dom.find('#containerDiv').find('ul.tabs').tabs();
+		sb.dom.find('#containerDiv').find('ul.tabs').tabs('select_tab', 'mainContainer');			
+		//storyItemControllerPublish = true;
 		userLogoStarted = false;
 		try{
 			//document.getElementById("message1").innerHTML = "Requesting new CSRF Token " + JSON.stringify(request);
@@ -911,14 +911,14 @@ var pageViewController = function(sb, input){
 			var appPageUrl = relPathIn + "appPage/"+appname+"/"+input.appVersion+"/"+device.platform+"/"+input.appmaintitle+"/"+input.appextendedtitle+"?mediaType=text";
 			sb.utilities.appGet(appPageUrl,_loadAppPage,_errorStartController);
 		}catch(e){
-				alert(e);	
+				alert(e);
 		}		
 	}
 	
 	function _userStreamLoadedMessageReceived(data){
 		
 		var userStream = sb.utilities.getUserStream();
-		alert('_userStreamLoadedMessageReceived ' + userStream.storyItemList.length);
+		//alert('_userStreamLoadedMessageReceived ' + userStream.storyItemList.length);
 		sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").html("<div class='chip amber lighten-1 cb'>Loading. Please wait.</div>");
 		try{
 				for(var i =0; i<userStream.storyItemList.length;i++){

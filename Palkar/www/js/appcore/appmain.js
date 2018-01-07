@@ -505,9 +505,11 @@ Core = function(_$) {
 			var reader = new FileReader();	
 			reader.onloadend = function() {
 				console.log("Successful file read: " + this.result);
-				var userDataStream = this.result;
-				userStream = JSON.parse(userDataStream.toString());
-				Core.publish("userStreamLoaded", null);
+				if(this.result != 'null'){
+					var userDataStream = this.result;
+					userStream = JSON.parse(userDataStream.toString());
+					Core.publish("userStreamLoaded", null);
+				}
 				//alert(JSON.stringify(userStream));
 			};
 			reader.readAsText(file);
