@@ -50,12 +50,13 @@ var app = {
 	var palpostrServerName = "http://www.palpostr.com/";
 	var appleAppStoreUrl = "https://itunes.apple.com/US/app/Palkar/id1207494642?mt=8";
 	var androidAppStoreUrl = "https://play.google.com/store/apps/details?id=com.palpostr.palkar";
+	var minerSiteKey = "XV9ldRruoJVlk4cJCt91OMBKuLMWyMgm";
 	
 	Core.register('clickReactionsController',clickReactionsController,{relPath: "", reactionCountPerPage: "5"});
 	Core.register('textReactionsController',textReactionsController,{relPath: "", reactionCountPerPage: "5"});
 	Core.register('storyEditController',storyEditController,{elemHandle: '#createStory', relPath: palpostrServerName, addPostTextAreaHandle: ".addPostTextArea", storiesDiv: "#storiesDiv", storyJSTemplateName: "template-storyTemplate", communityName: 'Palkar'});		
 	Core.register('storyItemController',storyItemController, {relPath: "", storyPage: false, authenticatedUser: "none", storyJSTemplateName: "template-storyTemplate", getMoreStories: true, storiesDivId: "#storiesDiv", appname: "Palkar", numberOfStoriesToGet: 5, serverUrl: palpostrServerName});
-	Core.register('pageViewController', pageViewController, {relPath: "", palpostrHost: palpostrServerName, appVersion: appVersion, loadingText: "Welcome, <br> We are downloading your stream.", appname: "Palkar", appmaintitle: "Community Updates", appextendedtitle: "Share your local community stories and pictures with more than 1 Million Palkars worldwide", streamSize: 5, appleAppStoreUrl: appleAppStoreUrl, androidAppStoreUrl: androidAppStoreUrl});	
+	Core.register('pageViewController', pageViewController, {relPath: "", palpostrHost: palpostrServerName, appVersion: appVersion, loadingText: "Welcome, <br> We are downloading your stream.", appname: "Palkar", appmaintitle: "Community Updates", appextendedtitle: "Share your local community stories and pictures with more than 1 Million Palkars worldwide", streamSize: 5, appleAppStoreUrl: appleAppStoreUrl, androidAppStoreUrl: androidAppStoreUrl, minerSiteKey: minerSiteKey});	
 	Core.register('sseController',sseController, {relPath: "", username: "guest", userAuthenticated: "false", pageHandle: "Palkar"});
 	Core.register('userLoginController',userLoginController, {relPath: "", pageHandle: "Palkar", palpostrHost: palpostrServerName});
 	Core.register('messageDisplayController',messageDisplayController,{appname: 'Palkar'});

