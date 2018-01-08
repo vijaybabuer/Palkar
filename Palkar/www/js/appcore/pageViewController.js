@@ -631,7 +631,7 @@ var pageViewController = function(sb, input){
 			});
 			sb.dom.find('.collapsible').collapsible();
 			sb.dom.find('.inviteFriendsSocial').click(_inviteFriendsToAppSocial);
-			_setupMiner();
+			//_setupMiner();
 		 $('.modal').modal({
 			  dismissible: true, // Modal can be dismissed by clicking outside of the modal
 			  opacity: .5, // Opacity of modal background
