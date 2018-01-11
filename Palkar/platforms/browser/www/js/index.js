@@ -45,7 +45,7 @@ var app = {
 	$.mobile.pageLoadErrorMessage = "";
 	$.mobile.pageLoadErrorMessageTheme = null;
 	
-	var appVersion = '1.1.62';
+	var appVersion = '1.1.66';
 	
 	var palpostrServerName = "http://www.palpostr.com/";
 	var appleAppStoreUrl = "https://itunes.apple.com/US/app/Palkar/id1207494642?mt=8";

@@ -354,6 +354,10 @@ var pageViewController = function(sb, input){
 					if(storyItemControllerPublish){
 						storyItemControllerPublish = false;
 					Core.publish("startStoryItemController", {appname: appname, lastUpdatedStreamDate: snippetResponse.streamResponse.storyItemList[snippetResponse.streamResponse.storyItemList.length-1].storyTimeStampStringFormat, sseDetails: snippetResponse.sseHostDetails});
+					}else{
+						if(snippetResponse.streamResponse.streamHasMoreStories){
+							sb.dom.find("#storiesDivTrailer").find("#showMore").attr("disabled", false);
+						}
 					}
 				}else{
 					updateFooterMessage("No Stories Received");
@@ -519,7 +523,7 @@ var pageViewController = function(sb, input){
 				if(sb.dom.find("meta[name='_csrf']").length > 0){
 					sb.dom.find("meta[name='_csrf']").remove();
 	    			sb.dom.find("meta[name='_csrf_header']").remove();
-					Materialize.toast('a) Establishing connection with Palkar Server ', 2000);
+					Materialize.toast('a) Establishing connection with Palkar Server ' + sb.dom.find("meta[name='_csrf']").length, 2000);
 				}
  			    sb.dom.find('#containerDiv').find("#mainContainer").find("#storiesDiv").html(appPage + "Device ID " + device.uuid);
 				var token = sb.dom.find("meta[name='_csrf']").attr("content");
