@@ -541,8 +541,10 @@ var storyItemController = function(sb, input){
 						if(storyResponse.storyitem.storyTitle){
 							options.subject = storyResponse.storyitem.storyTitle;	
 						}
-						if(storyResponse.base64PictureForSocialSharing){
-							options.files = ["data:image/gif;base64,"+storyResponse.base64PictureForSocialSharing];
+						if(!storyResponse.storyitem.story && !storyResponse.storyitem.storyTitle){							
+							if(storyResponse.base64PictureForSocialSharing){
+								options.files = ["data:image/gif;base64,"+storyResponse.base64PictureForSocialSharing];
+							}
 						}
 						window.plugins.socialsharing.shareWithOptions(options, _socialShareSuccess, _socialShareError);		
 						options = null;
