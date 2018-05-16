@@ -598,6 +598,10 @@ var storyEditController = function(sb, input){
 	   
    }
    
+   function G(e){"SUCCESS"==e.antahRequestStatus?(sb.dom.find("#"+e.antahRestfulTxnResponse.storyitem.storyDocumentPageId+"-CaptionButton").find(".fa").removeClass("fa-spin"),Materialize.toast("Media Description Updated.")):(sb.dom.find("#"+e.storyitem.storyDocumentPageId+"-CaptionButton").find(".fa").removeClass("fa-spin"),Core.publish("displayMessage",{message:sb.dom.find("#jstemplate-ErrorMessage").html(),messageType:"failure"}));}
+   function K(e){sb.dom.find("#"+e.mediaItemID+"-CaptionButton").find(".fa").addClass("fa-spin");var o=sb.dom.find("#"+e.mediaItemID+"-Title").val(),n=sb.dom.find("#"+e.mediaItemID+"-Description").html();sb.utilities.put("shrmsg.pvt?mediaType=json",{title:o,details:n,documentId:"",albumId:null,documentpageid:e.mediaItemID},G);}
+   function Q(e){sb.dom.find(".caption").slideToggle();}   
+   
    function _startController(){
 				try{
        			//Module Initializing
@@ -660,6 +664,11 @@ var storyEditController = function(sb, input){
 	    		Core.subscribe('pageSnippetAdded', _pageSnippetAddedProcess);
 				Core.subscribe('userLoginEvent', _userLoggedIn);
 				Core.subscribe('shareScore', _shareScoreMessage);
+				
+	    		Core.subscribe("mediaItemCaptionChanged",K);
+	    		sb.dom.find(".seeCaption").click(Q);
+	    		sb.dom.find(".caption").each(function(){sb.dom.find(this).show()});
+				
 				}catch(e){
 					alert(e);	
 				}

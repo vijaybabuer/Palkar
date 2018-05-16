@@ -30,6 +30,11 @@ var userLoginController = function(sb, input){
    }
    
    function _errorLogin(request, errorMessage, errorObj){
+	   try{
+	   navigator.notification.alert("There was a problem logging in. Please restart the app.", null, input.pageHandle, "Ok"); 
+	   }catch(e){
+		   alert("There was a problem logging in. Please restart the app.");
+	   }
 		if(request.status == '401'){
 			alert("Your Login has expired.");
 			document.getElementById("message1").innerHTML = "Your Login has expired.";
@@ -39,6 +44,7 @@ var userLoginController = function(sb, input){
 				sb.dom.find('#loginDiv').find('#loginForm').show();	
 				sb.dom.find('#loginDiv').find('#message').html("");
 				sb.dom.find("#loginDiv").find("#authorizeUser").button('enable');
+				sb.utilities.setUserInfo('guest', null, null, null);
 				Core.publish('restartApp', null);
 			}catch(e){
 					alert(e);	
@@ -169,6 +175,7 @@ var userLoginController = function(sb, input){
 	function _registerButtonClick(e){
 		try{
 		setTimeout(_initializeLoginSlidesV2, 1000);
+		sb.utilities.setUserInfo('guest', null, null, null);
 		sb.dom.find("#loginDiv").find("#authorizeUser").val(sb.dom.find("#jstemplate-login-label").html());
 		sb.dom.find("#loginDiv").find("#message").html(sb.dom.find("#jstemplate-login-message").html());
 		sb.dom.find("#loginDiv").find("#authorizeUser").unbind('click', _loginUser);

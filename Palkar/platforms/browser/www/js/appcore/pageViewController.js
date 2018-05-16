@@ -284,6 +284,9 @@ var pageViewController = function(sb, input){
 			   sb.dom.find('#containerDiv').find('.container').first().find('#getMoreStoriesForPageButton').click(_moreStoriesButtonClickEvent);
 			   sb.dom.find('#containerDiv').find('.container').first().find('#documentPagination').show();	
 			   sb.dom.find('#containerDiv').find('.container').first().find('#pageCountSelect').material_select();
+			   
+			   sb.dom.find('#containerDiv').find('.container').first().find('.caption').show();
+			   
 			   openOverlay();
 			   }
 			   catch(error){
